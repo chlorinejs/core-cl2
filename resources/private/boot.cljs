@@ -24,6 +24,15 @@
 (defmacro inc-after! [arg] `(inline ~(str arg "++")))
 (defmacro dec-after! [arg] `(inline ~(str arg "--")))
 
+(defn +' []
+  (reduce (fn [x y] (+ x y)) 0 arguments))
+
+(defn -' []
+  (reduce (fn [x y] (- x y)) 0 arguments))
+
+(defn *' []
+  (reduce (fn [x y] (* x y)) 1 arguments))
+
 (defmacro delete [arg] `(inline ~(str "delete " (clojurejs.js/emit-str arg))))
 
 (defmacro lvar [& bindings]
