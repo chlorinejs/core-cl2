@@ -21,6 +21,8 @@
 (defmacro join [sep seq] `(.join ~seq ~sep))
 (defmacro inc! [arg] `(set! ~arg (+ 1 ~arg)))
 (defmacro dec! [arg] `(set! ~arg (- ~arg 1)))
+(defmacro inc-after! [arg] `(inline ~(str arg "++")))
+(defmacro dec-after! [arg] `(inline ~(str arg "--")))
 
 (defmacro delete [arg] `(inline ~(str "delete " (clojurejs.js/emit-str arg))))
 
