@@ -17,7 +17,7 @@
       `(if ~pred ~consequent (cond ~@alternates)))
     `(if ~pred ~consequent)))
 (defmacro isa? [a t]
-  `(inline ~(str "(" (clojurejs.js/emit-str a) " instanceof " t ")")))
+  `(instanceof ~a ~(symbol t)))
 (defmacro join [sep seq] `(.join ~seq ~sep))
 (defmacro inc! [arg] `(set! ~arg (+ 1 ~arg)))
 (defmacro dec! [arg] `(set! ~arg (- ~arg 1)))
