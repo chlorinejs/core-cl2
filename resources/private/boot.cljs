@@ -1,6 +1,6 @@
 (defmacro apply [fun & args] `(.apply ~fun ~fun ~@args))
-(defmacro count [x] `(get ~x :length))
 (defmacro not [expr] `(! ~expr))
+(defn count [x] (get x :length))
 (defn empty? [s] (or (undefined? s) (nil? s) (= 0 (count s))))
 (defn not-empty? [s] (not (empty? s)))
 
@@ -120,8 +120,12 @@
   [m1 m2]
   (or (and m2
            (let [m {}]
-             (dokeys [k m1] (if (.hasOwnProperty m1 k) (set! (get m k) (get m1 k))))
-             (dokeys [k m2] (if (.hasOwnProperty m2 k) (set! (get m k) (get m2 k))))
+             (dokeys [k m1]
+                     (if (.hasOwnProperty m1 k)
+                       (set! (get m k) (get m1 k))))
+             (dokeys [k m2]
+                     (if (.hasOwnProperty m2 k)
+                       (set! (get m k) (get m2 k))))
              m))
       m1))
 
