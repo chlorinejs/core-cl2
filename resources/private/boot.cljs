@@ -33,8 +33,6 @@
 (defn *' []
   (reduce (fn [x y] (* x y)) 1 arguments))
 
-(defmacro delete [arg] `(inline ~(str "delete " (clojurejs.js/emit-str arg))))
-
 (defmacro lvar [& bindings]
   `(inline
     ~(str "var "
