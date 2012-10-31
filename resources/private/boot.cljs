@@ -149,10 +149,19 @@
       (if (.hasOwnProperty m k)
         (.push v (get m k))))
     v))
+(defmacro . [x & tail]
+  (let [dot-form-for (fn [x] (symbol (str "." (name x))))
+        [method args] (cond
+                        (< 1 (count tail))
+                        [(dot-form-for (first tail)) (rest tail)]
 
-(defmacro . [x [form & more]]
-  (let [dotform (symbol (str "." form))]
-    `(~dotform ~x ~@more)))
+                        :default
+                        (if (seq? (first tail))
+                          [(dot-form-for (first (first tail)))
+                           (rest (first tail))]
+                          [(dot-form-for (first tail)) ()])
+                        )]
+    `(~method ~x ~@args)))
 
 (defmacro ..
   ([x form] `(. ~x ~form))
