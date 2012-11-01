@@ -179,3 +179,9 @@
               (with-meta `(~(first form) ~@(next form)  ~x) (meta form))
               (list form x)))
   ([x form & more] `(->> (->> ~x ~form) ~@more)))
+
+(defmacro re-test [regexp s]
+  `(.. ~regexp (test ~s)))
+
+(defmacro re-exec [regexp s]
+  `(.. ~regexp (exec ~s)))
