@@ -38,7 +38,7 @@
     ~(str "var "
           (clojure.string/join ","
             (map (fn [[vname vval]]
-                   (str vname " = " (clojurejs.js/emit-str vval)))
+                   (str vname " = " (chlorine.js/emit-str vval)))
                  (partition 2 bindings))))))
 
 (defmacro doseq [[var seq] & body]
