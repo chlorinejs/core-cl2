@@ -149,6 +149,7 @@
       (if (.hasOwnProperty m k)
         (.push v (get m k))))
     v))
+
 (defmacro . [x & tail]
   (let [dot-form-for (fn [x] (symbol (str "." (name x))))
         [method args] (cond
@@ -170,13 +171,13 @@
 (defmacro ->
   ([x] x)
   ([x form] (if (seq? form)
-              (with-meta `(~(first form) ~x ~@(next form)) (meta form))
+              `(~(first form) ~x ~@(next form))
               (list form x)))
   ([x form & more] `(-> (-> ~x ~form) ~@more)))
 
 (defmacro ->>
   ([x form] (if (seq? form)
-              (with-meta `(~(first form) ~@(next form)  ~x) (meta form))
+              `(~(first form) ~@(next form)  ~x)
               (list form x)))
   ([x form & more] `(->> (->> ~x ~form) ~@more)))
 
