@@ -84,8 +84,22 @@
 
 (defn map? [m]
   (and m
-       (not (or (contains? #{:string :number :boolean} (typeof m))
-                (array? m)))))
+       (not (or (contains? #{'string 'number 'boolean 'function} (typeof m))
+                (array? m)
+                (nil? m)
+                (undefined? m)
+                (regexp? m)))))
+
+(defn type [x]
+  (cond (array?     x) 'array
+        (string?    x) 'string
+        (number?    x) 'number
+        (nil?       x) 'nil
+        (undefined? x) 'undefined
+        (boolean?   x) 'boolean
+        (fn?        x) 'function
+        (regexp?    x) 'regexp
+        :else          'map))
 
 (defn map [fun arr]
   (loop [r []

@@ -12,7 +12,8 @@
 (defmacro string? [s] `(=== "string" (typeof ~s)))
 (defmacro number? [n] `(=== "number" (typeof ~n)))
 (defmacro boolean? [b] `(=== "boolean" (typeof ~b)))
-(defmacro fn? [f] `(== "function" (typeof ~f)))
+(defmacro fn? [f] `(=== "function" (typeof ~f)))
+(defmacro regexp? [re] `(isa? ~re "RegExp"))
 
 (defmacro str [& args] `(+ "" ~@args))
 (defmacro inc [arg] `(+ 1 ~arg))

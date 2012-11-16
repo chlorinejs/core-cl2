@@ -12,8 +12,8 @@
 (defn string? [s] (=== "string" (typeof s)))
 (defn number? [n] (=== "number" (typeof n)))
 (defn boolean? [b] (=== "boolean" (typeof b)))
-(defn fn? [f] (== "function" (typeof f)))
-
+(defn fn? [f] (=== "function" (typeof f)))
+(defn regexp? [re] (isa? re "RegExp"))
 
 (defn map->str [m]
   (def e "")
@@ -29,7 +29,7 @@
     (map? x)
     (+ "{" (map->str x) "}")
 
-    (= nil x)
+    (nil? x)
     ""
 
     :default
@@ -54,6 +54,9 @@
 
     (map? x)
     (+ "{" (pr-map x) "}")
+
+    (regexp? x)
+    (+ "#" "\"" (.x toString) "\"")
 
     (= nil x)
     "nil"
