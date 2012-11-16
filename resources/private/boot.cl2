@@ -24,13 +24,13 @@
 (defmacro inc-after! [arg] `(inline ~(str arg "++")))
 (defmacro dec-after! [arg] `(inline ~(str arg "--")))
 
-(defn +' []
+(fn +' []
   (reduce (fn [x y] (+ x y)) 0 arguments))
 
-(defn -' []
+(fn -' []
   (reduce (fn [x y] (- x y)) 0 arguments))
 
-(defn *' []
+(fn *' []
   (reduce (fn [x y] (* x y)) 1 arguments))
 
 (defmacro lvar [& bindings]
@@ -60,7 +60,7 @@
            ~@body
            (recur (+ ~var 1)))))))
 
-(defn reduce [f val coll]
+(fn reduce [f val coll]
   (loop [i 0
          r val]
     (if (< i (count coll))
@@ -68,11 +68,11 @@
       r)))
 
 (def *gensym* 999)
-(defn gensym []
+(fn gensym []
   (inc! *gensym*)
   (str "G__" *gensym*))
 
-(defn subvec [a s e]
+(fn subvec [a s e]
   (let [e (or e (count a))
         r (new Array)]
     (loop [i (or s 0)]
@@ -82,7 +82,7 @@
           (recur (+ i 1)))
         r))))
 
-(defn map? [m]
+(fn map? [m]
   (and m
        (not (or (contains? #{'string 'number 'boolean 'function} (typeof m))
                 (array? m)
@@ -90,7 +90,7 @@
                 (undefined? m)
                 (regexp? m)))))
 
-(defn type [x]
+(fn type [x]
   (cond (array?     x) 'array
         (string?    x) 'string
         (number?    x) 'number
@@ -101,7 +101,7 @@
         (regexp?    x) 'regexp
         :else          'map))
 
-(defn map [fun arr]
+(fn map [fun arr]
   (loop [r []
          i 0]
     (if (< i (count arr))
@@ -110,7 +110,7 @@
         (recur r (+ i 1)))
       r)))
 
-(defn remove [pred seq]
+(fn remove [pred seq]
   (loop [r []
          i 0]
     (if (< i (count seq))
@@ -120,7 +120,7 @@
         (recur r (+ 1 i)))
       r)))
 
-(defn filter [pred arr]
+(fn filter [pred arr]
   (loop [r []
          i 0]
     (if (< i (count arr))
@@ -129,7 +129,7 @@
         (recur r (+ i 1)))
       r)))
 
-(defn merge
+(fn merge
   "Merge the contents of map `m2' into map `m1' and return a new map."
   [m1 m2]
   (or (and m2
@@ -143,21 +143,21 @@
              m))
       m1))
 
-(defn select-keys [m ks]
+(fn select-keys [m ks]
   (let [m1 {}]
     (doseq [k ks]
       (if (.hasOwnProperty m k)
         (set! (get m1 k) (get m k))))
     m1))
 
-(defn keys [m]
+(fn keys [m]
   (let [v []]
     (dokeys [k m]
       (if (.hasOwnProperty m k)
         (.push v k)))
     v))
 
-(defn vals [m]
+(fn vals [m]
   (let [v []]
     (dokeys [k m]
       (if (.hasOwnProperty m k)
