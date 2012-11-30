@@ -72,6 +72,33 @@
 (defmacro re-exec [regexp s]
   `(.. ~regexp (exec ~s)))
 
+(defmacro defmulti [fname dispatch-fn]
+  `(do
+     (let [dispatch-fn# ~(cond
+                         (keyword? dispatch-fn)
+                         (list 'fn '[obj] (list '-> 'obj dispatch-fn))
+
+                         :default
+                         dispatch-fn)]
+       (defn ~fname [& args]
+         (let [dispatched-val# (apply dispatch-fn# args)]
+           (if (contains? (-> ~fname :methods) dispatched-val#)
+             (let [dispatcher# (get (-> ~fname :methods) dispatched-val#)]
+               (apply dispatcher# args))
+             (if (fn? (-> ~fname :default-method))
+               (let [default-method# (-> ~fname :default-method)]
+                 (apply default-method# args))
+               (throw
+                (str "No method in multimethod '" ~(name fname)
+                     "' for dispatch value: " dispatched-val#))))))
+       (set! (-> ~fname :methods) {}))))
+
+(defmacro defmethod [fname dispatch-val & fdeclr]
+  (let [setee (if (= :default dispatch-val)
+                `(-> ~fname :default-method)
+                `(get (-> ~fname :methods) ~dispatch-val))]
+       `(set! ~setee ~(cons 'fn fdeclr))))
+
 (defmacro include-core! []
   `(include! [:resource
               "/private/core.cl2"
