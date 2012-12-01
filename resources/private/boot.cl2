@@ -99,6 +99,29 @@
                 `(get (-> ~fname :methods) ~dispatch-val))]
        `(set! ~setee ~(cons 'fn fdeclr))))
 
+(defmacro defn* [fname & fdeclrs]
+  (let [count-arg (fn [v] (if (contains? (set v) '&)
+                            :variadic
+                            (count v)))
+        runner-defs (for [fdeclr# fdeclrs]
+                 (let [[v# _] fdeclr#]
+                   `(set! (get (-> ~fname :args) ~(count-arg v#))
+                          ~(cons 'fn fdeclr#))))]
+    `(do
+       (defn ~fname [& args]
+         (let [n# (count args)]
+           (if (contains? (-> ~fname :args) n#)
+             (let [runner# (get (-> ~fname :args) n#)]
+               (apply runner# args))
+             (if (contains? (-> ~fname :args) :variadic)
+               (let [runner# (get (-> ~fname :args) :variadic)]
+                 (apply runner# args))
+               (throw (str "Wrong number of args (" n#
+                           ") passed to: " ~(name fname)))))))
+       (set! (-> ~fname :args) {})
+
+       ~runner-defs)))
+
 (defmacro include-core! []
   `(include! [:resource
               "/private/core.cl2"
