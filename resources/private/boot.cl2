@@ -104,23 +104,21 @@
                             :variadic
                             (count v)))
         runner-defs (for [fdeclr# fdeclrs]
-                 (let [[v# _] fdeclr#]
-                   `(set! (get (-> ~fname :args) ~(count-arg v#))
-                          ~(cons 'fn fdeclr#))))]
-    `(do
-       (defn ~fname [& args]
-         (let [n# (count args)]
-           (if (contains? (-> ~fname :args) n#)
-             (let [runner# (get (-> ~fname :args) n#)]
+                      (let [[v# _] fdeclr#]
+                        `(set! (get (-> this :args) ~(count-arg v#))
+                               ~(cons 'fn fdeclr#))))]
+    `(defn ~fname [& args]
+       (set! (-> this :args) {})
+       ~runner-defs
+       (let [n# (count args)]
+         (if (contains? (-> this :args) n#)
+           (let [runner# (get (-> this :args) n#)]
+             (apply runner# args))
+           (if (contains? (-> this :args) :variadic)
+             (let [runner# (get (-> this :args) :variadic)]
                (apply runner# args))
-             (if (contains? (-> ~fname :args) :variadic)
-               (let [runner# (get (-> ~fname :args) :variadic)]
-                 (apply runner# args))
-               (throw (str "Wrong number of args (" n#
-                           ") passed to: " ~(name fname)))))))
-       (set! (-> ~fname :args) {})
-
-       ~runner-defs)))
+             (throw (str "Wrong number of args (" n#
+                         ") passed to: " ~(name fname)))))))))
 
 (defmacro include-core! []
   `(include! [:resource
