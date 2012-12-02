@@ -107,7 +107,7 @@
                       (let [[v# _] fdeclr#]
                         `(set! (get (-> this :args) ~(count-arg v#))
                                ~(cons 'fn fdeclr#))))]
-    `(defn ~fname [& args]
+    `(fn ~fname [& args]
        (set! (-> this :args) {})
        ~runner-defs
        (let [n# (count args)]
