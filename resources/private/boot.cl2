@@ -74,24 +74,24 @@
 
 (defmacro defmulti [fname dispatch-fn]
   `(do
-     (let [dispatch-fn# ~(cond
-                         (keyword? dispatch-fn)
-                         (list 'fn '[obj] (list '-> 'obj dispatch-fn))
+     (defn ~fname [& args]
+       (let [dispatch-fn# ~(cond
+                            (keyword? dispatch-fn)
+                            (list 'fn '[obj] (list '-> 'obj dispatch-fn))
 
-                         :default
-                         dispatch-fn)]
-       (defn ~fname [& args]
-         (let [dispatched-val# (apply dispatch-fn# args)]
-           (if (contains? (-> ~fname :methods) dispatched-val#)
-             (let [dispatcher# (get (-> ~fname :methods) dispatched-val#)]
-               (apply dispatcher# args))
-             (if (fn? (-> ~fname :default-method))
-               (let [default-method# (-> ~fname :default-method)]
-                 (apply default-method# args))
-               (throw
-                (str "No method in multimethod '" ~(name fname)
-                     "' for dispatch value: " dispatched-val#))))))
-       (set! (-> ~fname :methods) {}))))
+                            :default
+                            dispatch-fn)
+             dispatched-val# (apply dispatch-fn# args)]
+         (if (contains? (-> ~fname :methods) dispatched-val#)
+           (let [dispatcher# (get (-> ~fname :methods) dispatched-val#)]
+             (apply dispatcher# args))
+           (if (fn? (-> ~fname :default-method))
+             (let [default-method# (-> ~fname :default-method)]
+               (apply default-method# args))
+             (throw
+              (str "No method in multimethod '" ~(name fname)
+                   "' for dispatch value: " dispatched-val#))))))
+     (set! (-> ~fname :methods) {})))
 
 (defmacro defmethod [fname dispatch-val & fdeclr]
   (let [setee (if (= :default dispatch-val)
