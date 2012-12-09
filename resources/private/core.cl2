@@ -51,7 +51,7 @@
   (cond (array?     x) 'array
         (string?    x) 'string
         (number?    x) 'number
-        (nil?       x) 'nil
+        (nil?       x) "nil"
         (undefined? x) 'undefined
         (boolean?   x) 'boolean
         (fn?        x) 'function
@@ -120,3 +120,102 @@
       (if (.hasOwnProperty m k)
         (.push v (get m k))))
     v))
+
+(fn =* [x y]
+  (if (=== x y)
+    true
+    (if (=== (type x) (type y))
+      (cond
+       (array? x)
+       (if (=== (count x) (count y))
+         (loop [a x b y c (count x)]
+           (if (=== 0 c) ;;empty arrays
+             true
+             (if (=* (first a) (first b))
+               (recur (rest a) (rest b) (dec c))
+               false)))
+         false)
+
+       (map? x)
+       (let [xkeys (.sort (keys x))]
+         (if (=* xkeys (.sort (keys y)))
+           ;;keys-equal
+           (loop [ks xkeys c (count xkeys)]
+             (if (=* (get x (first ks))
+                     (get y (first ks)))
+               (if (=== 0 c)
+                 true
+                 (recur (rest ks) (dec c)))
+               false))
+           false))
+
+       :default
+       false)
+      ;; not same type
+      false)))
+
+(defn* ='
+  ([]    true)
+  ([x]   true)
+  ([x y] (=* x y))
+  ([a b & c]
+     (loop [x a y b more c]
+       (if (=* x y)
+         (if (next more)
+           (recur y (first more) (next more))
+           (=* y (first more)))
+         false))))
+
+(defmulti  str* type)
+(defmethod str* "array"    [a]
+  (+* "["
+      (.join (map str* a) ", ")
+      "]"))
+(defmethod str* "nil"      [x] "")
+(defmethod str* "function" [x] (+* "" x))
+(defmethod str* "map"      [m]
+  (+* "{"
+      (.join (map (fn [k] (+* "\"" k "\" " (str* (get m k))))
+                  (keys m)) ", ")
+      "}"))
+
+(defmethod str* "regexp"   [x] (+* "#\"" x "\""))
+;; string, number, boolean, function
+(defmethod str* :default [x] (+* "" x))
+
+(fn str []
+  (.. (map str* arguments) (join "")))
+
+(defmulti  pr-str* type)
+
+(defmethod pr-str* "string" [x]
+  (+* "\""
+      (.. x
+          (replace #"/\\/g" "\\\\")
+          (replace #"/\t/g" "\\t")
+          (replace #"/\v/g" "\\v")
+          ;;(replace #"/\b/g" "\\b")
+          (replace #"/\f/g" "\\f")
+          (replace #"/\n/g" "\\n")
+          (replace #"/\r/g" "\\r")
+          (replace #"/\"/g" "\"")
+          (replace #"/\'/g" "\\'"))
+      "\""))
+
+(defmethod pr-str* "array"    [a]
+  (+* "["
+      (.join (map pr-str* a) ", ")
+      "]"))
+(defmethod pr-str* "nil"      [x] "nil")
+(defmethod pr-str* "function" [x] (+* "(inline " (pr-str* (+* "" x)) ")"))
+(defmethod pr-str* "map"      [m]
+  (+* "{"
+      (.join (map (fn [k] (+* "\"" k "\" " (pr-str* (get m k))))
+                  (keys m)) ", ")
+      "}"))
+(defmethod pr-str* "regexp"   [x] (+* "#\"" x "\""))
+;; string, number, boolean, function
+(defmethod pr-str* :default [x] (+* "" x))
+
+(fn pr-str []
+  (.. (map pr-str* arguments) (join " ")))

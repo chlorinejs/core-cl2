@@ -7,6 +7,8 @@
 (defmacro second [x] `(get ~x 1))
 (defmacro third [x] `(get ~x 2))
 (defmacro last [x] `(get ~x (- (count ~x) 1)))
+(defmacro next [x] `(if (< 1 (count ~x)) (.slice ~x 1)))
+(defmacro rest [x] `(.slice ~x 1))
 
 (defmacro array? [a] `(isa? ~a "Array"))
 (defmacro string? [s] `(=== "string" (typeof ~s)))
@@ -15,6 +17,5 @@
 (defmacro fn? [f] `(=== "function" (typeof ~f)))
 (defmacro regexp? [re] `(isa? ~re "RegExp"))
 
-(defmacro str [& args] `(+ "" ~@args))
 (defmacro inc [arg] `(+ 1 ~arg))
 (defmacro dec [arg] `(- ~arg 1))

@@ -105,18 +105,18 @@
                             (count v)))
         runner-defs (for [fdeclr# fdeclrs]
                       (let [[v# _] fdeclr#]
-                        `(set! (get (-> this :args) ~(count-arg v#))
+                        `(set! (get (-> this :argnum) ~(count-arg v#))
                                ~(cons 'fn fdeclr#))))]
-    `(fn ~fname [& args]
-       (set! (-> this :args) {})
+    `(fn ~fname [& args#]
+       (set! (-> this :argnum) {})
        ~runner-defs
-       (let [n# (count args)]
-         (if (contains? (-> this :args) n#)
-           (let [runner# (get (-> this :args) n#)]
-             (apply runner# args))
-           (if (contains? (-> this :args) :variadic)
-             (let [runner# (get (-> this :args) :variadic)]
-               (apply runner# args))
+       (let [n# (count args#)]
+         (if (contains? (-> this :argnum) n#)
+           (let [runner# (get (-> this :argnum) n#)]
+             (apply runner# args#))
+           (if (contains? (-> this :argnum) :variadic)
+             (let [runner# (get (-> this :argnum) :variadic)]
+               (apply runner# args#))
              (throw (str "Wrong number of args (" n#
                          ") passed to: " ~(name fname)))))))))
 
@@ -129,3 +129,29 @@
   `(include! [:resource
               "/private/core-macros.cl2"
               "/private/core.cl2"]))
+
+(defmacro +
+  ([] `0)
+  ([x] x)
+  ([x y] `(+* ~x ~y))
+  ([x y & more] `(+' ~x ~y ~@more)))
+
+(defmacro -
+  ([] `0)
+  ([x] x)
+  ([x y] `(-* ~x ~y))
+  ([x y & more] `(-' ~x ~y ~@more)))
+
+(defmacro *
+  ([] `1)
+  ([x] x)
+  ([x y] `(** ~x ~y))
+  ([x y & more] `(*' ~x ~y ~@more)))
+
+(defmacro =
+  ([] `true)
+  ([x] `true)
+  ([x y] `(if (=== ~x ~y)
+           true
+           (=* ~x ~y)))
+  ([x y & more] `(=' ~x ~y ~@more)))
