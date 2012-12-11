@@ -219,3 +219,60 @@
 
 (fn pr-str []
   (.. (map pr-str* arguments) (join " ")))
+
+(defn identity
+  [x] x)
+
+(defn* comp
+  ([] identity)
+  ([f] f)
+  ([f g]
+     (fn'
+       ([] (f (g)))
+       ([x] (f (g x)))
+       ([x y] (f (g x y)))
+       ([x y z] (f (g x y z)))
+       ([x y z & args] (f (apply g x y z args)))))
+  ([f g h]
+     (fn'
+       ([] (f (g (h))))
+       ([x] (f (g (h x))))
+       ([x y] (f (g (h x y))))
+       ([x y z] (f (g (h x y z))))
+       ([x y z & args] (f (g (apply h x y z args)))))))
+(fn reverse [x] (.reverse (.slice x 0)))
+(fn reverse! [x] (.reverse x))
+(fn compare [x y]
+  (cond
+   (=== x y)
+   0
+   (> x y)
+   1
+   (< x y)
+   -1))
+(fn zero? [x] (=== 0 x))
+
+(fn int [x]
+  (if (number? x) (bit-or x 0)))
+
+(def max Math.max)
+(def min Math.min)
+(fn pos? [x]
+  (and (number? x) (> x 0)))
+(fn neg? [x]
+  (and (number? x) (< x 0)))
+(defn* rand
+  ([]  (Math.random))
+  ([n] (* n (Math.random))))
+(fn quot [x y]
+  (int (/ x y)))
+(fn integer? [n]
+  (=== n (int n)))
+(fn even? [n]
+  (= 0 (rem n 2)))
+(fn odd? [n]
+  (= 1 (rem n 2)))
+(fn complement [f]
+  (fn [& args] (not (apply f args))))
+(fn constantly [x]
+  (fn [] x))
