@@ -35,6 +35,21 @@
          (when (< ~var ~nsym)
            ~@body
            (recur (+ ~var 1)))))))
+
+(defmacro for [[bindings coll] & body]
+  (cond
+   (symbol? bindings)
+   `(let [m# ~coll]
+      (dokeys [i# m#]
+              (let [~bindings (get m# i#)]
+                ~@body)))
+   (vector? bindings)
+   (let [[kname# vname#] bindings]
+     `(let [m# ~coll]
+        (dokeys [~kname# m#]
+                (let [~vname# (get m# ~kname#)]
+                  ~@body))))))
+
 (defmacro . [x & tail]
   (let [dot-form-for (fn [x] (symbol (str "." (name x))))
         [method args] (cond
