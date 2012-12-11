@@ -133,25 +133,20 @@
 (defmacro +
   ([] `0)
   ([x] x)
-  ([x y] `(+* ~x ~y))
-  ([x y & more] `(+' ~x ~y ~@more)))
+  ([x & more] `(+* ~x ~@more)))
 
 (defmacro -
   ([] `0)
   ([x] x)
-  ([x y] `(-* ~x ~y))
-  ([x y & more] `(-' ~x ~y ~@more)))
+  ([x & more] `(-* ~x ~@more)))
 
 (defmacro *
   ([] `1)
   ([x] x)
-  ([x y] `(** ~x ~y))
-  ([x y & more] `(*' ~x ~y ~@more)))
+  ([x & more] `(** ~x ~@more)))
 
 (defmacro =
   ([] `true)
   ([x] `true)
-  ([x y] `(if (=== ~x ~y)
-           true
-           (=* ~x ~y)))
+  ([x y] `(=* ~x ~y))
   ([x y & more] `(=' ~x ~y ~@more)))
