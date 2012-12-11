@@ -6,6 +6,12 @@
 (defmacro when [pred & body] `(if ~pred (do ~@body)))
 (defmacro when-not [pred & body] `(if (not ~pred) (do ~@body)))
 (defmacro unless [pred & body] `(if (not ~pred) (do ~@body)))
+
+(defmacro if-not
+  ([test then] `(if-not ~test ~then nil))
+  ([test then else]
+   `(if (not ~test) ~then ~else)))
+
 (defmacro cond [& [pred consequent & alternates]]
   (if (coll? alternates)
     (if (= (first alternates) :else)
