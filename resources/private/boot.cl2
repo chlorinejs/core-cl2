@@ -12,6 +12,12 @@
   ([test then else]
    `(if (not ~test) ~then ~else)))
 
+(defmacro fn' [& fdeclrs]
+  `(defn* temp# ~@fdeclrs))
+
+(defmacro fn* [gensym & fdeclrs]
+  `(fn ~@fdeclrs))
+
 (defmacro cond [& [pred consequent & alternates]]
   (if (coll? alternates)
     (if (= (first alternates) :else)
