@@ -26,6 +26,17 @@
             ~then)
           ~else)))))
 
+(defmacro when-let
+  [bindings & body]
+  (#'clojure.core/assert-args
+     (vector? bindings) "a vector for its binding"
+     (= 2 (count bindings)) "exactly 2 forms in binding vector")
+   (let [form (bindings 0) tst (bindings 1)]
+    `(let [temp# ~tst]
+       (when temp#
+         (let [~form temp#]
+           ~@body)))))
+
 (defmacro fn' [& fdeclrs]
   `(defn* temp# ~@fdeclrs))
 
