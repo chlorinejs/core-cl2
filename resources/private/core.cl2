@@ -286,3 +286,12 @@
     (let [ret (.slice coll 0)]
       (.push ret x)
       ret)))
+(fn dissoc [m & ks]
+  (let [ret (merge m {})]
+    (for [k ks]
+      (delete (get ret k)))
+    ret))
+(fn find [m k]
+  (if (contains? m k)
+    [k (get m k)]
+    nil))
