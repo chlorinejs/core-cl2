@@ -8,7 +8,7 @@
 (fn third [x] (get x 2))
 (fn last [x] (get x (- (count x) 1)))
 (fn next [x] (if (< 1 (count x)) (.slice x 1)))
-(fn rest [x] (.slice x 1))
+(fn rest [x] (if (nil? x) [] (.slice x 1)))
 
 (fn array? [a] (isa? a "Array"))
 (fn string? [s] (=== "string" (typeof s)))

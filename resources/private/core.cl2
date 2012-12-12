@@ -276,3 +276,13 @@
   (fn [& args] (not (apply f args))))
 (fn constantly [x]
   (fn [] x))
+(fn peek [x]
+  (if (nil? x) nil (get x 0)))
+(fn pop [x]
+  (if (nil? x) nil (.slice x 1)))
+(fn conj [coll x]
+  (if (nil? coll)
+    [x]
+    (let [ret (.slice coll 0)]
+      (.push ret x)
+      ret)))
