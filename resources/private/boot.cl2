@@ -12,6 +12,20 @@
   ([test then else]
    `(if (not ~test) ~then ~else)))
 
+(defmacro if-let
+  ([bindings then]
+   `(if-let ~bindings ~then nil))
+  ([bindings then else & oldform]
+   (#'clojure.core/assert-args
+     (and (vector? bindings) (nil? oldform)) "a vector for its binding"
+     (= 2 (count bindings)) "exactly 2 forms in binding vector")
+   (let [form (bindings 0) tst (bindings 1)]
+     `(let [temp# ~tst]
+        (if temp#
+          (let [~form temp#]
+            ~then)
+          ~else)))))
+
 (defmacro fn' [& fdeclrs]
   `(defn* temp# ~@fdeclrs))
 
