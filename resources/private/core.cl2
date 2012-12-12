@@ -373,3 +373,14 @@
               (recur (ret.push (f v)) (dec i))))))
 (fn split-with [pred coll]
   [(take-while pred coll) (drop-while pred coll)])
+
+(fn zipmap
+  [keys vals]
+  (def map {})
+  (loop [ks keys
+         vs vals]
+    (if (and ks vs)
+      (do (set! (get map (first ks)) (first vs))
+          (recur (next ks)
+                 (next vs)))
+      map)))
