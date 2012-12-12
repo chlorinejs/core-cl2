@@ -371,3 +371,5 @@
             (if (zero? i)
               ret
               (recur (ret.push (f v)) (dec i))))))
+(fn split-with [pred coll]
+  [(take-while pred coll) (drop-while pred coll)])
