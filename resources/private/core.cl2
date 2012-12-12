@@ -285,6 +285,8 @@
     xs
     (let [ret (.slice coll 0)]
       (.concat ret xs))))
+(fn cons [x coll]
+  (.concat [x] coll))
 (fn dissoc [m & ks]
   (let [ret (merge m {})]
     (for [k ks]
@@ -336,3 +338,36 @@
   (when-let [s coll]
     (when (pred (first s))
       (conj (take-while pred (rest s)) (first s)))))
+
+(fn drop-last [n coll]
+  (.slice coll 0 (- coll.length n)))
+
+(fn take-last [n coll]
+  (.slice coll (- coll.length n)))
+
+(fn drop-while [pred coll]
+  [pred coll]
+  (let [step (fn [pred coll]
+               (let [s coll]
+                 (if (and s (pred (first s)))
+                   (step pred (rest s))
+                   s)))]
+    (step pred coll)))
+(fn cycle [coll n]
+  (loop [ret [] n n]
+    (if (zero? n)
+      ret
+      (recur (.concat ret coll) (dec n)))))
+(fn split-at [n coll]
+  [(take n coll) (drop n coll)])
+(fn repeat [n x]
+  (loop [ret [] n n]
+    (if (zero? n)
+      ret
+      (recur (conj ret x) (dec n)))))
+(fn iterate [f x n]
+  (def ret [])
+  (cons x (loop [v x i (dec n)]
+            (if (zero? i)
+              ret
+              (recur (ret.push (f v)) (dec i))))))
