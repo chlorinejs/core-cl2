@@ -40,7 +40,7 @@
 (defmacro fn' [& fdeclrs]
   `(defn* temp# ~@fdeclrs))
 
-(defmacro fn* [gensym & fdeclrs]
+(defmacro fn* [& fdeclrs]
   `(fn ~@fdeclrs))
 
 (defmacro cond [& [pred consequent & alternates]]
