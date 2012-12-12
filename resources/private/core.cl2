@@ -320,3 +320,9 @@
   (when (pos? n)
     (when-let [s coll]
       (.slice s n))))
+(fn take
+  [n coll]
+  (when (pos? n)
+    (when-let [s coll]
+      (.slice s 0 n)
+      )))
