@@ -280,12 +280,11 @@
   (if (nil? x) nil (get x 0)))
 (fn pop [x]
   (if (nil? x) nil (.slice x 1)))
-(fn conj [coll x]
-  (if (nil? coll)
-    [x]
+(fn conj [coll & xs]
+  (if (empty? coll)
+    xs
     (let [ret (.slice coll 0)]
-      (.push ret x)
-      ret)))
+      (.concat ret xs))))
 (fn dissoc [m & ks]
   (let [ret (merge m {})]
     (for [k ks]
@@ -295,3 +294,29 @@
   (if (contains? m k)
     [k (get m k)]
     nil))
+(fn every?
+  [pred coll]
+  (cond
+   (empty? coll) true
+   (pred (first coll)) (every? pred (next coll))
+   :else false))
+(fn some
+  [pred coll]
+  (when coll
+    (or (pred (first coll))
+        (some pred (next coll)))))
+
+(defn* concat
+  ([] [])
+  ([x] [x])
+  ([x y] (.concat x y))
+  ([x & xs] (concat x (apply concat xs))))
+
+(fn mapcat
+  [f coll]
+  (apply concat (map f coll)))
+(fn drop
+  [n coll]
+  (when (pos? n)
+    (when-let [s coll]
+      (.slice s n))))
