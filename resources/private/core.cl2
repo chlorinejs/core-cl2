@@ -332,8 +332,11 @@
   (for [k ks]
     (set! (get ret k) true))
   ret)
-(fn sort [x]
-  (.sort (.slice x 0)))
+(defn* sort
+  ([coll]
+     (.sort (Array.prototype.slice.call coll 0)))
+  ([comp x]
+     (.sort (Array.prototype.slice.call x 0) comp)))
 (fn take-while [pred coll]
   (when-let [s coll]
     (when (pred (first s))
