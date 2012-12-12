@@ -324,5 +324,15 @@
   [n coll]
   (when (pos? n)
     (when-let [s coll]
-      (.slice s 0 n)
-      )))
+      (.slice s 0 n))))
+(fn set [& ks]
+  (def ret {})
+  (for [k ks]
+    (set! (get ret k) true))
+  ret)
+(fn sort [x]
+  (.sort (.slice x 0)))
+(fn take-while [pred coll]
+  (when-let [s coll]
+    (when (pred (first s))
+      (conj (take-while pred (rest s)) (first s)))))
