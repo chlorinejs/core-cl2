@@ -404,6 +404,12 @@
     (if (and xs (pos? n))
       (recur (dec n) (next xs))
       xs)))
+(fn nthrest
+  [coll n]
+  (loop [n n xs coll]
+    (if (and xs (pos? n))
+      (recur (dec n) (rest xs))
+      xs)))
 (fn rand-int [n] (int (rand n)))
 (fn rand-nth
   [coll]
