@@ -8,7 +8,7 @@
              ~@body)
            (recur (+ i# 1)))))))
 (fn count [x] (get x :length))
-(fn empty? [s] (or (undefined? s) (nil? s) (= 0 (count s))))
+(fn empty? [s] (or (undefined? s) (nil? s) (= {} s) (= [] s)))
 (fn not-empty? [s] (not (empty? s)))
 (fn +' []
   (reduce (fn [x y] (+ x y)) 0 arguments))
