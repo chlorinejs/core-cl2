@@ -430,3 +430,10 @@
   ([end] (range* 0 end 1))
   ([start end] (range* start end 1))
   ([start end step] (range* start end step)))
+(fn partition
+  [n step coll]
+  (when-let [s coll]
+    (when-let [p (take n s)]
+      (if (= n (count p))
+        (cons p (partition n step (nthrest s step)))
+        []))))
