@@ -10,19 +10,23 @@
 (fn count [x] (get x :length))
 (fn empty? [s] (or (undefined? s) (nil? s) (= {} s) (= [] s)))
 (fn not-empty? [s] (not (empty? s)))
-(fn +' []
-  (reduce (fn [x y] (+ x y)) 0 arguments))
-(fn -' []
-  (reduce (fn [x y] (- x y)) 0 arguments))
-(fn *' []
-  (reduce (fn [x y] (* x y)) 1 arguments))
+(fn +' [& args]
+  (reduce (fn [x y] (+ x y)) 0 args))
+(fn -' [& args]
+  (reduce (fn [x y] (- x y)) 0 args))
+(fn *' [& args]
+  (reduce (fn [x y] (* x y)) 1 args))
 
-(fn reduce [f val coll]
+(fn reduce* [f val coll]
   (loop [i 0
          r val]
     (if (< i (count coll))
       (recur (+ i 1) (f r (get coll i)))
       r)))
+(fn reduce [f val coll]
+  (if (fn? Array.prototype.reduce)
+    (.reduce coll f val)
+    (reduce* f val coll)))
 (fn reductions [f val coll]
   (def ret [])
   (loop [i 0
@@ -67,7 +71,7 @@
         (regexp?    x) 'regexp
         :else          'map))
 
-(fn map [fun arr]
+(fn map* [fun arr]
   (loop [r []
          i 0]
     (if (< i (count arr))
@@ -75,7 +79,10 @@
         (.push r (fun (get arr i)))
         (recur r (+ i 1)))
       r)))
-
+(fn map [f coll]
+  (if (fn? Array.prototype.map)
+    (.map coll f)
+    (map* f coll)))
 (fn remove [pred seq]
   (loop [r []
          i 0]
@@ -86,7 +93,7 @@
         (recur r (+ 1 i)))
       r)))
 
-(fn filter [pred arr]
+(fn filter* [pred arr]
   (loop [r []
          i 0]
     (if (< i (count arr))
@@ -94,7 +101,10 @@
         (if (pred (get arr i)) (.push r (get arr i)))
         (recur r (+ i 1)))
       r)))
-
+(fn filter [pred coll]
+  (if (fn? Array.prototype.map)
+    (.filter coll pred)
+    (filter* pred coll)))
 (fn merge
   "Merge the contents of map `m2' into map `m1' and return a new map."
   [m1 m2]
@@ -192,8 +202,8 @@
 ;; string, number, boolean, function
 (defmethod str* :default [x] (+* "" x))
 
-(fn str []
-  (.. (map str* arguments) (join "")))
+(fn str [& args]
+  (.join (map str* args) ""))
 
 (defmulti  pr-str* type)
 
