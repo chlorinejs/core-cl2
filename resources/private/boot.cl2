@@ -209,3 +209,4 @@
   ([coll index not-found]
      `(or (get ~coll ~index)
           ~not-found)))
+(defmacro nth [& args] `(get ~@args))
