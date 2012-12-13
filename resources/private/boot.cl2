@@ -202,3 +202,10 @@
   ([x] `true)
   ([x y] `(=* ~x ~y))
   ([x y & more] `(=' ~x ~y ~@more)))
+
+(defmacro get
+  ([coll index]
+     `(get ~coll ~index))
+  ([coll index not-found]
+     `(or (get ~coll ~index)
+          ~not-found)))
