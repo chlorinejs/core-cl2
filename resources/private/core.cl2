@@ -405,7 +405,7 @@
           (.push ret i)
           (recur (+ i step)))
         (if (comp i end)
-          (cons ret (range i end step))
+          (cons ret (range* i end step))
           ret)))))
 (defn* range
   ([end] (range* 0 end 1))
