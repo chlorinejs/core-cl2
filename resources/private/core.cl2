@@ -23,6 +23,15 @@
     (if (< i (count coll))
       (recur (+ i 1) (f r (get coll i)))
       r)))
+(fn reductions [f val coll]
+  (def ret [])
+  (loop [i 0
+         r val]
+    (if (< i (count coll))
+      (recur (+ i 1) (f (do (.push ret r) r)
+                        (get coll i)))
+      (.push ret r)))
+  ret)
 
 (def *gensym* 999)
 (fn gensym []
@@ -373,7 +382,8 @@
   (cons x (loop [v x i (dec n)]
             (if (zero? i)
               ret
-              (recur (ret.push (f v)) (dec i))))))
+              (recur (let [val (f v)] (ret.push val) val)
+                     (dec i))))))
 (fn split-with [pred coll]
   [(take-while pred coll) (drop-while pred coll)])
 
