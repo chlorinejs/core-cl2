@@ -242,23 +242,6 @@
 (defn identity
   [x] x)
 
-(defn* comp
-  ([] identity)
-  ([f] f)
-  ([f g]
-     (fn'
-       ([] (f (g)))
-       ([x] (f (g x)))
-       ([x y] (f (g x y)))
-       ([x y z] (f (g x y z)))
-       ([x y z & args] (f (apply g x y z args)))))
-  ([f g h]
-     (fn'
-       ([] (f (g (h))))
-       ([x] (f (g (h x))))
-       ([x y] (f (g (h x y))))
-       ([x y z] (f (g (h x y z))))
-       ([x y z & args] (f (g (apply h x y z args)))))))
 (fn reverse [x] (.reverse (.slice x 0)))
 (fn reverse! [x] (.reverse x))
 (fn compare [x y]
