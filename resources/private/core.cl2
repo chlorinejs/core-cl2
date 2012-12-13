@@ -387,3 +387,27 @@
           (recur (next ks)
                  (next vs)))
       map)))
+
+(defn nthnext
+  [coll n]
+  (loop [n n xs coll]
+    (if (and xs (pos? n))
+      (recur (dec n) (next xs))
+      xs)))
+
+(fn range*
+  [start end step]
+  (let [ret []
+        comp (if (pos? step) #(< %1 %2) #(> %1 %2))]
+    (loop [i start]
+      (if (comp i end)
+        (do
+          (.push ret i)
+          (recur (+ i step)))
+        (if (comp i end)
+          (cons ret (range i end step))
+          ret)))))
+(defn* range
+  ([end] (range* 0 end 1))
+  ([start end] (range* start end 1))
+  ([start end step] (range* start end step)))
