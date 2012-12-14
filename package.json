@@ -1,0 +1,13 @@
+{
+    "name": "core-cl2-ci"
+  , "version": "1.0.0"
+  , "private": true
+  , "dependencies": {
+      "testem": ">= 0.2.26"
+    , "mocha": ">= 1.7.4"
+  }
+  , "scripts": {
+     "pretest": "scripts/watch.sh -1"
+    ,"test": "scripts/testem_ci.sh -1"
+  }
+}
