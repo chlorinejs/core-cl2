@@ -234,6 +234,13 @@
       (.concat ret xs))))
 (fn cons [x coll]
   (.concat [x] coll))
+(fn assoc [m k v]
+  (let [ret (merge m {})]
+    (set! (get ret k) v)
+    ret))
+(fn assoc! [m k v]
+  (set! (get m k) v)
+  m)
 (fn dissoc [m & ks]
   (let [ret (merge m {})]
     (for [k ks]
