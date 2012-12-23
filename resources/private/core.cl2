@@ -246,6 +246,10 @@
     (for [k ks]
       (delete (get ret k)))
     ret))
+(fn dissoc! [m & ks]
+  (for [k ks]
+    (delete (get m k)))
+  m)
 (fn find [m k]
   (if (contains? m k)
     [k (get m k)]
