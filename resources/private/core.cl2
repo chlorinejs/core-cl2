@@ -1,3 +1,30 @@
+(fn not [x] (! x))
+(fn contains? [m k]
+  (in k m))
+(defmacro isa? [a t]
+  `(instanceof ~a ~(symbol t)))
+(fn true? [expr] (=== true expr))
+(fn false? [expr] (=== false expr))
+(fn undefined? [expr] (=== undefined expr))
+(fn nil? [expr] (=== nil expr))
+
+(fn first [x] (get x 0))
+(fn second [x] (get x 1))
+(fn third [x] (get x 2))
+(fn last [x] (get x (- (count x) 1)))
+(fn next [x] (if (empty? x) nil (if (< 1 (count x)) (.slice x 1))))
+(fn rest [x] (if (nil? x) [] (.slice x 1)))
+
+(fn array? [a] (isa? a "Array"))
+(fn string? [s] (=== "string" (typeof s)))
+(fn number? [n] (=== "number" (typeof n)))
+(fn boolean? [b] (=== "boolean" (typeof b)))
+(fn fn? [f] (=== "function" (typeof f)))
+(fn regexp? [re] (isa? re "RegExp"))
+
+(fn inc [arg] (+ 1 arg))
+(fn dec [arg] (- arg 1))
+
 (defmacro doseq [[var seq] & body]
   (let [seqsym (gensym)]
     `(do
@@ -10,12 +37,6 @@
 (fn count [x] (get x :length))
 (fn empty? [s] (or (undefined? s) (nil? s) (= {} s) (= [] s)))
 (fn not-empty? [s] (not (empty? s)))
-(fn +' [& args]
-  (reduce (fn [x y] (+ x y)) 0 args))
-(fn -' [& args]
-  (reduce (fn [x y] (- x y)) 0 args))
-(fn *' [& args]
-  (reduce (fn [x y] (* x y)) 1 args))
 
 (fn reduce* [f val coll]
   (loop [i 0
@@ -23,11 +44,13 @@
     (if (< i (count coll))
       (recur (+ i 1) (f r (get coll i)))
       r)))
-(fn reduce [f val coll]
-  (if (fn? Array.prototype.reduce)
-    (.reduce coll f val)
-    (reduce* f val coll)))
-(fn reductions [f val coll]
+(defmacro reduce 
+  ([f val coll]
+    `(reduce* ~f ~val ~coll))
+  ([f coll]
+    `(reduce* ~f (first ~coll) ~coll)))
+    
+(fn reductions* [f val coll]
   (def ret [])
   (loop [i 0
          r val]
@@ -36,7 +59,12 @@
                         (get coll i)))
       (.push ret r)))
   ret)
-
+(defmacro reductions
+  ([f val coll]
+    `(reductions* ~f ~val ~coll))
+  ([f coll]
+    `(reductions* ~f (first ~coll) ~coll)))
+    
 (def *gensym* 999)
 (fn gensym []
   (inc! *gensym*)
@@ -102,7 +130,7 @@
         (recur r (+ i 1)))
       r)))
 (fn filter [pred coll]
-  (if (fn? Array.prototype.map)
+  (if (fn? Array.prototype.filter)
     (.filter coll pred)
     (filter* pred coll)))
 (fn merge
@@ -184,11 +212,16 @@
            (recur y (first more) (next more))
            (=* y (first more)))
          false))))
+(fn +' [& args]
+  (reduce (fn [x y] (+ x y)) 0 args))
+(fn -' [& args]
+  (reduce (fn [x y] (- x y)) 0 args))
+(fn *' [& args]
+  (reduce (fn [x y] (* x y)) 1 args))
 (fn identity
   [x] x)
 
 (fn reverse [x] (.reverse (.slice x 0)))
-(fn reverse! [x] (.reverse x))
 (fn compare [x y]
   (cond
    (=== x y)
@@ -238,18 +271,11 @@
   (let [ret (merge m {})]
     (set! (get ret k) v)
     ret))
-(fn assoc! [m k v]
-  (set! (get m k) v)
-  m)
 (fn dissoc [m & ks]
   (let [ret (merge m {})]
     (for [k ks]
       (delete (get ret k)))
     ret))
-(fn dissoc! [m & ks]
-  (for [k ks]
-    (delete (get m k)))
-  m)
 (fn find [m k]
   (if (contains? m k)
     [k (get m k)]

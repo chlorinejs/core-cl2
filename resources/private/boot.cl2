@@ -1,61 +1,12 @@
-(defmacro apply [fun & args] `(.apply ~fun ~fun ~@args))
-(defmacro not [expr] `(! ~expr))
-(defmacro contains? [m k]
-  `(in ~k ~m))
-
-(defmacro when [pred & body] `(if ~pred (do ~@body)))
-(defmacro when-not [pred & body] `(if (not ~pred) (do ~@body)))
-(defmacro unless [pred & body] `(if (not ~pred) (do ~@body)))
-
-(defmacro if-not
-  ([test then] `(if-not ~test ~then nil))
-  ([test then else]
-   `(if (not ~test) ~then ~else)))
-
-(defmacro if-let
-  ([bindings then]
-   `(if-let ~bindings ~then nil))
-  ([bindings then else & oldform]
-   (#'clojure.core/assert-args
-     (and (vector? bindings) (nil? oldform)) "a vector for its binding"
-     (= 2 (count bindings)) "exactly 2 forms in binding vector")
-   (let [form (bindings 0) tst (bindings 1)]
-     `(let [temp# ~tst]
-        (if temp#
-          (let [~form temp#]
-            ~then)
-          ~else)))))
-
-(defmacro when-let
-  [bindings & body]
-  (#'clojure.core/assert-args
-     (vector? bindings) "a vector for its binding"
-     (= 2 (count bindings)) "exactly 2 forms in binding vector")
-   (let [form (bindings 0) tst (bindings 1)]
-    `(let [temp# ~tst]
-       (when temp#
-         (let [~form temp#]
-           ~@body)))))
-
+(defmacro borrow-macros [& syms] (apply chlorine.js/borrow-macros syms))
+(defmacro apply [fun & args] `(.apply ~fun 0 ~@args))
+(borrow-macros when when-not unless if-not if-let when-let cond .. -> ->>)
 (defmacro fn' [& fdeclrs]
   `(defn* temp# ~@fdeclrs))
 
 (defmacro fn* [& fdeclrs]
   `(fn ~@fdeclrs))
 
-(defmacro cond [& [pred consequent & alternates]]
-  (if (coll? alternates)
-    (if (= (first alternates) :else)
-      `(if ~pred ~consequent ~(second alternates))
-      `(if ~pred ~consequent (cond ~@alternates)))
-    `(if ~pred ~consequent)))
-(defmacro isa? [a t]
-  `(instanceof ~a ~(symbol t)))
-(defmacro join [sep seq] `(.join ~seq ~sep))
-(defmacro inc! [arg] `(set! ~arg (+ 1 ~arg)))
-(defmacro dec! [arg] `(set! ~arg (- ~arg 1)))
-(defmacro inc-after! [arg] `(inline ~(str arg "++")))
-(defmacro dec-after! [arg] `(inline ~(str arg "--")))
 (defmacro lvar [& bindings]
   `(inline
     ~(str "var "
@@ -100,23 +51,6 @@
                           [(dot-form-for (first tail)) ()])
                         )]
     `(~method ~x ~@args)))
-
-(defmacro ..
-  ([x form] `(. ~x ~form))
-  ([x form & more] `(.. (. ~x ~form) ~@more)))
-
-(defmacro ->
-  ([x] x)
-  ([x form] (if (seq? form)
-              `(~(first form) ~x ~@(next form))
-              (list form x)))
-  ([x form & more] `(-> (-> ~x ~form) ~@more)))
-
-(defmacro ->>
-  ([x form] (if (seq? form)
-              `(~(first form) ~@(next form)  ~x)
-              (list form x)))
-  ([x form & more] `(->> (->> ~x ~form) ~@more)))
 
 (defmacro re-test [regexp s]
   `(.. ~regexp (test ~s)))
@@ -172,41 +106,13 @@
              (throw (str "Wrong number of args (" n#
                          ") passed to: " ~(name fname)))))))))
 
-(defmacro include-core! []
-  `(include! [:resource
-              "/private/core.cl2"
-              "/private/core-funcs.cl2"]))
-
-(defmacro include-core-macros! []
-  `(include! [:resource
-              "/private/core-macros.cl2"
-              "/private/core.cl2"]))
-
-(defmacro +
-  ([] `0)
-  ([x] x)
-  ([x & more] `(+* ~x ~@more)))
-
-(defmacro -
-  ([] `0)
-  ([x] x)
-  ([x & more] `(-* ~x ~@more)))
-
-(defmacro *
-  ([] `1)
-  ([x] x)
-  ([x & more] `(** ~x ~@more)))
-
-(defmacro =
-  ([] `true)
-  ([x] `true)
-  ([x y] `(=* ~x ~y))
-  ([x y & more] `(=' ~x ~y ~@more)))
-
 (defmacro get
   ([coll index]
      `(get ~coll ~index))
   ([coll index not-found]
      `(or (get ~coll ~index)
           ~not-found)))
+          
 (defmacro nth [& args] `(get ~@args))
+
+

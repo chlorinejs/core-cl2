@@ -1,3 +1,6 @@
+(defmacro not [expr] `(! ~expr))
+(defmacro contains? [m k]
+  `(in ~k ~m))
 (defmacro true? [expr] `(=== true ~expr))
 (defmacro false? [expr] `(=== false ~expr))
 (defmacro undefined? [expr] `(=== undefined ~expr))
@@ -19,3 +22,25 @@
 
 (defmacro inc [arg] `(+ 1 ~arg))
 (defmacro dec [arg] `(- ~arg 1))
+
+(defmacro +
+  ([] `0)
+  ([x] x)
+  ([x & more] `(+* ~x ~@more)))
+
+(defmacro -
+  ([] `0)
+  ([x] x)
+  ([x & more] `(-* ~x ~@more)))
+
+(defmacro *
+  ([] `1)
+  ([x] x)
+  ([x & more] `(** ~x ~@more)))
+
+(defmacro =
+  ([] `true)
+  ([x] `true)
+  ([x y] `(=* ~x ~y))
+  ([x y & more] `(=' ~x ~y ~@more)))
+(defmacro count [x] `(get ~x :length))
