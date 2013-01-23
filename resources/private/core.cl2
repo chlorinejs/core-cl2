@@ -14,7 +14,7 @@
 (fn last [x] (get x (- (count x) 1)))
 (fn next [x] (if (empty? x) nil (if (< 1 (count x)) (.slice x 1))))
 (fn rest [x] (if (nil? x) [] (.slice x 1)))
-
+(fn nnext [x] (next (next x)))
 (fn array? [a] (isa? a "Array"))
 (fn string? [s] (=== "string" (typeof s)))
 (fn number? [n] (=== "number" (typeof n)))
@@ -44,12 +44,12 @@
     (if (< i (count coll))
       (recur (+ i 1) (f r (get coll i)))
       r)))
-(defmacro reduce 
+(defn* reduce
   ([f val coll]
-    `(reduce* ~f ~val ~coll))
+    (reduce* f val coll))
   ([f coll]
-    `(reduce* ~f (first ~coll) ~coll)))
-    
+    (reduce* f (first coll) coll)))
+
 (fn reductions* [f val coll]
   (def ret [])
   (loop [i 0
@@ -59,12 +59,12 @@
                         (get coll i)))
       (.push ret r)))
   ret)
-(defmacro reductions
+(defn* reductions
   ([f val coll]
-    `(reductions* ~f ~val ~coll))
+    (reductions* f val coll))
   ([f coll]
-    `(reductions* ~f (first ~coll) ~coll)))
-    
+    (reductions* f (first coll) coll)))
+
 (def *gensym* 999)
 (fn gensym []
   (inc! *gensym*)
@@ -135,17 +135,13 @@
     (filter* pred coll)))
 (fn merge
   "Merge the contents of map `m2' into map `m1' and return a new map."
-  [m1 m2]
-  (or (and m2
-           (let [m {}]
-             (dokeys [k m1]
-                     (if (.hasOwnProperty m1 k)
-                       (set! (get m k) (get m1 k))))
-             (dokeys [k m2]
-                     (if (.hasOwnProperty m2 k)
-                       (set! (get m k) (get m2 k))))
-             m))
-      m1))
+  [& ms]
+  (or (let [ret {}]
+        (for [m ms]
+          (for [[k v] m]
+            (set! (get ret k) v)))
+        ret)
+      {}))
 
 (fn select-keys [m ks]
   (let [m1 {}]

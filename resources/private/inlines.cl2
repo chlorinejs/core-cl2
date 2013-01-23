@@ -11,6 +11,7 @@
 (defmacro third [x] `(get ~x 2))
 (defmacro last [x] `(get ~x (- (count ~x) 1)))
 (defmacro next [x] `(if (< 1 (count ~x)) (.slice ~x 1)))
+(defmacro nnext [x] `(next (next ~x)))
 (defmacro rest [x] `(.slice ~x 1))
 
 (defmacro array? [a] `(isa? ~a "Array"))
@@ -44,3 +45,13 @@
   ([x y] `(=* ~x ~y))
   ([x y & more] `(=' ~x ~y ~@more)))
 (defmacro count [x] `(get ~x :length))
+(defmacro reductions
+  ([f val coll]
+    `(reductions* ~f ~val ~coll))
+  ([f coll]
+    `(reductions* ~f (first ~coll) ~coll)))
+(defmacro reduce
+  ([f val coll]
+    `(reduce* ~f ~val ~coll))
+  ([f coll]
+    `(reduce* ~f (first ~coll) ~coll)))
