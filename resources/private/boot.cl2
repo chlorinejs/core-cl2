@@ -88,31 +88,26 @@
 (defmacro defn* [fname & fdeclrs]
   (let [count-arg (fn [v] (if (contains? (set v) '&)
                             :variadic
-                            (count v)))
-        runner-defs (for [fdeclr# fdeclrs]
-                      (let [[v# _] fdeclr#]
-                        `(set! (get (-> this :argnum) ~(count-arg v#))
-                               ~(cons 'fn fdeclr#))))]
-    `(fn ~fname [& args#]
-       (set! (-> this :argnum) {})
-       ~runner-defs
-       (let [n# (count args#)]
-         (if (contains? (-> this :argnum) n#)
-           (let [runner# (get (-> this :argnum) n#)]
-             (apply runner# args#))
-           (if (contains? (-> this :argnum) :variadic)
-             (let [runner# (get (-> this :argnum) :variadic)]
-               (apply runner# args#))
-             (throw (str "Wrong number of args (" n#
-                         ") passed to: " ~(name fname)))))))))
+                            (count v)))]
+    `(fn ~fname []
+       (def args arguments)
 
+       ~(concat ['case `(count args)]
+                (apply concat
+                       (for [fdeclr# fdeclrs]
+                         (let [[v# _] fdeclr#]
+                           (if (= (count-arg v#) :variadic)
+                             (vector `(let [f ~(cons 'fn fdeclr#)]
+                                        (return (apply f args))))
+                             (vector (count-arg v#)
+                                     `(let [f ~(cons 'fn fdeclr#)]
+                                        (return (apply f args))))))))))
+    ))
 (defmacro get
   ([coll index]
      `(get ~coll ~index))
   ([coll index not-found]
      `(or (get ~coll ~index)
           ~not-found)))
-          
+
 (defmacro nth [& args] `(get ~@args))
-
-
