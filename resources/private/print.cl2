@@ -49,5 +49,5 @@
 ;; string, number, boolean, function
 (defmethod pr-str* :default [x] (+* "" x))
 
-(fn pr-str []
-  (.. (map pr-str* arguments) (join " ")))
+(fn pr-str [& args]
+  (.. (map pr-str* args) (join " ")))
