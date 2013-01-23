@@ -197,7 +197,7 @@
       ;; not same type
       false)))
 
-(defn* ='
+(defn* =
   ([]    true)
   ([x]   true)
   ([x y] (=* x y))
@@ -208,11 +208,11 @@
            (recur y (first more) (next more))
            (=* y (first more)))
          false))))
-(fn +' [& args]
+(fn + [& args]
   (reduce (fn [x y] (+ x y)) 0 args))
-(fn -' [& args]
+(fn - [& args]
   (reduce (fn [x y] (- x y)) 0 args))
-(fn *' [& args]
+(fn * [& args]
   (reduce (fn [x y] (* x y)) 1 args))
 (fn identity
   [x] x)

@@ -43,7 +43,7 @@
   ([] `true)
   ([x] `true)
   ([x y] `(=* ~x ~y))
-  ([x y & more] `(=' ~x ~y ~@more)))
+  ([x y & more] `(=* ~x ~y ~@more)))
 (defmacro count [x] `(get ~x :length))
 (defmacro reductions
   ([f val coll]
