@@ -24,7 +24,7 @@
            ~@body
            (recur (+ ~var 1)))))))
 
-(defmacro for [[bindings coll] & body]
+(defmacro doseq [[bindings coll] & body]
   (cond
    (symbol? bindings)
    `(let [m# ~coll]
@@ -37,6 +37,26 @@
         (dokeys [~kname# m#]
                 (let [~vname# (get m# ~kname#)]
                   ~@body))))))
+
+(defmacro for [[bindings coll] & body]
+  (cond
+   (symbol? bindings)
+   `(let [m# ~coll]
+      (def ret# [])
+      (dokeys [i# m#]
+              (.push ret#
+                     (let [~bindings (get m# i#)]
+                       ~@body)))
+      ret#)
+   (vector? bindings)
+   (let [[kname# vname#] bindings]
+     `(let [m# ~coll]
+        (def ret# [])
+        (dokeys [~kname# m#]
+                (.push ret#
+                       (let [~vname# (get m# ~kname#)]
+                         ~@body)))
+        ret#))))
 
 (defmacro . [x & tail]
   (let [dot-form-for (fn [x] (symbol (str "." (name x))))

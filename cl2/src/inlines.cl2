@@ -6,6 +6,8 @@
 (defmacro undefined? [expr] `(=== undefined ~expr))
 (defmacro nil? [expr] `(=== nil ~expr))
 
+(defmacro count [x] `(get ~x :length))
+
 (defmacro first [x] `(get ~x 0))
 (defmacro second [x] `(get ~x 1))
 (defmacro third [x] `(get ~x 2))
@@ -44,14 +46,3 @@
   ([x] `true)
   ([x y] `(=* ~x ~y))
   ([x y & more] `(=* ~x ~y ~@more)))
-(defmacro count [x] `(get ~x :length))
-(defmacro reductions
-  ([f val coll]
-    `(reductions* ~f ~val ~coll))
-  ([f coll]
-    `(reductions* ~f (first ~coll) ~coll)))
-(defmacro reduce
-  ([f val coll]
-    `(reduce* ~f ~val ~coll))
-  ([f coll]
-    `(reduce* ~f (first ~coll) ~coll)))
