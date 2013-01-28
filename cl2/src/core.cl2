@@ -25,15 +25,6 @@
 (fn inc [arg] (+ 1 arg))
 (fn dec [arg] (- arg 1))
 
-(defmacro doseq [[var seq] & body]
-  (let [seqsym (gensym)]
-    `(do
-       (lvar ~seqsym ~seq)
-       (loop [i# 0]
-         (when (< i# (count ~seqsym))
-           (let [~var (get ~seqsym i#)]
-             ~@body)
-           (recur (+ i# 1)))))))
 (fn count [x] (get x :length))
 (fn empty? [s] (or (undefined? s) (nil? s) (= {} s) (= [] s)))
 (fn not-empty? [s] (not (empty? s)))

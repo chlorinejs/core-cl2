@@ -111,27 +111,6 @@
   (is (= 1 (count [1])))
   (is (= 3 (count [1 2 3]))))
 
-(deftest doseq-test
-  (is (= 120
-         (do
-           (fn test-doseq-it []
-             (let [prod 1]
-               (doseq [i [1 2 3 4 5]]
-                 (set! prod (* prod i)))
-               prod))
-           (test-doseq-it))))
-
-  (is (= [120 120]
-         (do
-           (fn seq-doseq-it []
-             (let [p1 1
-                   p2 1]
-               (doseq [[x y] [[1 1] [2 2] [3 3] [4 4] [5 5]]]
-                 (set! p1 (* p1 x)
-                       p2 (* p2 y)))
-               [p1 p2]))
-           (seq-doseq-it)))))
-
 (deftest reduce-test
   (is (= 120
          (do

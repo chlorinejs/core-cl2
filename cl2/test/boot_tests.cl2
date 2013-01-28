@@ -49,19 +49,28 @@
   (is (=== 120
          (** 1 2 3 4 5))))
 
-(deftest for-tests
+(deftest doseq-vector-tests
   (def x 0)
-  (for [n [1 2 3]]
-        (set! x (+ n x)))
+  (doseq [n [1 2 3]]
+    (set! x (+ n x)))
   (is (=== x 6))
 
-  (def x "")
-  (def y 0)
-  (for [[k v] {:a 1 :b 2}]
-        (set! x (+* x k))
-        (set! y (+* y v)))
-  (is (=== "ab" x))
-  (is (=== 3 y)))
+  (def a "")
+  (def b 0)
+  (doseq [[c d] {:a 1 :b 2}]
+    (set! a (+* a c))
+    (set! b (+* b d)))
+  (is (=== "ab" a))
+  (is (=== 3 b)))
+
+(deftest for-tests
+  (is (= [1 2 3]
+           (for [n [1 2 3]]
+             n) ))
+
+  (is (= (for [[k v] {:a 1 :b 2}]
+           (str k v))
+         ["a1" "b2"])))
 
 (deftest ->-tests
   (is (=== (+* "" (-> [3 4] (.concat 1 2) (.sort)))
