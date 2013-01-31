@@ -161,3 +161,7 @@
           ~not-found)))
 
 (defmacro nth [& args] `(get ~@args))
+
+(defmacro as-fn [x]
+  (cond (keyword? x) `(fn [coll] (get coll ~x))
+        (set? x)     `(fn [y] (contains? ~x y))))

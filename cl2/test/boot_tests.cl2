@@ -88,3 +88,9 @@
 
 (deftest keyword-tests
   (is (=== (:a {:a 1 :b 2}) 1)))
+
+(deftest as-fn-tests
+  (is (=== (apply (as-fn :foo) [{:foo 'bar}])
+           "bar"))
+  (is (apply (as-fn #{:a :b :c}) [:a]))
+  (is (=== false (apply (as-fn #{:a :b :c}) [:d]))))
