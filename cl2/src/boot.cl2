@@ -3,7 +3,49 @@
 (borrow-macros when when-not unless if-not if-let when-let cond .. -> ->>)
 
 (defmacro fn [& fdeclrs]
-  `(fn* ~@fdeclrs))
+  (let [valid-fn-declrs? (fn [fdeclrs]
+                           (and (list? fdeclrs)
+                                (vector? (first fdeclrs))))
+        original-fdeclrs fdeclrs
+        [fname fdeclrs] (if (symbol? (first fdeclrs))
+                          [(first fdeclrs) (rest fdeclrs)]
+                          [nil fdeclrs])
+        [docstring fdeclrs] (if (string? (first fdeclrs))
+                              [(first fdeclrs) (rest fdeclrs)]
+                              [nil fdeclrs])
+        ]
+    ;; Cases:
+    ;; * (fn _ _ | [args] body)
+    ;; * (fn _ _ | ([args] body))
+    ;; * (fn _ _ | ([args-1] body-1) ([args-n] body-n))
+    (cond
+     (vector? (first fdeclrs))
+     `(fn* ~@original-fdeclrs)
+
+     (and (= 1 (count fdeclrs))
+          (apply valid-fn-declrs? fdeclrs))
+     `(fn* ~@(concat (remove nil? [fname docstring]) (first fdeclrs)))
+
+     (and (< 1 (count fdeclrs))
+          (every? valid-fn-declrs? fdeclrs))
+     (let [count-arg (fn [v] (if (contains? (set v) '&)
+                               :variadic
+                               (count v)))]
+       `(fn* ~@(concat (remove nil? [fname docstring])) []
+          (def args arguments)
+
+          ~(concat ['case `(count args)]
+                   (apply concat
+                          (for [fdeclr# fdeclrs]
+                            (let [[v# _] fdeclr#]
+                              (if (= (count-arg v#) :variadic)
+                                (vector `(let [f ~(cons 'fn fdeclr#)]
+                                           (return (apply f args))))
+                                (vector (count-arg v#)
+                                        `(let [f ~(cons 'fn fdeclr#)]
+                                           (return (apply f args))))))))))
+       )
+     )))
 
 (defmacro defn [fname & fdeclrs]
   (chlorine.js/undef-macro fname)
@@ -111,24 +153,6 @@
                 `(get (-> ~fname :methods) ~dispatch-val))]
        `(set! ~setee ~(cons 'fn fdeclr))))
 
-(defmacro defn* [fname & fdeclrs]
-  (let [count-arg (fn [v] (if (contains? (set v) '&)
-                            :variadic
-                            (count v)))]
-    `(fn ~fname []
-       (def args arguments)
-
-       ~(concat ['case `(count args)]
-                (apply concat
-                       (for [fdeclr# fdeclrs]
-                         (let [[v# _] fdeclr#]
-                           (if (= (count-arg v#) :variadic)
-                             (vector `(let [f ~(cons 'fn fdeclr#)]
-                                        (return (apply f args))))
-                             (vector (count-arg v#)
-                                     `(let [f ~(cons 'fn fdeclr#)]
-                                        (return (apply f args))))))))))
-    ))
 (defmacro get
   ([coll index]
      `(get ~coll ~index))

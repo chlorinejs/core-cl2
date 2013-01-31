@@ -3,7 +3,7 @@
 (fn assoc*! [m k v]
   (set! (get m k) v)
   m)
-(defn* assoc!
+(fn assoc!
   ([map key val] (assoc*! map key val))
   ([map key val & kvs]
      (let [ret (assoc*! map key val)]

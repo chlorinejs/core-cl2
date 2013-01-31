@@ -133,13 +133,13 @@
            (foo 'x 'y 'z)]
          ["zero" "one" "two" "anything"])))
 
-(defn* bar
+(fn bar
   ([] 0)
   ([x] 1)
   ([x y]   (+ x y))
   ([x y z] (* x y z)))
 
-(deftest defn*-tests
+(deftest fn-tests
   (is (= [(bar)
            (bar 1)
            (bar 2 3)

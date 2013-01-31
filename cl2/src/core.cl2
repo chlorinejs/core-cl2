@@ -35,7 +35,7 @@
     (if (< i (count coll))
       (recur (+ i 1) (f r (get coll i)))
       r)))
-(defn* reduce
+(fn reduce
   ([f val coll]
     (reduce* f val coll))
   ([f coll]
@@ -50,7 +50,7 @@
                         (get coll i)))
       (.push ret r)))
   ret)
-(defn* reductions
+(fn reductions
   ([f val coll]
     (reductions* f val coll))
   ([f coll]
@@ -188,7 +188,7 @@
       ;; not same type
       false)))
 
-(defn* =
+(fn =
   ([]    true)
   ([x]   true)
   ([x y] (=* x y))
@@ -228,7 +228,7 @@
   (and (number? x) (> x 0)))
 (fn neg? [x]
   (and (number? x) (< x 0)))
-(defn* rand
+(fn rand
   ([]  (Math.random))
   ([n] (* n (Math.random))))
 (fn quot [x y]
@@ -279,7 +279,7 @@
     (or (pred (first coll))
         (some pred (next coll)))))
 
-(defn* concat
+(fn concat
   ([] [])
   ([x] [x])
   ([x y] (.concat x y))
@@ -303,7 +303,7 @@
   (for [k ks]
     (set! (get ret k) true))
   ret)
-(defn* sort
+(fn sort
   ([coll]
      (.sort (Array.prototype.slice.call coll 0)))
   ([comp x]
@@ -388,7 +388,7 @@
         (if (comp i end)
           (cons ret (range* i end step))
           ret)))))
-(defn* range
+(fn range
   ([end] (range* 0 end 1))
   ([start end] (range* start end 1))
   ([start end step] (range* start end step)))
