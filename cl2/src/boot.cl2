@@ -1,11 +1,17 @@
 (defmacro borrow-macros [& syms] (apply chlorine.js/borrow-macros syms))
 (defmacro apply [fun & args] `(.apply ~fun 0 ~@args))
 (borrow-macros when when-not unless if-not if-let when-let cond .. -> ->>)
-(defmacro fn' [& fdeclrs]
-  `(defn* temp# ~@fdeclrs))
 
-(defmacro fn* [& fdeclrs]
-  `(fn ~@fdeclrs))
+(defmacro fn [& fdeclrs]
+  `(fn* ~@fdeclrs))
+
+(defmacro defn [fname & fdeclrs]
+  (chlorine.js/undef-macro fname)
+  `(set! ~fname ~(cons 'fn fdeclrs)))
+
+(defmacro defn- [fname & fdeclrs]
+  (chlorine.js/undef-macro fname)
+  `(def ~fname ~(cons 'fn fdeclrs)))
 
 (defmacro lvar [& bindings]
   `(inline
