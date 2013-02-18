@@ -40,10 +40,10 @@
                             (let [[v# _] fdeclr#]
                               (if (= (count-arg v#) :variadic)
                                 (vector `(let [f ~(cons 'fn fdeclr#)]
-                                           (return (apply f args))))
+                                           (apply f args)))
                                 (vector (count-arg v#)
                                         `(let [f ~(cons 'fn fdeclr#)]
-                                           (return (apply f args))))))))))
+                                           (apply f args)))))))))
        )
      )))
 
