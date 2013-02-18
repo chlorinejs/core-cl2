@@ -43,8 +43,9 @@
                                            (apply f args)))
                                 (vector (count-arg v#)
                                         `(let [f ~(cons 'fn fdeclr#)]
-                                           (apply f args)))))))))
-       )
+                                           (apply f args))))))))))
+     :otherwise
+     (throw (Exception. "Invalid function declaration!"))
      )))
 
 (defmacro defn [fname & fdeclrs]
