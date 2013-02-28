@@ -5,7 +5,6 @@
   `(instanceof ~a ~(symbol t)))
 (fn true? [expr] (=== true expr))
 (fn false? [expr] (=== false expr))
-(fn undefined? [expr] (=== undefined expr))
 (fn nil? [expr] (=== nil expr))
 
 (fn first [x] (get x 0))

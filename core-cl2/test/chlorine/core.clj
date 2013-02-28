@@ -45,9 +45,8 @@
               " return \"yes\"; }"
               " else {"
               " if ((\"number\" === typeof(a))) {"
-              " return \"no\"; }"
-              " else {"
-              " return null; }; }; }"))))
+              " return \"no\"; }; }; }"
+              ))))
 
 (deftest variables
   (is (= (js
