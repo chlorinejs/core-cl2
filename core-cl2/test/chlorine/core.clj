@@ -31,9 +31,9 @@
               " else {"
               " if ((\"number\" === typeof(a))) {"
               " return \"no\"; }"
-              " else { if ('else') {"
-              " return \"don't know\"; }"
-              " else { return null; }; }; }; }")))
+              " else { "
+              " return \"don't know\";; }"
+              "; }; }")))
 
   (is (= (js
           (defn test [a]
