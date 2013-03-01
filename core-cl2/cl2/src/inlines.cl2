@@ -3,7 +3,6 @@
   `(in ~k ~m))
 (defmacro true? [expr] `(=== true ~expr))
 (defmacro false? [expr] `(=== false ~expr))
-(defmacro undefined? [expr] `(=== undefined ~expr))
 (defmacro nil? [expr] `(=== nil ~expr))
 
 (defmacro count [x] `(get ~x :length))

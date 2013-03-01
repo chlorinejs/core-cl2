@@ -25,7 +25,7 @@
 (fn dec [arg] (- arg 1))
 
 (fn count [x] (get x :length))
-(fn empty? [s] (or (undefined? s) (nil? s) (= {} s) (= [] s)))
+(fn empty? [s] (or (= null s) (nil? s) (= {} s) (= [] s)))
 (fn not-empty? [s] (not (empty? s)))
 
 (fn reduce* [f val coll]
@@ -75,7 +75,7 @@
        (not (or (contains? #{'string 'number 'boolean 'function} (typeof m))
                 (array? m)
                 (nil? m)
-                (undefined? m)
+                (= null m)
                 (regexp? m)))))
 
 (fn type [x]
@@ -83,7 +83,6 @@
         (string?    x) 'string
         (number?    x) 'number
         (nil?       x) "nil"
-        (undefined? x) 'undefined
         (boolean?   x) 'boolean
         (fn?        x) 'function
         (regexp?    x) 'regexp

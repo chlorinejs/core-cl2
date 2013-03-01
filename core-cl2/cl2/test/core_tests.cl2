@@ -10,7 +10,7 @@
 
 (deftest last-next-rest-tests
   (is (= 3 (last [1 2 3])))
-  ;;(is (= nil (last [])))
+  (is (= nil (last [])))
   ;;(is (= nil (last nil)))
   )
 
@@ -30,7 +30,6 @@
   (is (boolean? true))
   (is (boolean? false))
   (is (= false (boolean? nil)))
-  (is (= false (boolean? undefined)))
   (is (= false (boolean? "true")))
 
   (is (fn? (fn [])))
@@ -68,8 +67,7 @@
   (is (= false false))
   (is (= {} {}))
   (is (= true true))
-  (is (= undefined undefined))
-  (is (= nil nil))
+  (is (= null null))
   (is (= "ab" :ab 'ab))
   (is (= [1 2] [1 2]))
   (is (= false (= [1 2] [2 3])))
@@ -156,7 +154,7 @@
   ;;(is (= false (not 0)))
   (is (not 0))
   (is (not nil))
-  (is (not undefined)))
+  )
 
 (deftest if-tests
   (is (= true (if-not false true false))))
