@@ -118,30 +118,30 @@
                      [1 2 3 4 5]))
            (reduce-it)))))
 
-(defmulti  foo (fn [& args] (count args)))
-(defmethod foo 0 [] "zero")
-(defmethod foo 1 [x] "one")
-(defmethod foo 2 [x y] "two")
-(defmethod foo :default [& args] "anything")
-
 (deftest defmulti-tests
+  (defmulti  foo (fn [& args] (count args)))
+  (defmethod foo 0 [] "zero")
+  (defmethod foo 1 [x] "one")
+  (defmethod foo 2 [x y] "two")
+  (defmethod foo :default [& args] "anything")
+
   (is (= [(foo)
-           (foo 'x)
-           (foo 'x 'y)
-           (foo 'x 'y 'z)]
+          (foo 'x)
+          (foo 'x 'y)
+          (foo 'x 'y 'z)]
          ["zero" "one" "two" "anything"])))
 
-(fn bar
-  ([] 0)
-  ([x] 1)
-  ([x y]   (+ x y))
-  ([x y z] (* x y z)))
-
 (deftest fn-tests
+  (fn bar
+    ([] 0)
+    ([x] 1)
+    ([x y]   (+ x y))
+    ([x y z] (* x y z)))
+
   (is (= [(bar)
-           (bar 1)
-           (bar 2 3)
-           (bar 4 5 6)]
+          (bar 1)
+          (bar 2 3)
+          (bar 4 5 6)]
          [0 1 5 120])))
 
 (deftest true?-and-false?-tests
