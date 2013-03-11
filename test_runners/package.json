@@ -7,7 +7,6 @@
     , "mocha": ">= 1.7.4"
   }
   , "scripts": {
-     "pretest": "scripts/watch.sh -1"
-    ,"test": "scripts/testem_ci.sh -1"
+    "test": "testem -f testem.json ci"
   }
 }

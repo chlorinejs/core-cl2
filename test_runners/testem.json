@@ -1,0 +1,10 @@
+{
+"framework": "mocha",
+"test_page": "html/test.html",
+"serve_files": ["js/test_runners.js"],
+"launchers": {
+  "Mocha": {
+    "command": "mocha -u qunit js/test_runners.js"
+    }
+  }
+}
