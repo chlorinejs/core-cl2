@@ -1,0 +1,11 @@
+/test_runners/node_modules/
+/core-cl2/makefile
+/core-cl2/target/
+*.js
+hs_err_*.log
+.lein-repl-history
+.lein-failures
+*.jar
+pom.xml
+/classes
+/lib
