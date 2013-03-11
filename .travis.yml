@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+  - 0.8
+before_install:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - "cd core-cl2 && lein2 test && cd .."
+  - git clone https://github.com/chlorinejs/chloric
+  - cd chloric
+  - lein2 uberjar
+  - echo "java -jar \"`ls $PWD/target/*-standalone.jar`\"" '"$@"' > chloric
+  - chmod +x chloric
+  - export PATH="$PWD:$PATH"
+  - cd ..
