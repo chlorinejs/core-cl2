@@ -1,5 +1,5 @@
 (defmulti  str* type)
-(defmethod str* "array"    [a]
+(defmethod str* "vector"    [a]
   (+* "["
       (.join (map str* a) ", ")
       "]"))
@@ -34,7 +34,7 @@
           (replace #"/\'/g" "\\'"))
       "\""))
 
-(defmethod pr-str* "array"    [a]
+(defmethod pr-str* "vector"    [a]
   (+* "["
       (.join (map pr-str* a) ", ")
       "]"))

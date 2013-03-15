@@ -15,10 +15,10 @@
   )
 
 (deftest type-tests
-  (is (array? [1 2 3]))
+  (is (vector? [1 2 3]))
   (is (= false
-         ((fn [] (array? arguments)))))
-  (is (= false (array? {:a 1 :b 2})))
+         ((fn [] (vector? arguments)))))
+  (is (= false (vector? {:a 1 :b 2})))
   (is (string? "abc"))
   (is (string? :def))
   (is (string? 'xyz))

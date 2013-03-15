@@ -12,7 +12,7 @@
 (defmacro nnext [x] `(next (next ~x)))
 (defmacro rest [x] `(.slice ~x 1))
 
-(defmacro array? [a] `(isa? ~a "Array"))
+(defmacro vector? [a] `(isa? ~a "Array"))
 (defmacro string? [s] `(=== "string" (typeof ~s)))
 (defmacro number? [n] `(=== "number" (typeof ~n)))
 (defmacro boolean? [b] `(=== "boolean" (typeof ~b)))

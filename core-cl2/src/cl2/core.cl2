@@ -21,7 +21,7 @@
 (fn next [x] (if (empty? x) nil (if (< 1 (count x)) (.slice x 1))))
 (fn rest [x] (if (nil? x) [] (.slice x 1)))
 (fn nnext [x] (next (next x)))
-(fn array? [a] (isa? a "Array"))
+(fn vector? [a] (isa? a "Array"))
 (fn string? [s] (=== "string" (typeof s)))
 (fn number? [n] (=== "number" (typeof n)))
 (fn boolean? [b] (=== "boolean" (typeof b)))
@@ -81,13 +81,13 @@
 (fn map? [m]
   (and m
        (not (or (contains? #{'string 'number 'boolean 'function} (typeof m))
-                (array? m)
+                (vector? m)
                 (nil? m)
                 (= null m)
                 (regexp? m)))))
 
 (fn type [x]
-  (cond (array?     x) 'array
+  (cond (vector?     x) 'vector
         (string?    x) 'string
         (number?    x) 'number
         (nil?       x) "nil"
@@ -166,10 +166,10 @@
     true
     (if (=== (type x) (type y))
       (cond
-       (array? x)
+       (vector? x)
        (if (=== (count x) (count y))
          (loop [a x b y c (count x)]
-           (if (=== 0 c) ;;empty arrays
+           (if (=== 0 c) ;;empty vectors
              true
              (if (=* (first a) (first b))
                (recur (rest a) (rest b) (dec c))
