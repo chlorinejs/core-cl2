@@ -205,6 +205,13 @@
            (recur y (first more) (next more))
            (=* y (first more)))
          false))))
+(defn not=
+  "Same as (not (= obj1 obj2))"
+  ([x] false)
+  ([x y] (not (= x y)))
+  ([& args]
+     (not (apply = args))))
+
 (fn + [& args]
   (reduce (fn [x y] (+ x y)) 0 args))
 (fn - [& args]

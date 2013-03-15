@@ -156,6 +156,16 @@
   (is (not nil))
   )
 
+(deftest not=-tests
+  (is (= (not= 1 2)
+         true))
+  (is (= (not= 1 1 1 2)
+         true))
+  (is (= (not= 1 1)
+         false))
+  (is (= (not= 1 1 1 1)
+         false)))
+
 (deftest if-tests
   (is (= true (if-not false true false))))
 
