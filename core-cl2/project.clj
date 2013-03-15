@@ -1,4 +1,4 @@
-(defproject core-cl2 "1.0.0-SNAPSHOT"
+(defproject core-cl2 "0.6.0"
   :description "Chlorine's bootstrap"
   :url "http://github.com/chlorinejs/core-cl2"
   :dependencies []
