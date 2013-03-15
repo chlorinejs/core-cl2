@@ -419,3 +419,6 @@
          (if (= n (count p))
            (cons p (partition n step pad (nthrest s step)))
            [(take n (concat p pad))])))))
+(defn subs
+  [s start end]
+  (.slice s start (or end (count s))))
