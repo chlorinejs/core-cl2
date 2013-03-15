@@ -7,7 +7,7 @@
 (defmethod str* "function" [x] (+* "" x))
 (defmethod str* "map"      [m]
   (+* "{"
-      (.join (map (fn [k] (+* "\"" k "\" " (str* (get m k))))
+      (.join (map (fn [k] (+* "\"" k "\" " (str* (get* m k))))
                   (keys m)) ", ")
       "}"))
 
@@ -42,7 +42,7 @@
 (defmethod pr-str* "function" [x] (+* "(inline " (pr-str* (+* "" x)) ")"))
 (defmethod pr-str* "map"      [m]
   (+* "{"
-      (.join (map (fn [k] (+* "\"" k "\" " (pr-str* (get m k))))
+      (.join (map (fn [k] (+* "\"" k "\" " (pr-str* (get* m k))))
                   (keys m)) ", ")
       "}"))
 (defmethod pr-str* "regexp"   [x] (+* "#\"" x "\""))

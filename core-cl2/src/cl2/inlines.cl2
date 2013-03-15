@@ -5,12 +5,9 @@
 (defmacro false? [expr] `(=== false ~expr))
 (defmacro nil? [expr] `(=== nil ~expr))
 
-(defmacro count [x] `(get ~x :length))
-
-(defmacro first [x] `(get ~x 0))
-(defmacro second [x] `(get ~x 1))
-(defmacro third [x] `(get ~x 2))
-(defmacro last [x] `(get ~x (- (count ~x) 1)))
+(defmacro first [x] `(get* ~x 0))
+(defmacro second [x] `(get* ~x 1))
+(defmacro last [x] `(get* ~x (- (count ~x) 1)))
 (defmacro next [x] `(if (< 1 (count ~x)) (.slice ~x 1)))
 (defmacro nnext [x] `(next (next ~x)))
 (defmacro rest [x] `(.slice ~x 1))

@@ -1,12 +1,14 @@
 (ns chlorine.core
   (:use [clojure.test :only [deftest is]])
-  (:require [chlorine.js]))
+  (:require [chlorine.js :as cl2]))
 
 (defmacro js [& body]
-  `(do
-     (dosync (ref-set chlorine.js/*macros* {}))
-     (chlorine.js/tojs [:resource "/dev.cl2"])
-     (chlorine.js/js ~@body)))
+  `(binding [cl2/*temp-sym-count* (ref 999)
+             cl2/*last-sexpr*     (ref nil)
+             cl2/*macros*         (ref {})]
+     (cl2/tojs' [:resource "/dev.cl2"])
+     (cl2/js ~@body)
+     ))
 
 (deftest types
   (is (= (js (isa? "foobar" "String"))

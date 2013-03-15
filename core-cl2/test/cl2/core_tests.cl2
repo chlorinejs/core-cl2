@@ -336,6 +336,7 @@
 
 (deftest get-tests
   (is (= (get {:a 1} :a) 1))
+  (is (= (get [1 :x 'y] 2) 'y))
   (is (= (get "abc" 1) "b")))
 
 (deftest conj-tests

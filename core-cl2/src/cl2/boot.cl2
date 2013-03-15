@@ -1,7 +1,6 @@
 (defmacro borrow-macros [& syms] (apply chlorine.js/borrow-macros syms))
 (defmacro apply [fun & args] `(.apply ~fun 0 ~@args))
 (borrow-macros when when-not unless if-not if-let when-let cond .. -> ->>)
-
 (defmacro fn [& fdeclrs]
   (let [valid-fn-declrs? (fn [fdeclrs]
                            (and (list? fdeclrs)
@@ -78,13 +77,13 @@
    (symbol? bindings)
    `(let [m# ~coll]
       (dokeys [i# m#]
-              (let [~bindings (get m# i#)]
+              (let [~bindings (get* m# i#)]
                 ~@body)))
    (vector? bindings)
    (let [[kname# vname#] bindings]
      `(let [m# ~coll]
         (dokeys [~kname# m#]
-                (let [~vname# (get m# ~kname#)]
+                (let [~vname# (get* m# ~kname#)]
                   ~@body))))))
 
 (defmacro for [[bindings coll] & body]
@@ -94,7 +93,7 @@
       (def ret# [])
       (dokeys [i# m#]
               (.push ret#
-                     (let [~bindings (get m# i#)]
+                     (let [~bindings (get* m# i#)]
                        ~@body)))
       ret#)
    (vector? bindings)
@@ -103,7 +102,7 @@
         (def ret# [])
         (dokeys [~kname# m#]
                 (.push ret#
-                       (let [~vname# (get m# ~kname#)]
+                       (let [~vname# (get* m# ~kname#)]
                          ~@body)))
         ret#))))
 
@@ -138,31 +137,24 @@
                             dispatch-fn)
              dispatched-val# (apply dispatch-fn# args)]
          (if (contains? (-> ~fname :methods) dispatched-val#)
-           (let [dispatcher# (get (-> ~fname :methods) dispatched-val#)]
+           (let [dispatcher# (get* (-> ~fname :methods) dispatched-val#)]
              (apply dispatcher# args))
-           (if (fn? (-> ~fname :default-method))
+           (if (fn? (get* ~fname :default-method))
              (let [default-method# (-> ~fname :default-method)]
                (apply default-method# args))
              (throw
               (str "No method in multimethod '" ~(name fname)
                    "' for dispatch value: " dispatched-val#))))))
-     (set! (-> ~fname :methods) {})))
+     (set! (get* ~fname :methods) {})))
 
 (defmacro defmethod [fname dispatch-val & fdeclr]
   (let [setee (if (= :default dispatch-val)
-                `(-> ~fname :default-method)
-                `(get (-> ~fname :methods) ~dispatch-val))]
+                `(get* ~fname :default-method)
+                `(get* (-> ~fname :methods) ~dispatch-val))]
        `(set! ~setee ~(cons 'fn fdeclr))))
 
-(defmacro get
-  ([coll index]
-     `(get ~coll ~index))
-  ([coll index not-found]
-     `(or (get ~coll ~index)
-          ~not-found)))
-
-(defmacro nth [& args] `(get ~@args))
+(defmacro nth [& args] `(get* ~@args))
 
 (defmacro as-fn [x]
-  (cond (keyword? x) `(fn [coll] (get coll ~x))
+  (cond (keyword? x) `(fn [coll not-found] (get coll ~x not-found))
         (set? x)     `(fn [y] (contains? ~x y))))

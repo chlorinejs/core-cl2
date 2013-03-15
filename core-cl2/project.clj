@@ -7,5 +7,5 @@
   :profiles {:provided
              {:dependencies
               [[org.clojure/clojure "1.5.1"]
-               [chlorine "1.5.0"]
+               [chlorine "1.5.1"]
                ]}})

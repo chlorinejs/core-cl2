@@ -1,16 +1,23 @@
 (fn not [x] (! x))
 (fn contains? [m k]
   (in k m))
+(defn get
+  [m k not-found]
+  (or (or (and (string? m) (get* m k))
+          not-found)
+      (or (and (contains? m k)
+               (get* m k))
+          not-found)))
+
 (defmacro isa? [a t]
   `(instanceof ~a ~(symbol t)))
 (fn true? [expr] (=== true expr))
 (fn false? [expr] (=== false expr))
 (fn nil? [expr] (=== nil expr))
 
-(fn first [x] (get x 0))
-(fn second [x] (get x 1))
-(fn third [x] (get x 2))
-(fn last [x] (get x (- (count x) 1)))
+(fn first [x] (get* x 0))
+(fn second [x] (get* x 1))
+(fn last [x] (get* x (- (count x) 1)))
 (fn next [x] (if (empty? x) nil (if (< 1 (count x)) (.slice x 1))))
 (fn rest [x] (if (nil? x) [] (.slice x 1)))
 (fn nnext [x] (next (next x)))
@@ -24,7 +31,8 @@
 (fn inc [arg] (+ 1 arg))
 (fn dec [arg] (- arg 1))
 
-(fn count [x] (get x :length))
+(defn count [x]
+  (or (and (vector? x) (get* x :length)) (get* (keys x) :length)))
 (fn empty? [s] (or (= null s) (nil? s) (= {} s) (= [] s)))
 (fn not-empty? [s] (not (empty? s)))
 
@@ -32,7 +40,7 @@
   (loop [i 0
          r val]
     (if (< i (count coll))
-      (recur (+ i 1) (f r (get coll i)))
+      (recur (+ i 1) (f r (get* coll i)))
       r)))
 (fn reduce
   ([f val coll]
@@ -46,7 +54,7 @@
          r val]
     (if (< i (count coll))
       (recur (+ i 1) (f (do (.push ret r) r)
-                        (get coll i)))
+                        (get* coll i)))
       (.push ret r)))
   ret)
 (fn reductions
@@ -66,7 +74,7 @@
     (loop [i (or s 0)]
       (if (< i e)
         (do
-          (.push r (get a i))
+          (.push r (get* a i))
           (recur (+ i 1)))
         r))))
 
@@ -93,7 +101,7 @@
          i 0]
     (if (< i (count arr))
       (do
-        (.push r (fun (get arr i)))
+        (.push r (fun (get* arr i)))
         (recur r (+ i 1)))
       r)))
 (fn map [f coll]
@@ -105,8 +113,8 @@
          i 0]
     (if (< i (count seq))
       (do
-        (when-not (pred (get seq i))
-          (.push r (get seq i)))
+        (when-not (pred (get* seq i))
+          (.push r (get* seq i)))
         (recur r (+ 1 i)))
       r)))
 
@@ -115,7 +123,7 @@
          i 0]
     (if (< i (count arr))
       (do
-        (if (pred (get arr i)) (.push r (get arr i)))
+        (if (pred (get* arr i)) (.push r (get* arr i)))
         (recur r (+ i 1)))
       r)))
 (fn filter [pred coll]
@@ -128,7 +136,7 @@
   (or (let [ret {}]
         (doseq [m ms]
           (doseq [[k v] m]
-            (set! (get ret k) v)))
+            (set! (get* ret k) v)))
         ret)
       {}))
 
@@ -136,7 +144,7 @@
   (let [m1 {}]
     (doseq [k ks]
       (if (.hasOwnProperty m k)
-        (set! (get m1 k) (get m k))))
+        (set! (get* m1 k) (get* m k))))
     m1))
 
 (fn keys [m]
@@ -150,7 +158,7 @@
   (let [v []]
     (dokeys [k m]
       (if (.hasOwnProperty m k)
-        (.push v (get m k))))
+        (.push v (get* m k))))
     v))
 
 (fn =* [x y]
@@ -173,8 +181,8 @@
          (if (=* xkeys (.sort (keys y)))
            ;;keys-equal
            (loop [ks xkeys c (count xkeys)]
-             (if (=* (get x (first ks))
-                     (get y (first ks)))
+             (if (=* (get* x (first ks))
+                     (get* y (first ks)))
                (if (=== 0 c)
                  true
                  (recur (rest ks) (dec c)))
@@ -242,7 +250,7 @@
 (fn constantly [x]
   (fn [] x))
 (fn peek [x]
-  (if (nil? x) nil (get x 0)))
+  (if (nil? x) nil (get* x 0)))
 (fn pop [x]
   (if (nil? x) nil (.slice x 1)))
 (fn conj [coll & xs]
@@ -254,16 +262,16 @@
   (.concat [x] coll))
 (fn assoc [m k v]
   (let [ret (merge m {})]
-    (set! (get ret k) v)
+    (set! (get* ret k) v)
     ret))
 (fn dissoc [m & ks]
   (let [ret (merge m {})]
     (doseq [k ks]
-      (delete (get ret k)))
+      (delete (get* ret k)))
     ret))
 (fn find [m k]
   (if (contains? m k)
-    [k (get m k)]
+    [k (get* m k)]
     nil))
 (fn every?
   [pred coll]
@@ -299,7 +307,7 @@
 (fn set [& ks]
   (def ret {})
   (doseq [k ks]
-    (set! (get ret k) true))
+    (set! (get* ret k) true))
   ret)
 (fn sort
   ([coll]
@@ -353,7 +361,7 @@
   (loop [ks keys
          vs vals]
     (if (and ks vs)
-      (do (set! (get map (first ks)) (first vs))
+      (do (set! (get* map (first ks)) (first vs))
           (recur (next ks)
                  (next vs)))
       map)))
