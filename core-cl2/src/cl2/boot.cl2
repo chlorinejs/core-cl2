@@ -102,20 +102,6 @@
                          ~@body)))
         ret#))))
 
-(defmacro . [x & tail]
-  (let [dot-form-for (fn [x] (symbol (str "." (name x))))
-        [method args] (cond
-                        (< 1 (count tail))
-                        [(dot-form-for (first tail)) (rest tail)]
-
-                        :default
-                        (if (seq? (first tail))
-                          [(dot-form-for (first (first tail)))
-                           (rest (first tail))]
-                          [(dot-form-for (first tail)) ()])
-                        )]
-    `(~method ~x ~@args)))
-
 (defmacro re-test [regexp s]
   `(.. ~regexp (test ~s)))
 
