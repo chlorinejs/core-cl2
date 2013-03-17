@@ -27,15 +27,11 @@
              (symbol? a) "yes"
              (number? a) "no"
              :else "don't know")))
-         (str "var test = function (a) {"
-              " if (symbol$QUEST$(a)) {"
-              " return \"yes\"; }"
-              " else {"
-              " if ((\"number\" === typeof(a))) {"
-              " return \"no\"; }"
-              " else { "
-              " return \"don't know\";; }"
-              "; }; }")))
+         (str "var test = function (a) { "
+              "if (symbol$QUEST$(a)) { return \"yes\"; } else { "
+              "if ((\"number\" === typeof(a))) {"
+              " return \"no\"; } else {"
+              " if ('else') { return \"don't know\"; }; }; }; }")))
 
   (is (= (js
           (defn test [a]
