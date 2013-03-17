@@ -32,7 +32,7 @@
 (fn dec [arg] (- arg 1))
 
 (defn count [x]
-  (or (and (vector? x) (get* x :length)) (get* (keys x) :length)))
+  (or (and (vector? x) (. x -length)) (. (keys x) -length)))
 (fn empty? [s] (or (= null s) (nil? s) (= {} s) (= [] s)))
 (fn not-empty? [s] (not (empty? s)))
 
@@ -422,3 +422,4 @@
 (defn subs
   [s start end]
   (.slice s start (or end (count s))))
+(def println console.log)
