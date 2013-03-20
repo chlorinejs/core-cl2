@@ -1,5 +1,9 @@
+(deftest apply-tests
+  (is (= (apply (fn* [x y] (+ x y)) [1 2])
+         3)))
+
 (deftest dotimes-tests
-  (is (=== 100
+  (is (= 100
          (do
            (fn test []
              (let [sum 0]
