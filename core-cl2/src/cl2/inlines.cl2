@@ -1,3 +1,11 @@
+;; "Inline" is a optimization technique where a function call inside an other
+;; form is emitted as smaller pieces of code while the outer form should still
+;; return the same result.
+;; ChlorineJS hasn't implemented :inline syntax for `defn` macro as seen
+;; in Clojure.
+;; To make the magic happen, ChlorineJS currently use macros to
+;; ensure the specified forms are emitted as their expanded forms instead.
+
 (defmacro not [expr] `(! ~expr))
 (defmacro contains? [m k]
   `(in ~k ~m))
