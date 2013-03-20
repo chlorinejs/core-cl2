@@ -31,8 +31,6 @@
 (fn inc [arg] (+ 1 arg))
 (fn dec [arg] (- arg 1))
 
-(fn empty? [s] (or (= null s) (nil? s) (= {} s) (= [] s)))
-(fn not-empty? [s] (not (empty? s)))
 (defn count
   "Returns the number of items in the collection. (count nil) returns
   0."
@@ -40,6 +38,11 @@
   (if (or (vector? x) (string? x))
     (. x -length)
     (. (keys x) -length)))
+
+(defn empty?
+  "Returns true if coll has no items."
+  [coll]
+  (or (=== coll "") (nil? coll) (= {} coll) (= [] coll)))
 
 (fn reduce* [f val coll]
   (loop [i 0
