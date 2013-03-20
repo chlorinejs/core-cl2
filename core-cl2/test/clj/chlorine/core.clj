@@ -2,13 +2,16 @@
   (:use [clojure.test :only [deftest is]])
   (:require [chlorine.js :as cl2]))
 
-(defmacro js [& body]
+(defmacro js
+  "Receives Chlorine forms, returns compiled javascript as a string.
+  All states are reset (with Chlorine core library loaded) each run
+  so that tests are independent."
+  [& body]
   `(binding [cl2/*temp-sym-count* (ref 999)
              cl2/*last-sexpr*     (ref nil)
              cl2/*macros*         (ref {})]
      (cl2/tojs' "r:/dev.cl2")
-     (cl2/js ~@body)
-     ))
+     (cl2/js ~@body)))
 
 (deftest types
   (is (= (js (isa? "foobar" "String"))
