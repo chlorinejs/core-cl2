@@ -31,10 +31,15 @@
 (fn inc [arg] (+ 1 arg))
 (fn dec [arg] (- arg 1))
 
-(defn count [x]
-  (or (and (vector? x) (. x -length)) (. (keys x) -length)))
 (fn empty? [s] (or (= null s) (nil? s) (= {} s) (= [] s)))
 (fn not-empty? [s] (not (empty? s)))
+(defn count
+  "Returns the number of items in the collection. (count nil) returns
+  0."
+  [x]
+  (if (or (vector? x) (string? x))
+    (. x -length)
+    (. (keys x) -length)))
 
 (fn reduce* [f val coll]
   (loop [i 0
