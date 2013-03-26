@@ -531,3 +531,9 @@
          "bcde"))
   (is (= (subs "abcde" 1 3)
          "bc")))
+
+(deftest subvec-tests
+  (is (= (subvec [1 2 3 4 5] 1)
+         [2 3 4 5]))
+  (is (= (subvec [1 2 3 4 5] 1 3)
+         [2 3])))

@@ -106,15 +106,12 @@
   (inc! *gensym*)
   (str "G__" *gensym*))
 
-(fn subvec [a s e]
-  (let [e (or e (count a))
-        r (new Array)]
-    (loop [i (or s 0)]
-      (if (< i e)
-        (do
-          (.push r (get* a i))
-          (recur (+ i 1)))
-        r))))
+(defn subvec
+  "Returns a persistent vector of the items in vector from
+  start (inclusive) to end (exclusive).  If end is not supplied,
+  defaults to (count vector)."
+  [v start end]
+  (. v slice start end))
 
 (defn map?
   "Returns true if m is a map. Note: all objects of non-primitive types
