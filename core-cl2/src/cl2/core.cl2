@@ -217,12 +217,10 @@
         (set! (get* m1 k) (get* m k))))
     m1))
 
-(fn keys [m]
-  (let [v []]
-    (dokeys [k m]
-      (if (.hasOwnProperty m k)
-        (.push v k)))
-    v))
+(defn keys
+  "Returns a sequence of the map's keys."
+  [m]
+  (for [[k v] m] k))
 
 (fn vals [m]
   (let [v []]
