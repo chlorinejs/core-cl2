@@ -54,3 +54,13 @@
   ([x] `true)
   ([x y] `(=* ~x ~y))
   ([x y & more] `(=* ~x ~y ~@more)))
+
+(defmacro reduce
+  ([f val coll]
+    `(reduce* ~f ~val ~coll))
+  ([f coll]
+     (if (vector? coll)
+       `(reduce* ~f ~(first coll) ~coll))
+     `(let [coll ~coll
+            init (first coll)]
+        (reduce* ~f init coll))))
