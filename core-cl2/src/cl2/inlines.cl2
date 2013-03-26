@@ -64,3 +64,13 @@
      `(let [coll ~coll
             init (first coll)]
         (reduce* ~f init coll))))
+
+(defmacro reductions
+  ([f val coll]
+    `(reductions* ~f ~val ~coll))
+  ([f coll]
+     (if (vector? coll)
+       `(reductions* ~f ~(first coll) ~coll))
+     `(let [coll ~coll
+            init (first coll)]
+        (reductions* ~f init coll))))
