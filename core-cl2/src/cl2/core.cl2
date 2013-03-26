@@ -144,14 +144,18 @@
               "RegExp")  'regexp
         :else            'map))
 
-(fn map* [fun arr]
-  (loop [r []
-         i 0]
-    (if (< i (count arr))
-      (do
-        (.push r (fun (get* arr i)))
-        (recur r (+ i 1)))
-      r)))
+(defn map*
+  "Non-native map implementation for old browsers."
+  [f arr]
+  (let [c (count arr)]
+    (loop [r []
+           i 0]
+      (if (< i c)
+        (do
+          (.push r (f (get* arr i)))
+          (recur r (+ i 1)))
+        r))))
+
 (fn map [f coll]
   (if (fn? Array.prototype.map)
     (.map coll f)
