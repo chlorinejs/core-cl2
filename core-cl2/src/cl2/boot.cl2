@@ -52,7 +52,7 @@
      )))
 
 (defmacro defn [fname & fdeclrs]
-  (chlorine.js/undef-macro fname)
+  ;;(chlorine.js/undef-macro fname)
   `(def ~fname ~(cons 'fn fdeclrs)))
 
 (defmacro lvar [& bindings]
