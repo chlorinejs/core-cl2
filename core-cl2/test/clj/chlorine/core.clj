@@ -21,9 +21,9 @@
   (is (= (js
           (defn test [a] (if (! (or (boolean? a) (string? a))) (first a))))
          (str "var test = function (a) {"
-              " if (!((\"boolean\" === typeof(a)) ||"
-              " (\"string\" === typeof(a))))"
-              " { return a[0]; }; }")))
+              " if (!((\"boolean\" === typeof(a))"
+              " || string$QUEST$(a))) {"
+              " return a[0]; }; }")))
   (is (= (js
           (defn test [a]
             (cond

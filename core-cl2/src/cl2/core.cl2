@@ -20,7 +20,13 @@
 (fn rest [x] (if (nil? x) [] (.slice x 1)))
 (fn nnext [x] (next (next x)))
 (fn vector? [a] (isa? a "Array"))
-(fn string? [s] (=== "string" (typeof s)))
+
+(defn string?
+  "Returns true if x is a String"
+  [x]
+  (or (=== "string" (typeof x))
+      (isa? x "String")))
+
 (fn number? [n] (=== "number" (typeof n)))
 (fn boolean? [b] (=== "boolean" (typeof b)))
 (fn fn? [f] (=== "function" (typeof f)))

@@ -21,7 +21,12 @@
 (defmacro rest [x] `(.slice ~x 1))
 
 (defmacro vector? [a] `(isa? ~a "Array"))
-(defmacro string? [s] `(=== "string" (typeof ~s)))
+
+(defmacro string?
+  [x]
+  `(or (=== "string" (typeof ~x))
+       (isa? ~x "String")))
+
 (defmacro number? [n] `(=== "number" (typeof ~n)))
 (defmacro boolean? [b] `(=== "boolean" (typeof ~b)))
 (defmacro fn? [f] `(=== "function" (typeof ~f)))
