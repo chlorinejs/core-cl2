@@ -161,15 +161,19 @@
   (set! map (fn [f coll] (.map coll f)))
   (set! map (fn [f coll] (map* f coll))))
 
-(fn remove [pred seq]
-  (loop [r []
-         i 0]
-    (if (< i (count seq))
-      (do
-        (when-not (pred (get* seq i))
-          (.push r (get* seq i)))
-        (recur r (+ 1 i)))
-      r)))
+(defn remove
+  "Returns a vector of the items in coll for which
+  (pred item) returns false. pred must be free of side-effects."
+  [pred seq]
+  (let [c (count seq)]
+    (loop [r []
+           i 0]
+      (if (< i c)
+        (do
+          (when-not (pred (get* seq i))
+            (.push r (get* seq i)))
+          (recur r (+ 1 i)))
+        r))))
 
 (fn filter* [pred arr]
   (loop [r []
