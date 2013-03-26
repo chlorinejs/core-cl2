@@ -208,7 +208,9 @@
         ret)
       {}))
 
-(fn select-keys [m ks]
+(defn select-keys
+  "Returns a map containing only those entries in map whose key is in keys"
+  [m ks]
   (let [m1 {}]
     (doseq [k ks]
       (if (.hasOwnProperty m k)
