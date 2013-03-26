@@ -98,15 +98,22 @@
                 (= null m)
                 (regexp? m)))))
 
-(fn type [x]
-  (cond (vector?     x) 'vector
-        (string?    x) 'string
-        (number?    x) 'number
-        (nil?       x) "nil"
-        (boolean?   x) 'boolean
-        (fn?        x) 'function
-        (regexp?    x) 'regexp
-        :else          'map))
+;; More info about type detection in javascript:
+;; http://stackoverflow.com/questions/332422/how-do-i-get-the-name-of-an-objects-type-in-javascript
+
+(defn type
+  "Returns the type of x as a string. Returns 'map on non-primitive types.
+  Won't try to determine Class name of x."
+  [x]
+  (cond (vector?     x)  'vector
+        (string?     x)  'string
+        (number?     x)  'number
+        (nil?        x)  "nil"
+        (=== "boolean"
+             (typeof x)) 'boolean
+        (fn?         x)  'function
+        (regexp?     x)  'regexp
+        :else            'map))
 
 (fn map* [fun arr]
   (loop [r []

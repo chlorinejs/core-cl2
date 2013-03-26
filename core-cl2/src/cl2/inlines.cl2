@@ -28,7 +28,7 @@
        (isa? ~x "String")))
 
 (defmacro number? [n] `(=== "number" (typeof ~n)))
-(defmacro boolean? [b] `(=== "boolean" (typeof ~b)))
+
 (defmacro fn? [f] `(=== "function" (typeof ~f)))
 (defmacro regexp? [re] `(isa? ~re "RegExp"))
 

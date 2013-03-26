@@ -22,6 +22,7 @@
   (is (string? "abc"))
   (is (string? :def))
   (is (string? 'xyz))
+  (is (string? (String. "foo")))
 
   (is (number? 123))
   (is (number? -456))
