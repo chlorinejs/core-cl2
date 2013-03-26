@@ -499,6 +499,12 @@
   ;;(is (= (sort #(< %1 %2) (vals {:foo 5, :bar 2, :baz 10})) [10 5 2]))
   )
 
+(deftest set-tests
+  (is (= (set [1 2 :true 1 2])
+         {1 true 2 true :true true}))
+  (is (= (hash-set 1 2 :true 1 2)
+         {1 true 2 true :true true})))
+
 (deftest nthnext-tests
   (is (= (nthnext [0 1 2 3 4 5 6 7 8 9] 3)
          [3 4 5 6 7 8 9])))

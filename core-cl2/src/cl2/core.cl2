@@ -403,11 +403,24 @@
   (when (pos? n)
     (when-let [s coll]
       (.slice s 0 n))))
-(fn set [& ks]
-  (def ret {})
-  (doseq [k ks]
-    (set! (get* ret k) true))
-  ret)
+
+(defn Cl2Set
+  "Constructor for set data type."
+  [coll]
+  (let [that this]
+    (doseq [k coll]
+      (set! (get* that k) true))))
+
+(defn hash-set
+  "Returns a new hash set with supplied keys."
+  [& ks]
+  (Cl2Set. ks))
+
+(defn set
+  "Returns a set of the distinct elements of coll."
+  [coll]
+  (Cl2Set. coll))
+
 (fn sort
   ([coll]
      (.sort (Array.prototype.slice.call coll 0)))
