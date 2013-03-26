@@ -28,9 +28,8 @@
       (isa? x "String")))
 
 (fn number? [n] (=== "number" (typeof n)))
-(fn boolean? [b] (=== "boolean" (typeof b)))
+
 (fn fn? [f] (=== "function" (typeof f)))
-(fn regexp? [re] (isa? re "RegExp"))
 
 (fn inc [arg] (+ 1 arg))
 (fn dec [arg] (- arg 1))
@@ -90,13 +89,17 @@
           (recur (+ i 1)))
         r))))
 
-(fn map? [m]
+(defn map?
+  "Returns true if m is a map. Note: all objects of non-primitive types
+   are considered maps."
+  [m]
   (and m
        (not (or (contains? #{'string 'number 'boolean 'function} (typeof m))
                 (vector? m)
                 (nil? m)
                 (= null m)
-                (regexp? m)))))
+                (fn? m)
+                (isa? m "RegExp")))))
 
 ;; More info about type detection in javascript:
 ;; http://stackoverflow.com/questions/332422/how-do-i-get-the-name-of-an-objects-type-in-javascript
@@ -109,10 +112,12 @@
         (string?     x)  'string
         (number?     x)  'number
         (nil?        x)  "nil"
+        (=== null    x)  'null
         (=== "boolean"
              (typeof x)) 'boolean
         (fn?         x)  'function
-        (regexp?     x)  'regexp
+        (isa? x
+              "RegExp")  'regexp
         :else            'map))
 
 (fn map* [fun arr]

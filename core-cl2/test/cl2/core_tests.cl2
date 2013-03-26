@@ -28,17 +28,11 @@
   (is (number? -456))
   (is (number? 9.8))
 
-  (is (boolean? true))
-  (is (boolean? false))
-  (is (= false (boolean? nil)))
-  (is (= false (boolean? "true")))
-
   (is (fn? (fn [])))
   (is (fn? console.log))
   (is (= false (fn? :a)))
 
-  (is (regexp? #"/a/"))
-  (is (= false (regexp? "b")))
+  (is (= (type #"/a/") 'regexp))
 
   (is (map? {:a 1 :b 2}))
   (is ((fn [] (map? arguments))))

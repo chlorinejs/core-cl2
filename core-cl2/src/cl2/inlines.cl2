@@ -30,7 +30,6 @@
 (defmacro number? [n] `(=== "number" (typeof ~n)))
 
 (defmacro fn? [f] `(=== "function" (typeof ~f)))
-(defmacro regexp? [re] `(isa? ~re "RegExp"))
 
 (defmacro inc [arg] `(+ 1 ~arg))
 (defmacro dec [arg] `(- ~arg 1))
