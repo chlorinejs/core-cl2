@@ -9,8 +9,6 @@
                (get* m k))
           not-found)))
 
-(defmacro isa? [a t]
-  `(instanceof ~a ~(symbol t)))
 (fn true? [expr] (=== true expr))
 (fn false? [expr] (=== false expr))
 (fn nil? [expr] (=== nil expr))
