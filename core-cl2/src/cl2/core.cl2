@@ -2,6 +2,12 @@
 (fn contains? [m k]
   (in k m))
 
+(defn boolean
+  "Coerces to boolean"
+  [x]
+  (and (!= null x)
+       (!== false x)))
+
 (defn get
   "Returns the value mapped to key, not-found or nil if key not present."
   [m k not-found]

@@ -38,6 +38,22 @@
   (is ((fn [] (map? arguments))))
   )
 
+(deftest boolean-tests
+  (is (= (boolean 3)
+         true))
+  (is (= (boolean 0)
+         true))
+  (is (= (boolean "")
+         true))
+  (is (= (boolean [])
+         true))
+  (is (= (boolean nil)
+         false))
+  (is (= (boolean false)
+         false))
+  (is (= (boolean null)
+         false)))
+
 (deftest inc-dec-test
   (is (= (inc 3) 4))
   (is (= (dec 3) 2)))
