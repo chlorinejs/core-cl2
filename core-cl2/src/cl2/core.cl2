@@ -486,6 +486,9 @@
            (cons p (partition n step pad (nthrest s step)))
            [(take n (concat p pad))])))))
 (defn subs
+  "Returns the substring of s beginning at start inclusive, and ending
+  at end (defaults to length of string), exclusive."
   [s start end]
-  (.slice s start (or end (count s))))
+  (.slice s start end))
+
 (def println console.log)
