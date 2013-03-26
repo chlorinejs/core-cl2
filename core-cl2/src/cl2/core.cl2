@@ -156,10 +156,11 @@
           (recur r (+ i 1)))
         r))))
 
-(fn map [f coll]
-  (if (fn? Array.prototype.map)
-    (.map coll f)
-    (map* f coll)))
+(def map)
+(if (fn? Array.prototype.map)
+  (set! map (fn [f coll] (.map coll f)))
+  (set! map (fn [f coll] (map* f coll))))
+
 (fn remove [pred seq]
   (loop [r []
          i 0]

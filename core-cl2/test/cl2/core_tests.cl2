@@ -429,7 +429,8 @@
   (is (not (some even? [1 3 5 7]))))
 
 (deftest map-tests
-  (is (= (map #(+* 1 %1) [1 2 3 4 5]) [2 3 4 5 6])))
+  (is (= (map* #(+ 1 %) [1 2 3 4 5]) [2 3 4 5 6]))
+  (is (= (map #(+ 1 %) [1 2 3 4 5]) [2 3 4 5 6])))
 
 (deftest mapcat-tests
   (is (= (mapcat reverse [[3 2 1 0] [6 5 4] [9 8 7]])
