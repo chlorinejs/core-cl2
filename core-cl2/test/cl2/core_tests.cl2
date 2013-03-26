@@ -415,7 +415,7 @@
   (is (not (when-let [a nil] (+ a 4)))))
 
 (deftest fn*-tests
-  (is (= (#(+* 1 %1) 2) 3)))
+  (is (= (#(+ 1 %) 2) 3)))
 
 ;; (deftest partial-tests
 ;;   (is (= ((partial + 1) 1) 2)))
@@ -476,7 +476,7 @@
   (is (= (cons 0 [1 2]) [0 1 2])))
 
 (deftest iterate-tests
-  (is (= (iterate #(+ 1 %1) 0 3) [0 1 2])))
+  (is (= (iterate #(+ 1 %) 0 3) [0 1 2])))
 
 (deftest merge-tests
   (is (= (merge {:a 1 :b 2} {:a 3 :c 4}) {:a 3 :b 2 :c 4})))
