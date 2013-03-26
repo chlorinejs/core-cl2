@@ -231,40 +231,52 @@
   [m]
   (for [[k v] m] v))
 
-(fn =* [x y]
+(defn v=*
+  "Checks if two vectors are equal."
+  [x y]
+  (if (=== (count x) (count y))
+    (loop [a x b y c (count x)]
+      (if (=== 0 c) ;;empty vectors
+        true
+        (if (=* (first a) (first b))
+          (recur (rest a) (rest b) (dec c))
+          false)))
+    false))
+
+(defn m=*
+  "Checks if two maps are equal."
+  [x y]
+  (let [xkeys (.sort (keys x))]
+    (if (=* xkeys (.sort (keys y)))
+      ;;keys-equal
+      (loop [ks xkeys c (count xkeys)]
+        (if (=* (get* x (first ks))
+                (get* y (first ks)))
+          (if (=== 0 c)
+            true
+            (recur (rest ks) (dec c)))
+          false))
+      false)))
+
+(defn =*
+  "Two argument version of =."
+  [x y]
   (if (=== x y)
     true
     (if (=== (type x) (type y))
       (cond
        (vector? x)
-       (if (=== (count x) (count y))
-         (loop [a x b y c (count x)]
-           (if (=== 0 c) ;;empty vectors
-             true
-             (if (=* (first a) (first b))
-               (recur (rest a) (rest b) (dec c))
-               false)))
-         false)
+       (v=* x y)
 
        (map? x)
-       (let [xkeys (.sort (keys x))]
-         (if (=* xkeys (.sort (keys y)))
-           ;;keys-equal
-           (loop [ks xkeys c (count xkeys)]
-             (if (=* (get* x (first ks))
-                     (get* y (first ks)))
-               (if (=== 0 c)
-                 true
-                 (recur (rest ks) (dec c)))
-               false))
-           false))
+       (m=* x y)
 
-       :default
+       :else
        false)
-      ;; not same type
+      ;; non comparable types
       false)))
 
-(fn =
+(defn =
   ([]    true)
   ([x]   true)
   ([x y] (=* x y))
