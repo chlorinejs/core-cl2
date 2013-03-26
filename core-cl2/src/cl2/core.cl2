@@ -187,10 +187,15 @@
           (recur r (+ i 1)))
         r))))
 
-(fn filter [pred coll]
-  (if (fn? Array.prototype.filter)
-    (.filter coll pred)
-    (filter* pred coll)))
+(def ^{:doc "Returns a vector of the items in coll for which
+  (pred item) returns true. pred must be free of side-effects."}
+  filter)
+(if (fn? Array.prototype.filter)
+  (set! filter (fn [pred coll]
+                 (.filter coll pred)))
+  (set! filter (fn [pred coll]
+                 (filter* pred coll))))
+
 (fn merge
   "Merge the contents of map `m2' into map `m1' and return a new map."
   [& ms]
