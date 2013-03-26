@@ -1,6 +1,6 @@
 (deftest native-operator-macro-tests
   (is (= "foobar"
-         (+ "f" "oo" "bar")))
+         (+* "f" "oo" "bar")))
   (is (= 10
          (+ 1 2 3 4)))
   (is (= -15

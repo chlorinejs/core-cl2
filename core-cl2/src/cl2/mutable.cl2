@@ -1,5 +1,6 @@
-(defmacro inc! [arg] `(set! ~arg (+ ~arg 1)))
-(defmacro dec! [arg] `(set! ~arg (- ~arg 1)))
+(defmacro inc! [arg] `(set! ~arg (+* ~arg 1)))
+(defmacro dec! [arg] `(set! ~arg (-* ~arg 1)))
+
 (fn assoc*! [m k v]
   (set! (get m k) v)
   m)

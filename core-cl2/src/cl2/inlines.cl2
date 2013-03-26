@@ -31,9 +31,6 @@
 
 (defmacro fn? [f] `(=== "function" (typeof ~f)))
 
-(defmacro inc [arg] `(+ 1 ~arg))
-(defmacro dec [arg] `(- ~arg 1))
-
 (defmacro +
   ([] `0)
   ([x] x)
@@ -48,6 +45,10 @@
   ([] `1)
   ([x] x)
   ([x & more] `(** ~x ~@more)))
+
+(defmacro inc [arg] `(+ 1 ~arg))
+
+(defmacro dec [arg] `(- ~arg 1))
 
 (defmacro =
   ([] `true)
