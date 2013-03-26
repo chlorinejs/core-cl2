@@ -80,18 +80,24 @@
   ([f coll]
     (reduce* f (first coll) coll)))
 
-(fn reductions* [f val coll]
-  (def ret [])
-  (loop [i 0
-         r val]
-    (if (< i (count coll))
-      (recur (+ i 1) (f (do (.push ret r) r)
-                        (get* coll i)))
-      (.push ret r)))
-  ret)
-(fn reductions
-  ([f val coll]
-    (reductions* f val coll))
+(defn reductions*
+  "Standard version of reductions"
+  [f init coll]
+  (let [c (count coll)
+        ret []]
+    (loop [i 0
+           r init]
+      (if (< i c)
+        (recur (+ i 1) (f (do (.push ret r) r)
+                          (get* coll i)))
+        (.push ret r)))
+    ret))
+
+(defn reductions
+  "Returns a vector of the intermediate values of the reduction (as
+  per reduce) of coll by f, starting with init."
+  ([f init coll]
+    (reductions* f init coll))
   ([f coll]
     (reductions* f (first coll) coll)))
 
