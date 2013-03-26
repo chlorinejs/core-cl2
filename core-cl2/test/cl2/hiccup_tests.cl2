@@ -1,12 +1,11 @@
-(defhtml hello-html
-  "My day!"
-  [a-var an-other-var]
-  [:div
-   [:div#id.foo
-    a-var]
-   [:span.bar an-other-var]])
+(deftest hiccup-tests
+  (defn span-sum
+    "Calculates sum of two numbers and puts the result into a span."
+    [x y]
+    (let [z (+ x y)]
+      (hiccup [:div.foo [:span#bar z]]
+              [:div.jazz y])))
 
-(deftest defhtml-tests
-  (is (= (hello-html "foo" 3)
-         (+* "<div><div class=\"foo\" id=\"id\">foo</div>"
-             "<span class=\"bar\">3</span></div>"))))
+  (is (= (span-sum 4 5)
+         (+ "<div class=\"foo\"><span id=\"bar\">9</span></div>"
+            "<div class=\"jazz\">5</div>"))))
