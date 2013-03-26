@@ -1,7 +1,9 @@
 (fn not [x] (! x))
 (fn contains? [m k]
   (in k m))
+
 (defn get
+  "Returns the value mapped to key, not-found or nil if key not present."
   [m k not-found]
   (or (or (and (string? m) (get* m k))
           not-found)
