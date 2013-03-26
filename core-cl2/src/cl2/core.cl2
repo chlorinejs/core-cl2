@@ -222,12 +222,10 @@
   [m]
   (for [[k v] m] k))
 
-(fn vals [m]
-  (let [v []]
-    (dokeys [k m]
-      (if (.hasOwnProperty m k)
-        (.push v (get* m k))))
-    v))
+(defn vals
+  "Returns a sequence of the map's values."
+  [m]
+  (for [[k v] m] v))
 
 (fn =* [x y]
   (if (=== x y)
