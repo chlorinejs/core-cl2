@@ -196,8 +196,10 @@
   (set! filter (fn [pred coll]
                  (filter* pred coll))))
 
-(fn merge
-  "Merge the contents of map `m2' into map `m1' and return a new map."
+(defn merge
+  "Returns a map that consists of the rest of the maps conj-ed onto
+  the first.  If a key occurs in more than one map, the mapping from
+  the latter (left-to-right) will be the mapping in the result."
   [& ms]
   (or (let [ret {}]
         (doseq [m ms]
