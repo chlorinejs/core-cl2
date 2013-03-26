@@ -175,14 +175,18 @@
           (recur r (+ 1 i)))
         r))))
 
-(fn filter* [pred arr]
-  (loop [r []
-         i 0]
-    (if (< i (count arr))
-      (do
-        (if (pred (get* arr i)) (.push r (get* arr i)))
-        (recur r (+ i 1)))
-      r)))
+(defn filter*
+  "Non-native filter implementation for old browsers."
+  [pred arr]
+  (let [c (count arr)]
+    (loop [r []
+           i 0]
+      (if (< i c)
+        (do
+          (if (pred (get* arr i)) (.push r (get* arr i)))
+          (recur r (+ i 1)))
+        r))))
+
 (fn filter [pred coll]
   (if (fn? Array.prototype.filter)
     (.filter coll pred)

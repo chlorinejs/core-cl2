@@ -437,7 +437,8 @@
          [0 1 2 3 4 5 6 7 8 9])))
 
 (deftest filter-tests
-  (is (= (filter even? [1 2 3 4 5]) [2 4])))
+  (is (= (filter even? [1 2 3 4 5]) [2 4]))
+  (is (= (filter* even? [1 2 3 4 5]) [2 4])))
 
 (deftest remove-tests
   (is (= (remove even? [1 2 3 4 5]) [1 3 5])))
