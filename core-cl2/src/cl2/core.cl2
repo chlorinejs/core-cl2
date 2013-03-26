@@ -294,12 +294,22 @@
   ([& args]
      (not (apply = args))))
 
-(fn + [& args]
-  (reduce (fn [x y] (+ x y)) 0 args))
-(fn - [& args]
-  (reduce (fn [x y] (- x y)) 0 args))
-(fn * [& args]
-  (reduce (fn [x y] (* x y)) 1 args))
+(defn +
+  "Returns the sum of nums. (+) returns 0."
+  [& args]
+  (reduce #(+ %1 %2) 0 args))
+
+(defn -
+  "If no ys are supplied, returns the negation of x, else subtracts
+  the ys from x and returns the result."
+  [& args]
+  (reduce #(- %1 %2) 0 args))
+
+(defn *
+  "Returns the product of nums. (*) returns 1."
+  [& args]
+  (reduce #(* %1 %2) 1 args))
+
 (fn identity
   [x] x)
 
