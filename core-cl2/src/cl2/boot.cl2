@@ -86,25 +86,61 @@
                 (let [~vname# (get* m# ~kname#)]
                   ~@body))))))
 
-(defmacro for [[bindings coll] & body]
-  (cond
-   (symbol? bindings)
-   `(let [m# ~coll]
-      (def ret# [])
-      (dokeys [i# m#]
-              (.push ret#
-                     (let [~bindings (get* m# i#)]
-                       ~@body)))
-      ret#)
-   (vector? bindings)
-   (let [[kname# vname#] bindings]
-     `(let [m# ~coll]
-        (def ret# [])
-        (dokeys [~kname# m#]
-                (.push ret#
-                       (let [~vname# (get* m# ~kname#)]
-                         ~@body)))
-        ret#))))
+(defmacro for
+  "List comprehension. Takes a vector of one or more
+   binding-form/collection-expr pairs, each followed by zero or more
+   modifiers, and yields a (NOT LAZY!) vector of evaluations of expr.
+   Collections are iterated in a nested fashion, rightmost fastest,
+   and nested coll-exprs can refer to bindings created in prior
+   binding-forms.  Supported modifiers are: :let [binding-form expr ...],
+   :while test, :when test."
+  [[& for-declrs] body]
+  (let [for-declrs
+        (reverse (partition 2 for-declrs))
+        return-name (gensym 'ret)]
+    (letfn [(loop-form
+              [bindings coll body]
+              (let [coll-name (gensym 'coll)]
+                (list
+                 `(let* ~coll-name ~coll)
+
+                 (let [[kname vname] (if (vector? bindings)
+                                       bindings
+                                       [(gensym 'k) bindings])]
+                   `(dokeys [~kname ~coll-name]
+                            (let* ~vname (get* ~coll-name ~kname))
+                            ~@body)))))
+            (modifier-form
+              [modifier-type modifier-expr body]
+              (cond
+               (= :while modifier-type)
+               (list `(if ~modifier-expr
+                       ~@body
+                       break))
+               (= :when modifier-type)
+               (list `(when ~modifier-expr
+                        ~@body))
+               (= :let modifier-type)
+               (cons `(let* ~@modifier-expr) body)
+               :else
+               (throw
+                (Exception. "Unsupported modifier form passed to `for`"))))]
+      (loop [for-declrs for-declrs
+             body (list `(. ~return-name push ~body))]
+        (if-let [binding-pair (first for-declrs)]
+          (recur (rest for-declrs)
+                 (cond
+                  (or (symbol? (first binding-pair))
+                      (vector? (first binding-pair)))
+                  (apply loop-form  `(~@binding-pair ~body))
+                  (keyword? (first binding-pair))
+                  (apply modifier-form `(~@binding-pair ~body))
+                  :else
+                  (throw (Exception. "Invalid binding form passed to `for`"))
+                  ))
+          `(let [~return-name []]
+             ~@body
+             ~return-name))))))
 
 (defmacro re-test [regexp s]
   `(.. ~regexp (test ~s)))
