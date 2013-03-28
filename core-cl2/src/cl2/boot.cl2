@@ -72,19 +72,54 @@
            ~@body
            (recur (+ ~var 1)))))))
 
-(defmacro doseq [[bindings coll] & body]
-  (cond
-   (symbol? bindings)
-   `(let [m# ~coll]
-      (dokeys [i# m#]
-              (let [~bindings (get* m# i#)]
-                ~@body)))
-   (vector? bindings)
-   (let [[kname# vname#] bindings]
-     `(let [m# ~coll]
-        (dokeys [~kname# m#]
-                (let [~vname# (get* m# ~kname#)]
-                  ~@body))))))
+(defmacro doseq
+  "Repeatedly executes body (presumably for side-effects) with
+  bindings and filtering as provided by \"for\".  Does not retain
+  the head of the sequence. Returns nil."
+  [[& for-declrs] & body]
+  (let [for-declrs
+        (reverse (partition 2 for-declrs))]
+    (letfn [(loop-form
+              [bindings coll body]
+              (let [coll-name (gensym 'coll)]
+                (list
+                 `(let* ~coll-name ~coll)
+
+                 (let [[kname vname] (if (vector? bindings)
+                                       bindings
+                                       [(gensym 'k) bindings])]
+                   `(dokeys [~kname ~coll-name]
+                            (let* ~vname (get* ~coll-name ~kname))
+                            ~@body)))))
+            (modifier-form
+              [modifier-type modifier-expr body]
+              (cond
+               (= :while modifier-type)
+               (list `(if ~modifier-expr
+                       ~@body
+                       break))
+               (= :when modifier-type)
+               (list `(when ~modifier-expr
+                        ~@body))
+               (= :let modifier-type)
+               (cons `(let* ~@modifier-expr) body)
+               :else
+               (throw
+                (Exception. "Unsupported modifier form passed to `doseq`"))))]
+      (loop [for-declrs for-declrs
+             body body]
+        (if-let [binding-pair (first for-declrs)]
+          (recur (rest for-declrs)
+                 (cond
+                  (or (symbol? (first binding-pair))
+                      (vector? (first binding-pair)))
+                  (apply loop-form  `(~@binding-pair ~body))
+                  (keyword? (first binding-pair))
+                  (apply modifier-form `(~@binding-pair ~body))
+                  :else
+                  (throw (Exception. "Invalid binding form passed to `doseq`"))
+                  ))
+          `((fn [] ~@body)))))))
 
 (defmacro for
   "List comprehension. Takes a vector of one or more
