@@ -545,3 +545,8 @@
          [2 3 4 5]))
   (is (= (subvec [1 2 3 4 5] 1 3)
          [2 3])))
+
+(deftest trampoline-tests
+  (defn tramfactorial [x n] (if (= 1 n) x #(tramfactorial (* x n) (dec n))))
+  (is (= (trampoline tramfactorial 1 5)
+         120)))
