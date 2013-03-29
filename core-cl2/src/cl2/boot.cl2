@@ -11,7 +11,9 @@
 
 (defmacro apply [fun & args] `(.apply ~fun 0 ~@args))
 
-(defmacro fn [& fdeclrs]
+(defmacro fn
+  "Function form. Supports multi-arity."
+  [& fdeclrs]
   (let [valid-fn-declrs? (fn [fdeclrs]
                            (and (list? fdeclrs)
                                 (vector? (first fdeclrs))))
