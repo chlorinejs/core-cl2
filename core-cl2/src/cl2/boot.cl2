@@ -7,7 +7,7 @@
   [& syms]
   (apply chlorine.js/borrow-macros syms))
 
-(borrow-macros when when-not unless if-not if-let when-let cond .. -> ->>)
+(borrow-macros when when-not unless if-not if-let when-let cond condp .. -> ->>)
 
 (defmacro apply [fun & args] `(.apply ~fun 0 ~@args))
 

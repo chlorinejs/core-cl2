@@ -88,3 +88,11 @@
            "bar"))
   (is (apply (as-fn #{:a :b :c}) [:a]))
   (is (=== false (apply (as-fn #{:a :b :c}) [:d]))))
+
+(deftest condp-tests
+  (is (=== (condp #(> %1 %2) 3
+             1 :one
+             2 :two
+             3 :three
+             4 :four)
+           :four)))
