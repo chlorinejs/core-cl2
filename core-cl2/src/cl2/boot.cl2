@@ -2,9 +2,15 @@
   [a t]
   `(instanceof ~a ~(symbol t)))
 
-(defmacro borrow-macros [& syms] (apply chlorine.js/borrow-macros syms))
-(defmacro apply [fun & args] `(.apply ~fun 0 ~@args))
+(defmacro borrow-macros
+  "Reuses clojure.core macros in Chlorine."
+  [& syms]
+  (apply chlorine.js/borrow-macros syms))
+
 (borrow-macros when when-not unless if-not if-let when-let cond .. -> ->>)
+
+(defmacro apply [fun & args] `(.apply ~fun 0 ~@args))
+
 (defmacro fn [& fdeclrs]
   (let [valid-fn-declrs? (fn [fdeclrs]
                            (and (list? fdeclrs)
