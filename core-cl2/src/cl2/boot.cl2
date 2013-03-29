@@ -96,7 +96,7 @@
               (cond
                (= :while modifier-type)
                (list `(if ~modifier-expr
-                       ~@body
+                        (do ~@body)
                        break))
                (= :when modifier-type)
                (list `(when ~modifier-expr
@@ -150,7 +150,7 @@
               (cond
                (= :while modifier-type)
                (list `(if ~modifier-expr
-                       ~@body
+                        (do ~@body)
                        break))
                (= :when modifier-type)
                (list `(when ~modifier-expr
