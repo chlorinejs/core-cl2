@@ -59,7 +59,11 @@
      (throw (Exception. "Invalid function declaration!"))
      )))
 
-(defmacro defn [fname & fdeclrs]
+(defmacro defn
+  "Defines a function."
+  [fname & fdeclrs]
+  ;; Will undefine macros when ^:inline is implemented.
+  ;; Chlorine currently uses macros instead of ^:inline
   ;;(chlorine.js/undef-macro fname)
   `(def ~fname ~(cons 'fn fdeclrs)))
 
