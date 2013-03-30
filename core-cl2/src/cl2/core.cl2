@@ -1,5 +1,13 @@
 (fn not [x] (! x))
-(fn contains? [m k]
+
+(defn contains?
+  "Returns true if key is present in the given collection, otherwise
+  returns false. Note that for numerically indexed collections like
+  vectors, this tests if the numeric key is within the range of indexes;
+  for maps and sets, this tests if key is within the keys. Also, keys must
+  be of javascript primitive types.
+  See also 'some'."
+  [m k]
   (in k m))
 
 (defn boolean
