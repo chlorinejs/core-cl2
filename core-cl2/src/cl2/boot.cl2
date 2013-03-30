@@ -212,7 +212,3 @@
        `(set! ~setee ~(cons 'fn fdeclr))))
 
 (defmacro nth [& args] `(get* ~@args))
-
-(defmacro as-fn [x]
-  (cond (keyword? x) `(fn [coll not-found] (get coll ~x not-found))
-        (set? x)     `(fn [y] (contains? ~x y))))
