@@ -37,7 +37,7 @@
              (join ",")))))
 
 (deftest regexp-tests
-  (is (=== (re-test #"/e/" "e")
+  (is (=== (.test #"/e/" "e")
          true))
   (is (=== (.. #"/e/" (test "E"))
          false)))

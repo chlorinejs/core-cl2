@@ -184,12 +184,6 @@
              ~@body
              ~return-name))))))
 
-(defmacro re-test [regexp s]
-  `(.. ~regexp (test ~s)))
-
-(defmacro re-exec [regexp s]
-  `(.. ~regexp (exec ~s)))
-
 (defmacro defmulti [fname dispatch-fn]
   `(do
      (defn ~fname [& args]
