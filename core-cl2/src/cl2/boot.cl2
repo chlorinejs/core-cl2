@@ -67,18 +67,13 @@
   ;;(chlorine.js/undef-macro fname)
   `(def ~fname ~(cons 'fn fdeclrs)))
 
-(defmacro lvar [& bindings]
-  `(inline
-    ~(str "var "
-          (clojure.string/join ","
-            (map (fn [[vname vval]]
-                   (str vname " = " (chlorine.js/emit-str vval)))
-                 (partition 2 bindings))))))
-
-(defmacro dotimes [[var n] & body]
+(defmacro dotimes
+  "Repeatedly executes body (presumably for side-effects) with name
+  bound to integers from 0 through n-1."
+  [[var n] & body]
   (let [nsym (gensym)]
     `(do
-       (lvar ~nsym ~n)
+       (let* ~nsym ~n)
        (loop [~var 0]
          (when (< ~var ~nsym)
            ~@body
