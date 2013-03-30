@@ -31,7 +31,13 @@
 
 (fn first [x] (get* x 0))
 (fn second [x] (get* x 1))
-(fn last [x] (get* x (- (count x) 1)))
+
+(defn last
+  "Return the last item in coll, in linear time.
+  Only works on vectors and strings, NOT maps."
+  [x]
+  (if (nil? x) nil (get* x (- (count x) 1))))
+
 (fn next [x] (if (empty? x) nil (if (< 1 (count x)) (.slice x 1))))
 (fn rest [x] (if (nil? x) [] (.slice x 1)))
 (fn nnext [x] (next (next x)))

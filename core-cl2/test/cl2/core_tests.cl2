@@ -11,7 +11,7 @@
 (deftest last-next-rest-tests
   (is (= 3 (last [1 2 3])))
   (is (= nil (last [])))
-  ;;(is (= nil (last nil)))
+  (is (= nil (last nil)))
   )
 
 (deftest type-tests
