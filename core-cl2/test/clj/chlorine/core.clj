@@ -99,8 +99,6 @@
          "baz(3, 4, bar(1, 2, foo))"))
   (is (= (js (isa? [ 1 2 3] "Array"))
          "([1,2,3] instanceof Array)"))
-  (is (= (js (re-test #"/e/" "e"))
-         "/e/.test(\"e\")"))
   (is (= (js (contains? [] 10))
          "(10 in [])")))
 
