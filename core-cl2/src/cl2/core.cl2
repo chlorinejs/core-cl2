@@ -216,7 +216,9 @@
           (recur r (+ i 1)))
         r))))
 
-(def map)
+(def ^{:doc "Creates a new vector with the results of calling a
+provided function  on every element in this vector."}
+  map)
 (if (fn? Array.prototype.map)
   (set! map (fn [f coll] (.map coll f)))
   (set! map (fn [f coll] (map* f coll))))
