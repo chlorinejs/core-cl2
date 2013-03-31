@@ -613,7 +613,10 @@ provided function  on every element in this vector."}
   "Returns a vector of [(take n coll) (drop n coll)]"
   [n coll]
   [(take n coll) (drop n coll)])
-(fn repeat [n x]
+
+(defn repeat
+  "Returns a sequence of xs for n times."
+  [n x]
   (loop [ret [] n n]
     (if (zero? n)
       ret
