@@ -650,13 +650,16 @@ provided function  on every element in this vector."}
                  (next vs)))
       map)))
 
-(fn nthnext
+(defn nthnext
+  "Returns the nth next of coll, coll when n is 0."
   [coll n]
   (loop [n n xs coll]
     (if (and xs (pos? n))
       (recur (dec n) (next xs))
       xs)))
-(fn nthrest
+
+(defn nthrest
+  "Returns the nth rest of coll, coll when n is 0."
   [coll n]
   (loop [n n xs coll]
     (if (and xs (pos? n))
