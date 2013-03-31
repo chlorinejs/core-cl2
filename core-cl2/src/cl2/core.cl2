@@ -638,7 +638,8 @@ provided function  on every element in this vector."}
   [pred coll]
   [(take-while pred coll) (drop-while pred coll)])
 
-(fn zipmap
+(defn zipmap
+  "Returns a map with the keys mapped to the corresponding vals."
   [keys vals]
   (def map {})
   (loop [ks keys
