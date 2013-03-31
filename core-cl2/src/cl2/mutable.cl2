@@ -1,19 +1,22 @@
 (defmacro inc! [arg] `(set! ~arg (+* ~arg 1)))
+
 (defmacro dec! [arg] `(set! ~arg (-* ~arg 1)))
 
-(fn assoc*! [m k v]
-  (set! (get m k) v)
-  m)
-(fn assoc!
-  ([map key val] (assoc*! map key val))
-  ([map key val & kvs]
-     (let [ret (assoc*! map key val)]
-       (if kvs
-         (assoc! ret (first kvs) (second kvs) (nnext kvs))
-         ret))))
-(fn dissoc! [m & ks]
-  (for [k ks]
-    (delete (get m k)))
+(defn assoc!
+  "Mutable version of assoc."
+  [m & kvs]
+  (loop [kv-tail kvs]
+    (if kv-tail
+      (do (let* [k v] kv-tail)
+          (set! (get* m k) v)
+          (recur (nnext kv-tail)))
+      m)))
+
+(defn dissoc!
+  "Mutable version of dissoc."
+  [m & ks]
+  (doseq [k ks]
+    (delete (get* m k)))
   m)
 (fn reverse! [x] (.reverse x))
 (fn conj! [coll & xs]
