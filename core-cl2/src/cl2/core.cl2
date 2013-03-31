@@ -447,7 +447,10 @@ provided function  on every element in this vector."}
   has the same effects, if any, and returns the opposite truth value."
   [f]
   (fn [& args] (not (apply f args))))
-(fn constantly [x]
+
+(defn constantly
+  "Returns a function that takes any number of arguments and returns x"
+  [x]
   (fn [] x))
 (fn peek [x]
   (if (nil? x) nil (get* x 0)))
