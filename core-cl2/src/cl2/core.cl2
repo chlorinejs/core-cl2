@@ -441,13 +441,11 @@ provided function  on every element in this vector."}
   "quot[ient] of dividing numerator by denominator."
   [x y]
   (int (/ x y)))
-(fn integer? [n]
-  (=== n (int n)))
-(fn even? [n]
-  (= 0 (rem n 2)))
-(fn odd? [n]
-  (= 1 (rem n 2)))
-(fn complement [f]
+
+(defn complement
+  "Takes a fn f and returns a fn that takes the same arguments as f,
+  has the same effects, if any, and returns the opposite truth value."
+  [f]
   (fn [& args] (not (apply f args))))
 (fn constantly [x]
   (fn [] x))
