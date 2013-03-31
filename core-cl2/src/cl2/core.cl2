@@ -600,7 +600,10 @@ provided function  on every element in this vector."}
                    (step pred (rest s))
                    s)))]
     (step pred coll)))
-(fn cycle [coll n]
+
+(defn cycle
+  "Returns a vector of n repetitions of the items in coll."
+  [coll n]
   (loop [ret [] n n]
     (if (zero? n)
       ret
