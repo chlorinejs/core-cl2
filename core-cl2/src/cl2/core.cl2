@@ -675,7 +675,9 @@ provided function  on every element in this vector."}
   "Return a random element of the vector."
   [coll]
   (nth coll (rand-int (count coll))))
-(fn range*
+
+(defn range*
+  "Standard version of range."
   [start end step]
   (let [ret []
         comp (if (pos? step) #(< %1 %2) #(> %1 %2))]
@@ -687,7 +689,10 @@ provided function  on every element in this vector."}
         (if (comp i end)
           (cons ret (range* i end step))
           ret)))))
-(fn range
+(defn range
+  "Returns a vector of nums from start (inclusive) to end
+  (exclusive), by step, where start defaults to 0, step to 1, and end
+  to infinity."
   ([end] (range* 0 end 1))
   ([start end] (range* start end 1))
   ([start end step] (range* start end step)))
