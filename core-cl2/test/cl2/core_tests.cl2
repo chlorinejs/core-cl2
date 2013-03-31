@@ -341,14 +341,6 @@
   (is (= (identity 3) 3))
   (is (= (identity 4) 4)))
 
-(deftest peek-tests
-  (is (= (peek [1 2]) 1))
-  (is (= (peek nil) nil)))
-
-(deftest pop-tests
-  (is (= (pop [1 2]) [2]))
-  (is (= (pop nil) nil)))
-
 (deftest contains?-tests
   (is (= true (contains? [4 4 4 4] 3)))
   (is (= true (contains? {:a 1 :b 2} :a)))
