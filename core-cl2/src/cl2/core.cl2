@@ -386,25 +386,60 @@ provided function  on every element in this vector."}
   (cond
    (=== x y)
    0
+
    (> x y)
    1
+
    (< x y)
    -1))
-(fn zero? [x] (=== 0 x))
 
-(fn int [x]
+(defn int
+  "Coerce to int."
+  [x]
   (if (number? x) (bit-or x 0)))
 
-(def max Math.max)
-(def min Math.min)
-(fn pos? [x]
+(def ^{:doc "Returns the greatest of the nums. If no number is provided,
+  returns `-Infinity`."}
+  max Math.max)
+
+(def ^{:doc "Returns the least of the nums. If no number is provided,
+  returns `Infinity`."}
+  min Math.min)
+
+(defn pos?
+  "Returns true if num is greater than zero, else false"
+  [x]
   (and (number? x) (> x 0)))
-(fn neg? [x]
+
+(defn neg?
+  "Returns true if num is less than zero, else false"
+  [x]
   (and (number? x) (< x 0)))
-(fn rand
+
+(defn integer?
+  "Returns true if n is an integer"
+  [n]
+  (=== n (int n)))
+
+(defn even?
+  "Returns true if n is even, else false"
+  [n]
+  (=== 0 (rem n 2)))
+
+(defn odd?
+  "Returns true if n is odd, else false"
+  [n]
+  (=== 1 (rem n 2)))
+
+(defn rand
+  "Returns a random floating point number between 0 (inclusive) and
+  n (default 1) (exclusive)"
   ([]  (Math.random))
   ([n] (* n (Math.random))))
-(fn quot [x y]
+
+(defn quot
+  "quot[ient] of dividing numerator by denominator."
+  [x y]
   (int (/ x y)))
 (fn integer? [n]
   (=== n (int n)))
