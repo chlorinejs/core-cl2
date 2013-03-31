@@ -50,12 +50,6 @@
               " return \"no\"; }; }; }"
               ))))
 
-(deftest variables
-  (is (= (js
-           (lvar x 0)
-           (set! x (+ x 1)))
-         " var x = 0; x = (x + 1);")))
-
 (deftest data-structures
     (is (= (js (contains? {:a 1} :a))
            "('a' in {'a' : 1})")))
