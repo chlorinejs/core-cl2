@@ -608,7 +608,10 @@ provided function  on every element in this vector."}
     (if (zero? n)
       ret
       (recur (.concat ret coll) (dec n)))))
-(fn split-at [n coll]
+
+(defn split-at
+  "Returns a vector of [(take n coll) (drop n coll)]"
+  [n coll]
   [(take n coll) (drop n coll)])
 (fn repeat [n x]
   (loop [ret [] n n]
