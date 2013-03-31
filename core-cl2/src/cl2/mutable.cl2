@@ -35,9 +35,11 @@
   [coll & xs]
   (.apply coll.unshift coll xs)
   coll)
-(fn merge!
+
+(defn merge!
+  "Mutable version of merge."
   [m0 & ms]
-  (for [m ms]
-    (for [[k v] m]
-      (set! (get m0 k) v)))
+  (doseq [m ms]
+    (doseq [[k v] m]
+      (set! (get* m0 k) v)))
   m0)
