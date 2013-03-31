@@ -359,7 +359,7 @@
 
 (deftest assoc-vector-test
   (def my-vec [0 1 2])
-  (def new-vec (assoc [0 1 2] 1 :x))
+  (def new-vec (assoc my-vec 1 :x))
   (is (= new-vec [0 :x 2]))
   (is (= my-vec [0 1 2])))
 
