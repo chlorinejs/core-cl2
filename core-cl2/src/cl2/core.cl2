@@ -585,7 +585,9 @@ provided function  on every element in this vector."}
   [n coll]
   (.slice coll 0 (- coll.length n)))
 
-(fn take-last [n coll]
+(defn take-last
+  "Returns a seq of the last n items in coll. See also subvec."
+  [n coll]
   (.slice coll (- coll.length n)))
 
 (fn drop-while [pred coll]
