@@ -571,7 +571,11 @@ provided function  on every element in this vector."}
      (.sort (Array.prototype.slice.call coll 0)))
   ([comp x]
      (.sort (Array.prototype.slice.call x 0) comp)))
-(fn take-while [pred coll]
+
+(defn take-while
+  "Returns a vector of successive items from coll while
+  (pred item) returns true. pred must be free of side-effects."
+  [pred coll]
   (when-let [s coll]
     (when (pred (first s))
       (conj (take-while pred (rest s)) (first s)))))
