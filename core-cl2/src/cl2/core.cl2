@@ -317,7 +317,7 @@ provided function  on every element in this vector."}
       false)))
 
 (defn =*
-  "Two argument version of =."
+  "Equality. Returns true if x equals y, false if not."
   [x y]
   (if (=== x y)
     true
@@ -335,6 +335,7 @@ provided function  on every element in this vector."}
       false)))
 
 (defn =
+  "Equality. Returns true if all its arguments are equal."
   ([]    true)
   ([x]   true)
   ([x y] (=* x y))
