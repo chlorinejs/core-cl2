@@ -538,7 +538,10 @@ provided function  on every element in this vector."}
   (when (pos? n)
     (when-let [s coll]
       (.slice s n))))
-(fn take
+
+(defn take
+  "Returns a vector of the first n items in coll, or all items if
+  there are fewer than n."
   [n coll]
   (when (pos? n)
     (when-let [s coll]
