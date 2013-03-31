@@ -632,7 +632,10 @@ provided function  on every element in this vector."}
               ret
               (recur (let [val (f v)] (ret.push val) val)
                      (dec i))))))
-(fn split-with [pred coll]
+
+(defn split-with
+  "Returns a vector of [(take-while pred coll) (drop-while pred coll)]"
+  [pred coll]
   [(take-while pred coll) (drop-while pred coll)])
 
 (fn zipmap
