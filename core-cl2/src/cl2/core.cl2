@@ -25,12 +25,23 @@
                (get* m k))
           not-found)))
 
-(fn true? [expr] (=== true expr))
-(fn false? [expr] (=== false expr))
-(fn nil? [expr] (=== nil expr))
+(defn true? [expr] (=== true expr))
 
-(fn first [x] (get* x 0))
-(fn second [x] (get* x 1))
+(defn false? [expr] (=== false expr))
+
+(defn nil? [expr] (=== nil expr))
+
+(defn first
+  "Returns the first item in the collection. Doesn't work on maps.
+  If coll is nil, returns nil."
+  [x]
+  (if (nil? x) nil (get* x 0)))
+
+(defn second
+  "Returns the second item in the collection. Doesn't work on maps.
+  If coll is nil, returns nil."
+  [x]
+  (if (nil? x) nil (get* x 1)))
 
 (defn last
   "Return the last item in coll, in linear time.
