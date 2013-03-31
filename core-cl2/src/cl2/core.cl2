@@ -495,7 +495,10 @@ provided function  on every element in this vector."}
   (if (contains? m k)
     [k (get* m k)]
     nil))
-(fn every?
+
+(defn every?
+  "Returns true if (pred x) is logical true for every x in coll, else
+  false."
   [pred coll]
   (cond
    (empty? coll) true
