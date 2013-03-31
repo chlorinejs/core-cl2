@@ -369,11 +369,20 @@ provided function  on every element in this vector."}
   [& args]
   (reduce #(* %1 %2) 1 args))
 
-(fn identity
+(defn identity
+  "Returns its argument."
   [x] x)
 
-(fn reverse [x] (.reverse (.slice x 0)))
-(fn compare [x y]
+(defn reverse
+  "Returns a seq of the items in coll in reverse order."
+  [x]
+  (.reverse (.slice x 0)))
+
+(defn compare
+  "Comparator. Returns a negative number, zero, or a positive number
+  when x is logically 'less than', 'equal to', or 'greater than'
+  y."
+  [x y]
   (cond
    (=== x y)
    0
