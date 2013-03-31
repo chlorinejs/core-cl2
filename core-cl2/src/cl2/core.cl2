@@ -44,15 +44,31 @@
   (if (nil? x) nil (get* x 1)))
 
 (defn last
-  "Return the last item in coll, in linear time.
-  Only works on vectors and strings, NOT maps."
+  "Returns the last item in the collection. Doesn't work on maps.
+  If coll is nil, returns nil."
   [x]
-  (if (nil? x) nil (get* x (- (count x) 1))))
+  (if (nil? x) nil (get* x (dec (count x)))))
 
-(fn next [x] (if (empty? x) nil (if (< 1 (count x)) (.slice x 1))))
-(fn rest [x] (if (nil? x) [] (.slice x 1)))
-(fn nnext [x] (next (next x)))
-(fn vector? [a] (isa? a "Array"))
+(defn next
+  "Returns a vector of the items after the first. Doesn't work on maps.
+  If there are no more items, returns nil."
+  [x]
+  (if (empty? x) nil (if (< 1 (count x)) (.slice x 1))))
+
+(defn rest
+  "Returns a possibly empty vector of the items after the first.
+  Doesn't work on maps."
+  [x]
+  (if (nil? x) [] (.slice x 1)))
+
+(defn nnext
+  "Same as (next (next x))"
+  [x]
+  (next (next x)))
+
+(defn vector?
+  "Return true if x is a Vector."
+  [x] (isa? x "Array"))
 
 (defn string?
   "Returns true if x is a String"
