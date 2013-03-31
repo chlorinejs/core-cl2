@@ -76,12 +76,27 @@
   (or (=== "string" (typeof x))
       (isa? x "String")))
 
-(fn number? [n] (=== "number" (typeof n)))
+(defn number?
+  "Return true if x is a Number"
+  [n]
+  (=== "number" (typeof n)))
 
-(fn fn? [f] (=== "function" (typeof f)))
+(defn zero? [x] (=== 0 x))
 
-(fn inc [arg] (+ 1 arg))
-(fn dec [arg] (- arg 1))
+(defn fn?
+  "Return true if x is a Function"
+  [f]
+  (=== "function" (typeof f)))
+
+(defn inc
+  "Returns a number one greater than num."
+  [arg]
+  (+ 1 arg))
+
+(defn dec
+  "Returns a number one less than num."
+  [arg]
+  (- arg 1))
 
 (defn count
   "Returns the number of items in the collection. (count nil) returns
