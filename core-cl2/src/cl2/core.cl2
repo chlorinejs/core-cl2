@@ -621,7 +621,11 @@ provided function  on every element in this vector."}
     (if (zero? n)
       ret
       (recur (conj ret x) (dec n)))))
-(fn iterate [f x n]
+
+(defn iterate
+  "Returns a vector of x, (f x), (f (f x)) etc upto n times.
+  f must be free of side-effects"
+  [f x n]
   (def ret [])
   (cons x (loop [v x i (dec n)]
             (if (zero? i)
