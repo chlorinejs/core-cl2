@@ -590,7 +590,9 @@ provided function  on every element in this vector."}
   [n coll]
   (.slice coll (- coll.length n)))
 
-(fn drop-while [pred coll]
+(defn drop-while
+  "Returns a vector of the items in coll starting from the first
+  item for which (pred item) returns logical false."
   [pred coll]
   (let [step (fn [pred coll]
                (let [s coll]
