@@ -464,11 +464,26 @@ provided function  on every element in this vector."}
   "Returns a new seq where x is the first element and seq is the rest."
   [x coll]
   (.concat [x] coll))
-(fn assoc [m k v]
-  (let [ret (merge m {})]
-    (set! (get* ret k) v)
-    ret))
-(fn dissoc [m & ks]
+
+(defn assoc
+  "assoc[iate]. When applied to a map, returns a new map  that contains
+  the mapping of the new key to the new val. When applied to a vector,
+  returns a new vector that contains val at index.
+   Note - index must be <= (count vector)."
+  [m & kvs]
+  (let [ret (if (vector? m)
+               (. m slice 0)
+               (merge m {}))]
+    (loop [kv-tail kvs]
+      (if kv-tail
+        (do (let* [k v] kv-tail)
+            (set! (get* ret k) v)
+            (recur (nnext kv-tail)))
+        ret))))
+
+(defn dissoc
+  "dissoc[iate]. Returns a new map that does not contain a mapping for key(s)."
+  [m & ks]
   (let [ret (merge m {})]
     (doseq [k ks]
       (delete (get* ret k)))
