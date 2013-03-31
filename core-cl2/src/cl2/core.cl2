@@ -716,13 +716,16 @@ provided function  on every element in this vector."}
          (if (= n (count p))
            (cons p (partition n step pad (nthrest s step)))
            [(take n (concat p pad))])))))
+
 (defn subs
   "Returns the substring of s beginning at start inclusive, and ending
   at end (defaults to length of string), exclusive."
   [s start end]
   (.slice s start end))
 
-(def println console.log)
+(def println (if (=== "object" (typeof console))
+               console.log
+               (fn [])))
 
 (defn trampoline
   "trampoline can be used to convert algorithms requiring mutual
