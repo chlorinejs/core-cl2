@@ -564,7 +564,9 @@ provided function  on every element in this vector."}
   [coll]
   (Cl2Set. coll))
 
-(fn sort
+(defn sort
+  "Returns a sorted sequence of the items in coll. If no comparator is
+  supplied, uses Javascript native sort."
   ([coll]
      (.sort (Array.prototype.slice.call coll 0)))
   ([comp x]
