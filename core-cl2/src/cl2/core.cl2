@@ -665,8 +665,14 @@ provided function  on every element in this vector."}
     (if (and xs (pos? n))
       (recur (dec n) (rest xs))
       xs)))
-(fn rand-int [n] (int (rand n)))
-(fn rand-nth
+
+(defn rand-int
+  "Returns a random integer between 0 (inclusive) and n (exclusive)."
+  [n]
+  (int (rand n)))
+
+(defn rand-nth
+  "Return a random element of the vector."
   [coll]
   (nth coll (rand-int (count coll))))
 (fn range*
