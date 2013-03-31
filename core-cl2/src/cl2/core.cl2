@@ -458,9 +458,11 @@ provided function  on every element in this vector."}
   [coll & xs]
   (if (empty? coll)
     xs
-    (let [ret (.slice coll 0)]
-      (.concat ret xs))))
-(fn cons [x coll]
+    (.concat coll xs)))
+
+(defn cons
+  "Returns a new seq where x is the first element and seq is the rest."
+  [x coll]
   (.concat [x] coll))
 (fn assoc [m k v]
   (let [ret (merge m {})]
