@@ -452,11 +452,10 @@ provided function  on every element in this vector."}
   "Returns a function that takes any number of arguments and returns x"
   [x]
   (fn [] x))
-(fn peek [x]
-  (if (nil? x) nil (get* x 0)))
-(fn pop [x]
-  (if (nil? x) nil (.slice x 1)))
-(fn conj [coll & xs]
+
+(defn conj
+  "conj[oin]. Returns a new vector with the xs 'added' to the end."
+  [coll & xs]
   (if (empty? coll)
     xs
     (let [ret (.slice coll 0)]
