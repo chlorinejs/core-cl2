@@ -515,13 +515,20 @@ provided function  on every element in this vector."}
     (or (pred (first coll))
         (some pred (next coll)))))
 
-(fn concat
-  ([] [])
-  ([x] [x])
-  ([x y] (.concat x y))
-  ([x & xs] (concat x (apply concat xs))))
+(defn concat
+  "Returns a vector representing the concatenation of the elements in
+  the supplied colls."
+  [& xs]
+  (loop [ret []
+         xs-tail xs]
+    (if xs-tail
+      (recur (. ret concat (get* xs-tail 0))
+             (next xs-tail))
+      ret)))
 
-(fn mapcat
+(defn mapcat
+  "Returns the result of applying concat to the result of applying map
+  to f and colls.  Thus function f should return a collection."
   [f coll]
   (apply concat (map f coll)))
 (fn drop
