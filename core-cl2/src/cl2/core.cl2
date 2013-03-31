@@ -531,7 +531,9 @@ provided function  on every element in this vector."}
   to f and colls.  Thus function f should return a collection."
   [f coll]
   (apply concat (map f coll)))
-(fn drop
+
+(defn drop
+  "Returns a vector of all but the first n items in coll."
   [n coll]
   (when (pos? n)
     (when-let [s coll]
