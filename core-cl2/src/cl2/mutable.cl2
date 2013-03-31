@@ -18,11 +18,21 @@
   (doseq [k ks]
     (delete (get* m k)))
   m)
-(fn reverse! [x] (.reverse x))
-(fn conj! [coll & xs]
+
+(defn reverse!
+  "Mutable version of reverse."
+  [x]
+  (.reverse x))
+
+(defn conj!
+  "Mutable version of conj."
+  [coll & xs]
   (.apply coll.push coll xs)
   coll)
-(fn cons! [coll & xs]
+
+(defn cons!
+  "Mutable version of cons."
+  [coll & xs]
   (.apply coll.unshift coll xs)
   coll)
 (fn merge!
