@@ -488,7 +488,10 @@ provided function  on every element in this vector."}
     (doseq [k ks]
       (delete (get* ret k)))
     ret))
-(fn find [m k]
+
+(defn find
+  "Returns the map entry for key, or nil if key not present."
+  [m k]
   (if (contains? m k)
     [k (get* m k)]
     nil))
