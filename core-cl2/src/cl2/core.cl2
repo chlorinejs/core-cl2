@@ -580,7 +580,9 @@ provided function  on every element in this vector."}
     (when (pred (first s))
       (conj (take-while pred (rest s)) (first s)))))
 
-(fn drop-last [n coll]
+(defn drop-last
+  "Return a vector of all but the last n (default 1) items in coll."
+  [n coll]
   (.slice coll 0 (- coll.length n)))
 
 (fn take-last [n coll]
