@@ -113,26 +113,3 @@
              (inc! x)))
          "do { x = (x + 1); } while (((x < 10) && (x > 5)))"
          )))
-
-(deftest dofor-test
-  (is (= (js
-           (dofor [(lvar i 0
-                        j 1)
-                  (< i 5)
-                  (inc! i)]
-                 1))
-         "for (var i = 0,j = 1;(i < 5);i = (i + 1)) { 1; }"
-         ))
-  (is (= (js
-           (dofor [(def i 0)
-                  (< i 5)
-                  (inc! i)]
-                 1))
-         "for (var i = 0;(i < 5);i = (i + 1)) { 1; }"
-         ))
-  (is (= (js
-          (dofor [[i 0 j 1]
-                  (< i 5)
-                  (inc! i)]
-                 1))
-         "for (var i = 0,j = 1;(i < 5);i = (i + 1)) { 1; }")))
