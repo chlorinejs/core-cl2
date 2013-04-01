@@ -12,7 +12,7 @@ In summary, this repository is a port of Clojure's clojure.core library to the C
 The [core-cl2](core-cl2) sub-directory is a normal Leiningen project directory which contains source code (in ChlorineJS) and test code (in both Clojure and ChlorineJS). The [test_runners](test_runners) directory, in turn, sets up an environment to compile and run javascript unit tests. With help of [testem](https://github.com/airportyh/testem), these tests are compiled and evaluated in browsers/phantomjs/node everytime a file is changed.
 
 # Develop
-Ensure you have [Chloric](https://github.com/chlorinejs/chloric) installed. Starts chloric watcher by typing:
+Ensure you have  installed [Chloric](https://github.com/chlorinejs/chloric), the command-line compiler for ChlorineJS. Starts `chloric` watcher by typing:
 ```bash
 make watch
 ```
