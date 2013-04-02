@@ -346,6 +346,10 @@ provided function  on every element in this vector."}
            (recur y (first more) (next more))
            (=* y (first more)))
          false))))
+
+;; Alias of `=` function to use in `=` macro
+(def =' =)
+
 (defn not=
   "Same as (not (= obj1 obj2))"
   ([x] false)

@@ -53,8 +53,21 @@
 (defmacro =
   ([] `true)
   ([x] `true)
-  ([x y] `(=* ~x ~y))
-  ([x y & more] `(=* ~x ~y ~@more)))
+  ([x y]
+     ;; things to be compared using `===`
+     (if (or (some #{'null}
+                   [x y])
+             (some #(or (number? %)
+                        (keyword? %)
+                        (string? %)
+                        (true? %)
+                        (false? %)
+                        (nil? %))
+                   [x y]))
+       `(=== ~x ~y)
+       `(=* ~x ~y)))
+  ([x y & more]
+     `(=' ~x ~y ~@more)))
 
 (defmacro reduce
   ([f val coll]
