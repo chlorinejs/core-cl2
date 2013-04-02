@@ -68,7 +68,7 @@
                    (recur (* n x) (dec x))))))
          (str "var fact = function (n) {"
               " for (var n = n, x = (n - 1); true;) {"
-              " if ($EQ$$STAR$(1, x)) { return n;"
+              " if ((1 === x)) { return n;"
               " } else {"
               " var _temp_1000 = [(n * x),(x - 1)];\n"
               " n = _temp_1000[0];"
