@@ -73,26 +73,28 @@
   (is (= 6
          (apply + [1 2 3]))))
 
-(deftest equal-tests
+(deftest primity-type-equal-tests
   (is (= nil nil))
   (is (= false false))
-  (is (= {} {}))
+  (is (= 2 2))
+  (is (= "ab" :ab))
   (is (= true true))
   (is (= null null))
-  (is (= "ab" :ab 'ab))
-  (is (= [1 2] [1 2]))
   (is (= false (= [1 2] [2 3])))
+  (is (= false (= {:a 1} {:a 1 :b 2})))
+  (is (= false (=* (fn []) (fn []))))
+  (is (= false (apply = [1 1 2]))))
+
+(deftest non-primity-type-equal-tests
+  (is (= "ab" :ab 'ab))
+  (is (= {} {}))
+  (is (= [1 2] [1 2]))
   (is (= {:a 1 :b 2} {:a 1 :b 2}))
   (is (= {:a 1 :b 2} {:b 2 :a 1}))
-  (is (= false (= {:a 1} {:a 1 :b 2})))
-
-  (is (=* console.log console.log))
+  (is (= console.log console.log))
   (def my-print console.log)
-  (is (=* my-print console.log))
-  (is (= false (=* (fn []) (fn []))))
-
-  (is (apply = [1 1 1]))
-  (is (= false (apply = [1 1 2]))))
+  (is (= my-print console.log))
+  (is (apply = [1 1 1])))
 
 (deftest function-tests
   (is (= 3
