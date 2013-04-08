@@ -11,4 +11,4 @@
                        #"\{\{CL2HIC\}\}")]
     `(+* ~@(mapcat (fn [[html var]] (list html (symbol var)))
                  (partition 2 hiccup-output))
-         ~@(last hiccup-output))))
+         ~(last hiccup-output))))
