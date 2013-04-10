@@ -20,7 +20,7 @@
 (deftest combo
   (is (= (js
           (defn test [a] (if (! (or (boolean? a) (string? a))) (first a))))
-         (str "var test = function (a) {"
+         (str "test = function (a) {"
               " if (!(boolean$QUEST$(a)"
               " || ((\"string\" === typeof(a))"
               " || (a instanceof String)))) {"
@@ -31,7 +31,7 @@
              (symbol? a) "yes"
              (number? a) "no"
              :else "don't know")))
-         (str "var test = function (a) { "
+         (str "test = function (a) { "
               "if (symbol$QUEST$(a)) { return \"yes\"; } else { "
               "if ((\"number\" === typeof(a))) {"
               " return \"no\"; } else {"
@@ -42,7 +42,7 @@
             (cond
              (symbol? a) "yes"
              (number? a) "no")))
-         (str "var test = function (a) {"
+         (str "test = function (a) {"
               " if (symbol$QUEST$(a)) {"
               " return \"yes\"; }"
               " else {"
@@ -59,14 +59,14 @@
          (str "function has_foo$QUEST$ ()"
               " { return ('foo' in {'foo' : 1,'bar' : 2}); }")))
   (is (= (js (defn has-foo? [] (contains? {:foo 1 :bar 2} :foo)))
-         (str "var has_foo$QUEST$ = function ()"
+         (str "has_foo$QUEST$ = function ()"
               " { return ('foo' in {'foo' : 1,'bar' : 2}); }")))
   (is (= (js (defn fact [n]
                (loop [n n x (dec n)]
                  (if (= 1 x)
                    n
                    (recur (* n x) (dec x))))))
-         (str "var fact = function (n) {"
+         (str "fact = function (n) {"
               " for (var n = n, x = (n - 1); true;) {"
               " if ((1 === x)) { return n;"
               " } else {"

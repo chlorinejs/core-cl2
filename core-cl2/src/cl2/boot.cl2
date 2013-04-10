@@ -65,7 +65,7 @@
   ;; Will undefine macros when ^:inline is implemented.
   ;; Chlorine currently uses macros instead of ^:inline
   ;;(chlorine.js/undef-macro fname)
-  `(def ~fname ~(cons 'fn fdeclrs)))
+  `(set! ~fname ~(cons 'fn fdeclrs)))
 
 (defmacro dotimes
   "Repeatedly executes body (presumably for side-effects) with name
