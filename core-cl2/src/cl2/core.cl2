@@ -336,7 +336,17 @@ provided function  on every element in this vector."}
       ;; non comparable types
       false)))
 
-(defn =
+(defn =**
+  "Primitive equality. Returns true if all its arguments are equal."
+  [x & xs]
+  (loop [a x more xs]
+    (if (=== x a)
+      (if (next more)
+        (recur (first more) (next more))
+        (=== x (first more)))
+      false)))
+
+(defn ='
   "Equality. Returns true if all its arguments are equal."
   ([]    true)
   ([x]   true)
@@ -350,7 +360,7 @@ provided function  on every element in this vector."}
          false))))
 
 ;; Alias of `=` function to use in `=` macro
-(def =' =)
+(def = =')
 
 (defn not=
   "Same as (not (= obj1 obj2))"

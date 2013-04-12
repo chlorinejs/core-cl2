@@ -85,9 +85,16 @@
   (is (= false (=* (fn []) (fn []))))
   (is (= false (apply = [1 1 2]))))
 
+(deftest primitve-equal-tests
+  (is (=** 'foo 'foo 'foo 'foo))
+  (is (not (=** 'foo 'foo 'bar 'foo))))
+
 (deftest non-primity-type-equal-tests
   (is (= "ab" :ab 'ab))
+  (is (= false false false false))
+  (is (= nil nil nil nil))
   (is (= {} {}))
+  (is (= {} {} {} {}))
   (is (= [1 2] [1 2]))
   (is (= {:a 1 :b 2} {:a 1 :b 2}))
   (is (= {:a 1 :b 2} {:b 2 :a 1}))
