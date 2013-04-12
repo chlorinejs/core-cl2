@@ -65,7 +65,12 @@
   ;; Will undefine macros when ^:inline is implemented.
   ;; Chlorine currently uses macros instead of ^:inline
   ;;(chlorine.js/undef-macro fname)
-  `(set! ~fname ~(cons 'fn fdeclrs)))
+  ;; If fname contains "." which means member access, use `set!`
+  ;; else use `def`
+  (let [setter (if ((set (name fname)) \.)
+                 'set!
+                 'def)]
+    `(~setter ~fname ~(cons 'fn fdeclrs))))
 
 (defmacro dotimes
   "Repeatedly executes body (presumably for side-effects) with name
