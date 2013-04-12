@@ -32,7 +32,7 @@
   (is (fn? console.log))
   (is (= false (fn? :a)))
 
-  (is (= (type #"/a/") 'regexp))
+  (is (= (type #"a") 'regexp))
 
   (is (map? {:a 1 :b 2}))
   (is ((fn [] (map? arguments))))
