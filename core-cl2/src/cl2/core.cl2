@@ -16,7 +16,7 @@
   (and (!= null x)
        (!== false x)))
 
-(defn get
+(defn get'
   "Returns the value mapped to key, not-found or nil if key not present."
   [m k not-found]
   (or (or (and (string? m) (get* m k))
@@ -24,6 +24,8 @@
       (or (and (contains? m k)
                (get* m k))
           not-found)))
+
+(def get get')
 
 (defn true? [expr] (=== true expr))
 

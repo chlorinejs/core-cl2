@@ -7,6 +7,13 @@
 ;; ensure the specified forms are emitted as their expanded forms instead.
 
 (defmacro not [expr] `(! ~expr))
+
+(defmacro get
+  ([m k]
+     `(get* ~m ~k))
+  ([m k not-found]
+     `(get' ~m ~k ~not-found)))
+
 (defmacro contains? [m k]
   `(in ~k ~m))
 (defmacro true? [expr] `(=== true ~expr))
