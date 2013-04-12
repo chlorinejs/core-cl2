@@ -19,10 +19,10 @@
 (defn get'
   "Returns the value mapped to key, not-found or nil if key not present."
   [m k not-found]
-  (or (or (and (string? m) (get* m k))
+  (or (or (and (string? m) (get m k))
           not-found)
       (or (and (contains? m k)
-               (get* m k))
+               (get m k))
           not-found)))
 
 (def get get')
@@ -37,19 +37,19 @@
   "Returns the first item in the collection. Doesn't work on maps.
   If coll is nil, returns nil."
   [x]
-  (if (nil? x) nil (get* x 0)))
+  (if (nil? x) nil (get x 0)))
 
 (defn second
   "Returns the second item in the collection. Doesn't work on maps.
   If coll is nil, returns nil."
   [x]
-  (if (nil? x) nil (get* x 1)))
+  (if (nil? x) nil (get x 1)))
 
 (defn last
   "Returns the last item in the collection. Doesn't work on maps.
   If coll is nil, returns nil."
   [x]
-  (if (nil? x) nil (get* x (dec (count x)))))
+  (if (nil? x) nil (get x (dec (count x)))))
 
 (defn next
   "Returns a vector of the items after the first. Doesn't work on maps.
@@ -120,7 +120,7 @@
     (loop [i 0
            r val]
       (if (< i c)
-        (recur (+ i 1) (f r (get* coll i)))
+        (recur (+ i 1) (f r (get coll i)))
         r))))
 
 (defn reduce
@@ -147,7 +147,7 @@
            r init]
       (if (< i c)
         (recur (+ i 1) (f (do (.push ret r) r)
-                          (get* coll i)))
+                          (get coll i)))
         (.push ret r)))
     ret))
 
@@ -214,7 +214,7 @@
            i 0]
       (if (< i c)
         (do
-          (.push r (f (get* arr i)))
+          (.push r (f (get arr i)))
           (recur r (+ i 1)))
         r))))
 
@@ -234,8 +234,8 @@ provided function  on every element in this vector."}
            i 0]
       (if (< i c)
         (do
-          (when-not (pred (get* seq i))
-            (.push r (get* seq i)))
+          (when-not (pred (get seq i))
+            (.push r (get seq i)))
           (recur r (+ 1 i)))
         r))))
 
@@ -247,7 +247,7 @@ provided function  on every element in this vector."}
            i 0]
       (if (< i c)
         (do
-          (if (pred (get* arr i)) (.push r (get* arr i)))
+          (if (pred (get arr i)) (.push r (get arr i)))
           (recur r (+ i 1)))
         r))))
 
@@ -268,7 +268,7 @@ provided function  on every element in this vector."}
   (or (let [ret {}]
         (doseq [m ms]
           (doseq [[k v] m]
-            (set! (get* ret k) v)))
+            (set! (get ret k) v)))
         ret)
       {}))
 
@@ -278,7 +278,7 @@ provided function  on every element in this vector."}
   (let [m1 {}]
     (doseq [k ks]
       (if (.hasOwnProperty m k)
-        (set! (get* m1 k) (get* m k))))
+        (set! (get m1 k) (get m k))))
     m1))
 
 (defn keys
@@ -310,8 +310,8 @@ provided function  on every element in this vector."}
     (if (=* xkeys (.sort (keys y)))
       ;;keys-equal
       (loop [ks xkeys c (count xkeys)]
-        (if (=* (get* x (first ks))
-                (get* y (first ks)))
+        (if (=* (get x (first ks))
+                (get y (first ks)))
           (if (=== 0 c)
             true
             (recur (rest ks) (dec c)))
@@ -483,7 +483,7 @@ provided function  on every element in this vector."}
     (loop [kv-tail kvs]
       (if kv-tail
         (do (let* [k v] kv-tail)
-            (set! (get* ret k) v)
+            (set! (get ret k) v)
             (recur (nnext kv-tail)))
         ret))))
 
@@ -492,14 +492,14 @@ provided function  on every element in this vector."}
   [m & ks]
   (let [ret (merge m {})]
     (doseq [k ks]
-      (delete (get* ret k)))
+      (delete (get ret k)))
     ret))
 
 (defn find
   "Returns the map entry for key, or nil if key not present."
   [m k]
   (if (contains? m k)
-    [k (get* m k)]
+    [k (get m k)]
     nil))
 
 (defn every?
@@ -528,7 +528,7 @@ provided function  on every element in this vector."}
   (loop [ret []
          xs-tail xs]
     (if xs-tail
-      (recur (. ret concat (get* xs-tail 0))
+      (recur (. ret concat (get xs-tail 0))
              (next xs-tail))
       ret)))
 
@@ -558,7 +558,7 @@ provided function  on every element in this vector."}
   [coll]
   (let [that this]
     (doseq [k coll]
-      (set! (get* that k) true))))
+      (set! (get that k) true))))
 
 (defn hash-set
   "Returns a new hash set with supplied keys."
@@ -651,7 +651,7 @@ provided function  on every element in this vector."}
   (loop [ks keys
          vs vals]
     (if (and ks vs)
-      (do (set! (get* map (first ks)) (first vs))
+      (do (set! (get map (first ks)) (first vs))
           (recur (next ks)
                  (next vs)))
       map)))

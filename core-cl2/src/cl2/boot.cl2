@@ -101,7 +101,7 @@
                                        bindings
                                        [(gensym 'k) bindings])]
                    `(dokeys [~kname ~coll-name]
-                            (let* ~vname (get* ~coll-name ~kname))
+                            (let* ~vname (get ~coll-name ~kname))
                             ~@body)))))
             (modifier-form
               [modifier-type modifier-expr body]
@@ -155,7 +155,7 @@
                                        bindings
                                        [(gensym 'k) bindings])]
                    `(dokeys [~kname ~coll-name]
-                            (let* ~vname (get* ~coll-name ~kname))
+                            (let* ~vname (get ~coll-name ~kname))
                             ~@body)))))
             (modifier-form
               [modifier-type modifier-expr body]
@@ -200,20 +200,20 @@
                             dispatch-fn)
              dispatched-val# (apply dispatch-fn# args)]
          (if (contains? (-> ~fname :methods) dispatched-val#)
-           (let [dispatcher# (get* (-> ~fname :methods) dispatched-val#)]
+           (let [dispatcher# (get (-> ~fname :methods) dispatched-val#)]
              (apply dispatcher# args))
-           (if (fn? (get* ~fname :default-method))
+           (if (fn? (get ~fname :default-method))
              (let [default-method# (-> ~fname :default-method)]
                (apply default-method# args))
              (throw
               (str "No method in multimethod '" ~(name fname)
                    "' for dispatch value: " dispatched-val#))))))
-     (set! (get* ~fname :methods) {})))
+     (set! (get ~fname :methods) {})))
 
 (defmacro defmethod [fname dispatch-val & fdeclr]
   (let [setee (if (= :default dispatch-val)
-                `(get* ~fname :default-method)
-                `(get* (-> ~fname :methods) ~dispatch-val))]
+                `(get ~fname :default-method)
+                `(get (-> ~fname :methods) ~dispatch-val))]
        `(set! ~setee ~(cons 'fn fdeclr))))
 
-(defmacro nth [& args] `(get* ~@args))
+(defmacro nth [& args] `(get ~@args))
