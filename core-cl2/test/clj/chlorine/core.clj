@@ -8,7 +8,6 @@
   so that tests are independent."
   [& body]
   `(binding [cl2/*temp-sym-count* (ref 999)
-             cl2/*last-sexpr*     (ref nil)
              cl2/*macros*         (ref {})]
      (cl2/tojs' "r:/dev.cl2")
      (cl2/js ~@body)))
