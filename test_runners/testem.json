@@ -1,6 +1,5 @@
 {
-"framework": "mocha",
-"test_page": "html/test.html",
+"framework": "qunit",
 "serve_files": ["js/test_runners.js"],
 "launchers": {
   "Mocha": {
