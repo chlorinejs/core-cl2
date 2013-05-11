@@ -1,6 +1,6 @@
 # ChlorineJs Core library
 
-[![Build Status](https://api.travis-ci.org/chlorinejs/core-cl2.png)](https://travis-ci.org/chlorinejs/core-cl2)
+[![Build Status](https://api.travis-ci.org/chlorinejs/core-cl2.png?branch=master)](https://travis-ci.org/chlorinejs/core-cl2)
 
 [Chlorine](http://github.com/chlorinejs/chlorine) (formerly Clojurejs) is a naive implementation of a Clojure subset language to Javascript translator.
 
@@ -22,12 +22,11 @@ make watch-test
 ```
 
 # Note
-- Sometimes, you want to compile by a local version of [Chloric](https://github.com/chlorinejs/chloric) instead of the version deployed to NPM, then type this instead:
-```bash
-make local-watch
-```
+- Sometimes, you want to compile by a local version of [Chloric](https://github.com/chlorinejs/chloric) instead of the version deployed to NPM, then type this instead: `make local-watch`.
 to start the watcher.
 - Tests are run only against Firefox on travis from now on. Others (phantomjs, chromium, mocha) sometimes cause unknown errors on travis. Of course, developers may test on their machine all Testem supported environments with `make ci-test`.
+Build status for tests run against PhantomJS and Mocha (branch `full-ci`):
+[![Build Status](https://travis-ci.org/chlorinejs/core-cl2.png?branch=full-ci)](https://travis-ci.org/chlorinejs/core-cl2)
 
 # More information
 This project is also an example of how to organize a Chlorine project with unit tests.
