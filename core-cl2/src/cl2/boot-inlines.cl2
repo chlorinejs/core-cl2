@@ -27,6 +27,8 @@
 (defmacro nnext [x] `(next (next ~x)))
 (defmacro rest [x] `(.slice ~x 1))
 
+(defmacro set? [x] `(isa? ~x "Cl2Set"))
+
 (defmacro vector? [a] `(isa? ~a "Array"))
 
 (defmacro string?

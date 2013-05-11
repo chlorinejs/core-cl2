@@ -68,6 +68,10 @@
   [x]
   (next (next x)))
 
+(defn set?
+  "Return true if x is a set"
+  [x] (isa? x "Cl2Set"))
+
 (defn vector?
   "Return true if x is a Vector."
   [x] (isa? x "Array"))
@@ -111,7 +115,7 @@
 (defn empty?
   "Returns true if coll has no items."
   [coll]
-  (or (=== coll "") (nil? coll) (= {} coll) (= [] coll)))
+  (or (=== coll "") (nil? coll) (= {} coll) (= [] coll) (= #{} coll)))
 
 (defn reduce*
   "Standard version of reduce."
@@ -195,6 +199,7 @@
   Won't try to determine Class name of x."
   [x]
   (cond (vector?     x)  'vector
+        (set?        x)  'set
         (string?     x)  'string
         (number?     x)  'number
         (nil?        x)  "nil"
@@ -328,7 +333,7 @@ provided function  on every element in this vector."}
        (vector? x)
        (v=* x y)
 
-       (map? x)
+       (or (map? x)  (set? x))
        (m=* x y)
 
        :else

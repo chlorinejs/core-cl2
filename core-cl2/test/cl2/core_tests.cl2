@@ -35,6 +35,7 @@
   (is (= (type #"a") 'regexp))
 
   (is (map? {:a 1 :b 2}))
+  (is (set? #{:a :b 2}))
   (is ((fn [] (map? arguments))))
   )
 
@@ -378,7 +379,7 @@
   (is (= (dissoc my-map :a :b) {}))
   (is (= (dissoc my-map :a :c) {:b 2}))
   (is (= my-map {:a 1 :b 2}))
-  (is (= (dissoc #{:a 1 :b 2} :a :c) #{1 :b 2})))
+  (is (= (dissoc #{:a 1 :b 2} :a :c) {1 true :b true 2 true})))
 
 (deftest find-tests
   (is (= [:a 1] (find {:a 1 :b 2} :a))))
@@ -486,10 +487,9 @@
   )
 
 (deftest set-tests
-  (is (= (set [1 2 :true 1 2])
-         {1 true 2 true :true true}))
-  (is (= (hash-set 1 2 :true 1 2)
-         {1 true 2 true :true true})))
+  (is (= (set [1 2 :true 3 4])
+         (hash-set 1 2 :true 3 4)
+         (Cl2Set. [1 2 :true 3 4]))))
 
 (deftest nthnext-tests
   (is (= (nthnext [0 1 2 3 4 5 6 7 8 9] 3)
@@ -512,6 +512,7 @@
   (is (= true (empty? #{})))
   (is (= false (empty? [1])))
   (is (= false (empty? [1 2 3 4]))))
+
 (deftest randnth-tests
   (is (= true (< (rand-nth (range 5)) 5)))
   (is (= true (= (rand-nth [2 2 2 2]) 2))))
