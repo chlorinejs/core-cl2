@@ -3,6 +3,10 @@
   (+* "["
       (.join (map str* a) ", ")
       "]"))
+(defmethod str* "set"    [a]
+  (+* "#{"
+      (.join (map str* (keys a)) ", ")
+      "}"))
 (defmethod str* "nil"      [x] "")
 (defmethod str* "function" [x] (+* "" x))
 (defmethod str* "map"      [m]
@@ -36,8 +40,14 @@
 
 (defmethod pr-str* "vector"    [a]
   (+* "["
-      (.join (map pr-str* a) ", ")
+      (.join (map pr-str* a) " ")
       "]"))
+
+(defmethod pr-str* "set"    [a]
+  (+* "#{"
+      (.join (map pr-str* (keys a)) " ")
+      "}"))
+
 (defmethod pr-str* "nil"      [x] "nil")
 (defmethod pr-str* "function" [x] (+* "(inline " (pr-str* (+* "" x)) ")"))
 (defmethod pr-str* "map"      [m]
