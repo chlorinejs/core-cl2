@@ -1,9 +1,8 @@
 {
 "framework": "qunit",
-"serve_files": ["js/test_runners.js"],
 "launchers": {
   "Mocha": {
-    "command": "mocha -u qunit js/test_runners.js"
+    "command": "mocha -u qunit test_runners.js"
     }
   }
 }
