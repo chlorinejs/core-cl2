@@ -8,5 +8,7 @@ watch-test : install
 	cd test_runners && npm run-script livetest
 compile : install
 	cd test_runners && npm run-script compile
+ci-test : compile
+	cd test_runners && npm run-script ci-test
 test : compile
-	cd test_runners && npm test
+	cd test_runners && npm run-script test

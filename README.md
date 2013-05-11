@@ -22,13 +22,14 @@ make watch-test
 ```
 
 # Note
-Sometimes, you want to compile by a local version of [Chloric](https://github.com/chlorinejs/chloric) instead of the version deployed to NPM, then type this instead:
+- Sometimes, you want to compile by a local version of [Chloric](https://github.com/chlorinejs/chloric) instead of the version deployed to NPM, then type this instead:
 ```bash
 make local-watch
 ```
 to start the watcher.
+- Tests are run only against Firefox on travis from now on. Others (phantomjs, chromium, mocha) sometimes cause unknown errors on travis. Of course, developers may test on their machine all Testem supported environments with `make ci-test`.
 
-# Info
+# More information
 This project is also an example of how to organize a Chlorine project with unit tests.
 
 For more information see the chlorine [wiki](https://github.com/chlorinejs/chlorine/wiki).
