@@ -184,12 +184,14 @@
    are considered maps."
   [m]
   (and m
-       (not (or (contains? #{'string 'number 'boolean 'function} (typeof m))
-                (vector? m)
-                (nil? m)
-                (= null m)
-                (fn? m)
-                (isa? m "RegExp")))))
+       (= "object" (typeof m))
+       (not (or ;; (contains? #{'string 'number 'boolean 'function} (typeof m))
+             ;; null is "object", too
+             (vector? m)
+             (= null m)
+             (isa? m "RegExp")
+             (isa? m "String")
+             (isa? m "Cl2Set")))))
 
 ;; More info about type detection in javascript:
 ;; http://stackoverflow.com/questions/332422/how-do-i-get-the-name-of-an-objects-type-in-javascript

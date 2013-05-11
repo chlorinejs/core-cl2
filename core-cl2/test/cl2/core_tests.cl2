@@ -34,9 +34,26 @@
 
   (is (= (type #"a") 'regexp))
 
-  (is (map? {:a 1 :b 2}))
   (is (set? #{:a :b 2}))
   (is ((fn [] (map? arguments))))
+  )
+
+(deftest map?-tests
+  (is (map? {:a 1 :b 2}))
+  (is (not (map? 1)))
+
+  (is (not (map? #{:a 1 :b 2})))
+
+  (is (not (map? true)))
+
+  (is (not (map? null)))
+
+  (is (not (map? #"foo")))
+
+  (is (not (map? (fn []))))
+
+  (is (not (map? [:yo])))
+  (is (not (map? (Array. :yo))))
   )
 
 (deftest boolean-tests
