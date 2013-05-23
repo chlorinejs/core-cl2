@@ -28,6 +28,12 @@ to start the watcher.
 Build status for tests run against PhantomJS and Mocha (branch `full-ci`):
 [![Build Status](https://travis-ci.org/chlorinejs/core-cl2.png?branch=full-ci)](https://travis-ci.org/chlorinejs/core-cl2)
 
+# License
+
+Copyright © 2013 Hoang Minh Thang.
+
+core-cl2 library may be used under the terms of either the [GNU Lesser General Public License (LGPL)](http://www.gnu.org/copyleft/lesser.html) or the [Eclipse Public License (EPL)](http://www.eclipse.org/legal/epl-v10.html). As a recipient of core-cl2, you may choose which license to receive the code under.
+
 # More information
 This project is also an example of how to organize a Chlorine project with unit tests.
 
