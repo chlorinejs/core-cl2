@@ -1,4 +1,6 @@
-(defn ok* [expr msg]
+(defn ok*
+  "An implement of qunit's ok to be used with mocha."
+  [expr msg]
   (if (not expr)
     (throw (Error. msg))))
 
