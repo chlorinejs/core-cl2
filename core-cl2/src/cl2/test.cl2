@@ -1,6 +1,9 @@
-(fn ok [expr msg]
+(defn ok* [expr msg]
   (if (not expr)
     (throw (Error. msg))))
+
+(when (undefined? ok)
+  (set! ok ok*))
 
 (defn equal
   "An other implement of qunit's equal that use Chlorine's = to compare values"
