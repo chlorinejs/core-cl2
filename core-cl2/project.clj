@@ -3,7 +3,6 @@
   :url "http://github.com/chlorinejs/core-cl2"
   :dependencies []
   :resource-paths ["src/cl2"]
-  :test-paths ["test/clj"]
   :profiles {:provided
              {:dependencies
               [[org.clojure/clojure "1.5.1"]
