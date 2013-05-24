@@ -217,3 +217,6 @@
        `(set! ~setee ~(cons 'fn fdeclr))))
 
 (defmacro nth [& args] `(get ~@args))
+
+(defmacro undefined? [sym]
+  `(=== "undefined" (typeof ~sym)))
