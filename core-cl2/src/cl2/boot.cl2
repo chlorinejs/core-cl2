@@ -220,3 +220,53 @@
 
 (defmacro undefined? [sym]
   `(=== "undefined" (typeof ~sym)))
+
+(defmacro require [& args]
+  (let [detect-main-symbol
+        (fn [require-string]
+          (let [main-group
+                (-> require-string
+                    (clojure.string/split #"[/]")
+                    last)
+                extracted-symbols
+                (-> main-group
+                    (clojure.string/split #"[.]")
+                    reverse)
+                main-symbol
+                (symbol
+                 (if (and (#{"js" "json" "node"}
+                           (first extracted-symbols))
+                          (<= 2 (count extracted-symbols)))
+                   (second extracted-symbols)
+                   (first extracted-symbols)))]
+            main-symbol))]
+    (cond
+     (and (= 1 (count args)) (not (coll? (first args))))
+     (let [requiree (first args)]
+       (cond
+        (string? requiree)
+        `(def ~(detect-main-symbol requiree)
+           (require* ~requiree))
+        (symbol? requiree)
+        `(def ~requiree (require* ~(str requiree)))
+        :default
+        (throw (Exception. "Invalid syntax for require"))))
+     (every? coll? args)
+     (let [final-forms
+           (->> args
+                (mapcat
+                 (fn [[requiree & option-vals]]
+                   (let [options (apply hash-map option-vals)
+                         main-symbol (or (:as options)
+                                         (detect-main-symbol requiree))
+                         refer (:refer options)]
+                     (if (< 1 (count refer))
+                       `[(def ~main-symbol (require* ~requiree))
+                         ~@(for [sym refer]
+                             `(def ~sym (get ~main-symbol ~sym)))]
+                       [`(def ~main-symbol (require* ~requiree))])))))]
+       (if (= 1 (count final-forms))
+         (first final-forms)
+         `(do ~@final-forms)))
+     :default
+     (throw (Exception. "Invalid syntax for require")))))
