@@ -276,10 +276,12 @@ provided function  on every element in this vector."}
   (pred item) returns true. pred must be free of side-effects."}
   filter)
 (if (fn? Array.prototype.filter)
+  ;; wrapping pred with an anonymous function to ignore
+  ;; unwanted (index and coll) arguments passed by
+  ;; native filter.
   (set! filter (fn [pred coll]
-                 (.filter coll pred)))
-  (set! filter (fn [pred coll]
-                 (filter* pred coll))))
+                 (.filter coll (fn [x] (pred x)))))
+  (set! filter filter*))
 
 (defn merge
   "Returns a map that consists of the rest of the maps conj-ed onto
