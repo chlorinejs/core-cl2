@@ -554,15 +554,25 @@ coll, else false."}
                  (.every coll (fn [x] (pred x)))))
   (set! every? every?*))
 
-(defn some
-  "Returns the first logical true value of (pred x) for any x in coll,
-  else nil.  One common idiom is to use a set as pred, for example
-  this will return :fred if :fred is in the sequence, otherwise nil:
-  (some #{:fred} coll)"
+(defn some*
+  "Non-native some implementation for old browsers."
   [pred coll]
   (when coll
     (or (pred (first coll))
-        (some pred (next coll)))))
+        (some* pred (next coll)))))
+
+(def ^{:doc "Returns the first logical true value of (pred x) for any
+x in coll, else nil. One common idiom is to use a set as pred,
+for example this will return :fred if :fred is in the sequence,
+otherwise nil: (some #{:fred} coll)"}
+  some)
+(if (fn? Array.prototype.some)
+  ;; wrapping pred with an anonymous function to ignore
+  ;; unwanted (index and coll) arguments passed by
+  ;; native filter.
+  (set! some (fn [pred coll]
+                 (.some coll (fn [x] (pred x)))))
+  (set! some some*))
 
 (defn concat
   "Returns a vector representing the concatenation of the elements in
