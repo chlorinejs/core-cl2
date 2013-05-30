@@ -229,8 +229,11 @@
 provided function  on every element in this vector."}
   map)
 (if (fn? Array.prototype.map)
-  (set! map (fn [f coll] (.map coll f)))
-  (set! map (fn [f coll] (map* f coll))))
+  ;; Array.prototype.map passes not only one but three arguments
+  ;; to f. Wrapping f with an anonymous function to ignore the
+  ;; rest arguments
+  (set! map (fn [f coll] (.map coll (fn [x] (f x)))))
+  (set! map map*))
 
 (defn remove
   "Returns a vector of the items in coll for which
