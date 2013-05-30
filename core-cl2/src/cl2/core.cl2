@@ -786,11 +786,9 @@ otherwise nil: (some #{:fred} coll)"}
   ([n step pad coll]
      (partition4 n step pad coll)))
 
-(defn subs
-  "Returns the substring of s beginning at start inclusive, and ending
-  at end (defaults to length of string), exclusive."
-  [s start end]
-  (.slice s start end))
+(def ^{:doc "Returns the substring of s beginning at start inclusive,
+ and ending at end (defaults to length of string), exclusive."}
+  subs subvec)
 
 (def println (if (=== "object" (typeof console))
                console.log
