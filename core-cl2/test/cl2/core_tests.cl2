@@ -149,12 +149,16 @@
 
 (deftest reduce-test
   (is (= 120
-         (do
-           (fn reduce-it []
-             (reduce (fn [r x] (* r x))
+         (reduce (fn [x y] (* x y))
                      1
-                     [1 2 3 4 5]))
-           (reduce-it)))))
+                     [1 2 3 4 5])))
+  (is (= 120
+         (reduce (fn [x y] (* x y))
+                     [1 2 3 4 5])))
+  (is (= 120
+         (reduce* (fn [x y] (* x y))
+                     1
+                     [1 2 3 4 5]))))
 
 (deftest defmulti-tests
   (defmulti  foo (fn [& args] (count args)))
