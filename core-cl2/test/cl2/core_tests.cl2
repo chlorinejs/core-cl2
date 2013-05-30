@@ -430,7 +430,9 @@
 
 (deftest every?-tests
   (is (= true (every? even? [2 4 6])))
-  (is (= false (every? even? [1 4 6]))))
+  (is (= false (every? even? [1 4 6])))
+  (is (= true (every?* even? [2 4 6])))
+  (is (= false (every?* even? [1 4 6]))))
 
 (deftest some-tests
   (is (= true (some even? [1 2 3 4])))
