@@ -149,12 +149,16 @@
 
 (deftest reduce-test
   (is (= 120
-         (do
-           (fn reduce-it []
-             (reduce (fn [r x] (* r x))
+         (reduce (fn [x y] (* x y))
                      1
-                     [1 2 3 4 5]))
-           (reduce-it)))))
+                     [1 2 3 4 5])))
+  (is (= 120
+         (reduce (fn [x y] (* x y))
+                     [1 2 3 4 5])))
+  (is (= 120
+         (reduce* (fn [x y] (* x y))
+                     1
+                     [1 2 3 4 5]))))
 
 (deftest defmulti-tests
   (defmulti  foo (fn [& args] (count args)))
@@ -426,11 +430,15 @@
 
 (deftest every?-tests
   (is (= true (every? even? [2 4 6])))
-  (is (= false (every? even? [1 4 6]))))
+  (is (= false (every? even? [1 4 6])))
+  (is (= true (every?* even? [2 4 6])))
+  (is (= false (every?* even? [1 4 6]))))
 
 (deftest some-tests
   (is (= true (some even? [1 2 3 4])))
-  (is (not (some even? [1 3 5 7]))))
+  (is (not (some even? [1 3 5 7])))
+  (is (= true (some* even? [1 2 3 4])))
+  (is (not (some* even? [1 3 5 7]))))
 
 (deftest map-tests
   (is (= (map* #(+ 1 %) [1 2 3 4 5]) [2 3 4 5 6]))
@@ -554,7 +562,3 @@
   (defn tramfactorial [x n] (if (= 1 n) x #(tramfactorial (* x n) (dec n))))
   (is (= (trampoline tramfactorial 1 5)
          120)))
-
-(deftest native-map-tests
-  (is (= (map + [1 2 3])
-         [1 2 3])))
