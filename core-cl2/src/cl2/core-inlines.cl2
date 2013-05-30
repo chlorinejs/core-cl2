@@ -51,13 +51,13 @@
 
 (defmacro reduce
   ([f val coll]
-     `(reduce* ~f ~val ~coll))
+     `(reduce' ~f ~val ~coll))
   ([f coll]
      (if (vector? coll)
-       `(reduce* ~f ~(first coll) ~coll))
+       `(reduce' ~f ~(first coll) ~coll))
      `(let [coll ~coll
             init (first coll)]
-        (reduce* ~f init coll))))
+        (reduce' ~f init coll))))
 
 (defmacro reductions
   ([f val coll]

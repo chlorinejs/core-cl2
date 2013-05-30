@@ -127,6 +127,17 @@
         (recur (+ i 1) (f r (get coll i)))
         r))))
 
+(def reduce')
+(if (fn? Array.prototype.reduce)
+  ;; Array.prototype.reduce passes not only two but four arguments
+  ;; to f. Wrapping f with an anonymous function to ignore the
+  ;; rest arguments
+  (set! reduce' (fn [f val coll]
+                  (.reduce coll
+                           (fn [x y] (f x y))
+                           val)))
+  (set! reduce' reduce*))
+
 (defn reduce
   "f should be a function of 2 arguments. If val is not supplied,
   returns the result of applying f to the first 2 items in coll, then
@@ -138,9 +149,9 @@
   applying f to that result and the 2nd item, etc. If coll contains no
   items, returns val and f is not called."
   ([f val coll]
-    (reduce* f val coll))
+    (reduce' f val coll))
   ([f coll]
-    (reduce* f (first coll) coll)))
+    (reduce' f (first coll) coll)))
 
 (defn reductions*
   "Standard version of reductions"
