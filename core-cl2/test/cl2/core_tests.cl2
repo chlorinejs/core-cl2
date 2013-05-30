@@ -554,3 +554,7 @@
   (defn tramfactorial [x n] (if (= 1 n) x #(tramfactorial (* x n) (dec n))))
   (is (= (trampoline tramfactorial 1 5)
          120)))
+
+(deftest native-map-tests
+  (is (= (map + [1 2 3])
+         [1 2 3])))

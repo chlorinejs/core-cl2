@@ -127,6 +127,17 @@
         (recur (+ i 1) (f r (get coll i)))
         r))))
 
+(def reduce')
+(if (fn? Array.prototype.reduce)
+  ;; Array.prototype.reduce passes not only two but four arguments
+  ;; to f. Wrapping f with an anonymous function to ignore the
+  ;; rest arguments
+  (set! reduce' (fn [f val coll]
+                  (.reduce coll
+                           (fn [x y] (f x y))
+                           val)))
+  (set! reduce' reduce*))
+
 (defn reduce
   "f should be a function of 2 arguments. If val is not supplied,
   returns the result of applying f to the first 2 items in coll, then
@@ -138,9 +149,9 @@
   applying f to that result and the 2nd item, etc. If coll contains no
   items, returns val and f is not called."
   ([f val coll]
-    (reduce* f val coll))
+    (reduce' f val coll))
   ([f coll]
-    (reduce* f (first coll) coll)))
+    (reduce' f (first coll) coll)))
 
 (defn reductions*
   "Standard version of reductions"
@@ -229,8 +240,11 @@
 provided function  on every element in this vector."}
   map)
 (if (fn? Array.prototype.map)
-  (set! map (fn [f coll] (.map coll f)))
-  (set! map (fn [f coll] (map* f coll))))
+  ;; Array.prototype.map passes not only one but three arguments
+  ;; to f. Wrapping f with an anonymous function to ignore the
+  ;; rest arguments
+  (set! map (fn [f coll] (.map coll (fn [x] (f x)))))
+  (set! map map*))
 
 (defn remove
   "Returns a vector of the items in coll for which
@@ -262,10 +276,12 @@ provided function  on every element in this vector."}
   (pred item) returns true. pred must be free of side-effects."}
   filter)
 (if (fn? Array.prototype.filter)
+  ;; wrapping pred with an anonymous function to ignore
+  ;; unwanted (index and coll) arguments passed by
+  ;; native filter.
   (set! filter (fn [pred coll]
-                 (.filter coll pred)))
-  (set! filter (fn [pred coll]
-                 (filter* pred coll))))
+                 (.filter coll (fn [x] (pred x)))))
+  (set! filter filter*))
 
 (defn merge
   "Returns a map that consists of the rest of the maps conj-ed onto
@@ -519,24 +535,44 @@ provided function  on every element in this vector."}
     [k (get m k)]
     nil))
 
-(defn every?
-  "Returns true if (pred x) is logical true for every x in coll, else
-  false."
+(defn every?*
+  "Non-native every? implementation for old browsers."
   [pred coll]
   (cond
    (empty? coll) true
-   (pred (first coll)) (every? pred (next coll))
+   (pred (first coll)) (every?* pred (next coll))
    :else false))
 
-(defn some
-  "Returns the first logical true value of (pred x) for any x in coll,
-  else nil.  One common idiom is to use a set as pred, for example
-  this will return :fred if :fred is in the sequence, otherwise nil:
-  (some #{:fred} coll)"
+(def ^{:doc "Returns true if (pred x) is logical true for every x in
+coll, else false."}
+  every?)
+(if (fn? Array.prototype.every)
+  ;; wrapping pred with an anonymous function to ignore
+  ;; unwanted (index and coll) arguments passed by
+  ;; native filter.
+  (set! every? (fn [pred coll]
+                 (.every coll (fn [x] (pred x)))))
+  (set! every? every?*))
+
+(defn some*
+  "Non-native some implementation for old browsers."
   [pred coll]
   (when coll
     (or (pred (first coll))
-        (some pred (next coll)))))
+        (some* pred (next coll)))))
+
+(def ^{:doc "Returns the first logical true value of (pred x) for any
+x in coll, else nil. One common idiom is to use a set as pred,
+for example this will return :fred if :fred is in the sequence,
+otherwise nil: (some #{:fred} coll)"}
+  some)
+(if (fn? Array.prototype.some)
+  ;; wrapping pred with an anonymous function to ignore
+  ;; unwanted (index and coll) arguments passed by
+  ;; native filter.
+  (set! some (fn [pred coll]
+                 (.some coll (fn [x] (pred x)))))
+  (set! some some*))
 
 (defn concat
   "Returns a vector representing the concatenation of the elements in
