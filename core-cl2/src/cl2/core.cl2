@@ -535,14 +535,24 @@ provided function  on every element in this vector."}
     [k (get m k)]
     nil))
 
-(defn every?
-  "Returns true if (pred x) is logical true for every x in coll, else
-  false."
+(defn every?*
+  "Non-native every? implementation for old browsers."
   [pred coll]
   (cond
    (empty? coll) true
-   (pred (first coll)) (every? pred (next coll))
+   (pred (first coll)) (every?* pred (next coll))
    :else false))
+
+(def ^{:doc "Returns true if (pred x) is logical true for every x in
+coll, else false."}
+  every?)
+(if (fn? Array.prototype.every)
+  ;; wrapping pred with an anonymous function to ignore
+  ;; unwanted (index and coll) arguments passed by
+  ;; native filter.
+  (set! every? (fn [pred coll]
+                 (.every coll (fn [x] (pred x)))))
+  (set! every? every?*))
 
 (defn some
   "Returns the first logical true value of (pred x) for any x in coll,
