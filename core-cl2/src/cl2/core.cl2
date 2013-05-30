@@ -720,25 +720,35 @@ provided function  on every element in this vector."}
   ([start end] (range* start end 1))
   ([start end step] (range* start end step)))
 
+(defn partition3
+  "Three-argument version of partition"
+  [n step coll]
+  (when-let [s coll]
+    (when-let [p (take n s)]
+      (if (= n (count p))
+        (cons p (partition3 n step (nthrest s step)))
+        []))))
+
+(defn partition4
+  "Four-argument version of partition"
+  [n step pad coll]
+  (when-let [s coll]
+    (when-let [p (take n s)]
+      (if (= n (count p))
+        (cons p (partition4 n step pad (nthrest s step)))
+        [(take n (concat p pad))]))))
+
 (defn partition
   "Returns a vector of lists of n items each, at offsets step
   apart. If step is not supplied, defaults to n, i.e. the partitions
   do not overlap. If a pad collection is supplied, use its elements as
   necessary to complete last partition upto n items. In case there are
   not enough padding elements, return a partition with less than n items."
-  ([n coll] (partion n n coll))
+  ([n coll] (partion3 n n coll))
   ([n step coll]
-     (when-let [s coll]
-       (when-let [p (take n s)]
-         (if (= n (count p))
-           (cons p (partition n step (nthrest s step)))
-           []))))
+     (partition3 n step coll))
   ([n step pad coll]
-     (when-let [s coll]
-       (when-let [p (take n s)]
-         (if (= n (count p))
-           (cons p (partition n step pad (nthrest s step)))
-           [(take n (concat p pad))])))))
+     (partition4 n step pad coll)))
 
 (defn subs
   "Returns the substring of s beginning at start inclusive, and ending

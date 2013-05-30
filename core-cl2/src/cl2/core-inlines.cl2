@@ -68,3 +68,11 @@
      `(let [coll ~coll
             init (first coll)]
         (reductions* ~f init coll))))
+
+(defmacro partition
+  ([n coll]
+     `(partion3 ~n ~n ~coll))
+  ([n step coll]
+     `(partition3 ~n ~step ~coll))
+  ([n step pad coll]
+     `(partition4 ~n ~step ~pad ~coll)))
