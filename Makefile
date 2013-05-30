@@ -6,8 +6,8 @@ watch : install
 	cd test_runners && npm run-script watch
 watch-test : install
 	cd test_runners && npm run-script livetest
-compile : install
-	cd test_runners && npm run-script compile
+compile :
+	cd core-cl2 && lein run -m compile test/test_runners.cl2
 ci-test : compile
 	cd test_runners && npm run-script ci-test
 test : compile
