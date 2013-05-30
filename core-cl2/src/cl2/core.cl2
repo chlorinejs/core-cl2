@@ -1,4 +1,4 @@
-(fn not [x] (! x))
+(defn not [x] (! x))
 
 (defn contains?
   "Returns true if key is present in the given collection, otherwise
