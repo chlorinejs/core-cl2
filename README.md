@@ -25,8 +25,6 @@ make watch-test
 - Sometimes, you want to compile by a local version of [Chloric](https://github.com/chlorinejs/chloric) instead of the version deployed to NPM, then type this instead: `make local-watch`.
 to start the watcher.
 - Tests are run only against Firefox on travis from now on. Others (phantomjs, chromium, mocha) sometimes cause unknown errors on travis. Of course, developers may test on their machine all Testem supported environments with `make ci-test`.
-Build status for tests run against PhantomJS and Mocha (branch `full-ci`):
-[![Build Status](https://travis-ci.org/chlorinejs/core-cl2.png?branch=full-ci)](https://travis-ci.org/chlorinejs/core-cl2)
 
 # License
 
