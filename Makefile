@@ -9,7 +9,7 @@ watch-test : install
 compile : install
 	cd core-cl2 && lein run -m compile test/test_runners.cl2
 compile-travis : install
-cd core-cl2 && lein2 run -m compile test/test_runners.cl2
+	cd core-cl2 && lein2 run -m compile test/test_runners.cl2
 ci-test : compile
 	cd test_runners && npm run-script ci-test
 test : compile-travis
