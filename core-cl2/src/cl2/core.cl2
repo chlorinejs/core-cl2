@@ -571,7 +571,9 @@ otherwise nil: (some #{:fred} coll)"}
   ;; unwanted (index and coll) arguments passed by
   ;; native filter.
   (set! some (fn [pred coll]
-                 (.some coll (fn [x] (pred x)))))
+               (def ret)
+               (. coll some #(do (set! ret (pred %)) ret))
+               ret))
   (set! some some*))
 
 (defn concat

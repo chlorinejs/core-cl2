@@ -438,7 +438,11 @@
   (is (= true (some even? [1 2 3 4])))
   (is (not (some even? [1 3 5 7])))
   (is (= true (some* even? [1 2 3 4])))
-  (is (not (some* even? [1 3 5 7]))))
+  (is (not (some* even? [1 3 5 7])))
+  (is (= {:id 1 :username "foo"}
+         (some #(and (= 1 (:id %)) %)
+               [{:id 1 :username "foo"}
+                {:id 2 :username "bar"}]))))
 
 (deftest map-tests
   (is (= (map* #(+ 1 %) [1 2 3 4 5]) [2 3 4 5 6]))
