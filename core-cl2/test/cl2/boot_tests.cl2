@@ -90,3 +90,26 @@
              3 :three
              4 :four)
            :four)))
+
+(deftest cond->-test
+  (is (=== 6
+           (cond-> 1
+                   true inc
+                   false (* 42)
+                   (= 2 2) (* 3)))))
+
+(deftest cond->>-test
+  (is (=== 10
+           (let [d [0 1 2 3]]
+             (cond->> d
+                      true (map inc)
+                      (number? d) (map dec)
+                      (= (count d) 4) (reduce +)
+                      )))))
+
+(deftest doto-test
+  (is (= ["four" "three" 2 1]
+         (doto [1 2 3]
+           (.pop)
+           (.push "three" "four")
+           (.reverse)))))
