@@ -54,20 +54,22 @@
      `(reduce' ~f ~val ~coll))
   ([f coll]
      (if (vector? coll)
-       `(reduce' ~f ~(first coll) ~coll))
+       `(reduce' ~f ~(first coll) ~(rest coll)))
      `(let [coll ~coll
-            init (first coll)]
-        (reduce' ~f init coll))))
+            init (first coll)
+            tail (rest coll)]
+        (reduce' ~f init tail))))
 
 (defmacro reductions
   ([f val coll]
     `(reductions* ~f ~val ~coll))
   ([f coll]
      (if (vector? coll)
-       `(reductions* ~f ~(first coll) ~coll))
+       `(reductions* ~f ~(first coll) ~(rest coll)))
      `(let [coll ~coll
-            init (first coll)]
-        (reductions* ~f init coll))))
+            init (first coll)
+            tail (rest coll)]
+        (reductions* ~f init tail))))
 
 (defmacro partition
   ([n coll]

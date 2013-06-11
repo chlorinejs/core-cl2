@@ -149,9 +149,9 @@
   applying f to that result and the 2nd item, etc. If coll contains no
   items, returns val and f is not called."
   ([f val coll]
-    (reduce' f val coll))
+     (reduce' f val coll))
   ([f coll]
-    (reduce' f (first coll) coll)))
+     (reduce' f (first coll) (rest coll))))
 
 (defn reductions*
   "Standard version of reductions"
@@ -170,9 +170,9 @@
   "Returns a vector of the intermediate values of the reduction (as
   per reduce) of coll by f, starting with init."
   ([f init coll]
-    (reductions* f init coll))
+     (reductions* f init coll))
   ([f coll]
-    (reductions* f (first coll) coll)))
+     (reductions* f (first coll) (rest coll))))
 
 (def *gensym* 999)
 (defn gensym
