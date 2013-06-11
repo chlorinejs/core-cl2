@@ -158,7 +158,9 @@
   (is (= 120
          (reduce* (fn [x y] (* x y))
                      1
-                     [1 2 3 4 5]))))
+                     [1 2 3 4 5])))
+  (is (= 10
+         (reduce + [1 2 3 4]))))
 
 (deftest defmulti-tests
   (defmulti  foo (fn [& args] (count args)))
@@ -533,7 +535,8 @@
   (is (= (range 0 -9 -3) [0 -3 -6])))
 
 (deftest reductions-tests
-  (is (= [1 3 6 10 15] (reductions #(+ %1 %2) 1 [2 3 4 5]))))
+  (is (= [1 3 6 10 15] (reductions #(+ %1 %2) 1 [2 3 4 5])))
+  (is (= [2 5 9 14] (reductions + [2 3 4 5]))))
 
 (deftest empty-tests
   (is (= true (empty? [])))
