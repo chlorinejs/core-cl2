@@ -42,20 +42,31 @@
           (every? valid-fn-declrs? fdeclrs))
      (let [count-arg (fn [v] (if (contains? (set v) '&)
                                :variadic
-                               (count v)))]
-       `(fn* ~@(concat (remove nil? [fname docstring])) []
-          (def args arguments)
-
-          ~(concat ['case `(count args)]
-                   (apply concat
-                          (for [fdeclr# fdeclrs]
-                            (let [[v# _] fdeclr#]
-                              (if (= (count-arg v#) :variadic)
-                                (vector `(let [f ~(cons 'fn fdeclr#)]
-                                           (apply f args)))
-                                (vector (count-arg v#)
-                                        `(let [f ~(cons 'fn fdeclr#)]
-                                           (apply f args))))))))))
+                               (count v)))
+           root-arguments (gensym "args")
+           children
+           (for [fdeclr# fdeclrs]
+             (let [[v# _]    fdeclr#
+                   arg-count (count-arg v#)]
+               (let [child-name (gensym "f")
+                     excution-form
+                     `(apply ~child-name ~root-arguments)]
+                 {:child-declr
+                  `(def ~child-name (fn* ~@fdeclr#))
+                  :case-form
+                  (if (= arg-count :variadic)
+                    ;; in `case`, default values are not specified
+                    [excution-form]
+                    ;; other cases:
+                    [arg-count excution-form])})))
+           child-dclrs   (map    :child-declr children)
+           case-forms    (apply concat (map :case-form   children))]
+       `(fn* ~@(concat (remove nil? [fname docstring]))
+             []
+             (def ~root-arguments arguments)
+             ~@child-dclrs
+             (case (count ~root-arguments)
+               ~@case-forms)))
      :otherwise
      (throw (Exception. "Invalid function declaration!"))
      )))
