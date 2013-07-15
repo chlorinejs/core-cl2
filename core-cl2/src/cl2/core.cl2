@@ -715,6 +715,7 @@ empty, returns nil. (seq nil) returns nil."
      [k v])))
 
 (defn interleave
+  "Returns a vector of the first item in each coll, then the second etc."
   [& colls]
   (let [max-index (apply min (map count colls))]
     (apply concat
