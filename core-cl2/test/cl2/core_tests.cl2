@@ -155,12 +155,20 @@
   (is (= 120
          (reduce (fn [x y] (* x y))
                      [1 2 3 4 5])))
-  (is (= 120
-         (reduce* (fn [x y] (* x y))
-                     1
-                     [1 2 3 4 5])))
   (is (= 10
          (reduce + [1 2 3 4]))))
+
+(deftest non-native-tests
+  (is (= 120
+         (reduce* (fn [x y] (* x y))
+                  1
+                  [1 2 3 4 5])))
+  (is (= (map* #(+ 1 %) [1 2 3 4 5]) [2 3 4 5 6]))
+  (is (= true (every?* even? [2 4 6])))
+  (is (= false (every?* even? [1 4 6])))
+  (is (= true (some* even? [1 2 3 4])))
+  (is (not (some* even? [1 3 5 7])))
+  (is (= (filter* even? [1 2 3 4 5]) [2 4])))
 
 (deftest defmulti-tests
   (defmulti  foo (fn [& args] (count args)))
@@ -433,21 +441,17 @@
 (deftest every?-tests
   (is (= true (every? even? [2 4 6])))
   (is (= false (every? even? [1 4 6])))
-  (is (= true (every?* even? [2 4 6])))
-  (is (= false (every?* even? [1 4 6]))))
+)
 
 (deftest some-tests
   (is (= true (some even? [1 2 3 4])))
   (is (not (some even? [1 3 5 7])))
-  (is (= true (some* even? [1 2 3 4])))
-  (is (not (some* even? [1 3 5 7])))
   (is (= {:id 1 :username "foo"}
          (some #(and (= 1 (:id %)) %)
                [{:id 1 :username "foo"}
                 {:id 2 :username "bar"}]))))
 
 (deftest map-tests
-  (is (= (map* #(+ 1 %) [1 2 3 4 5]) [2 3 4 5 6]))
   (is (= (map #(+ 1 %) [1 2 3 4 5]) [2 3 4 5 6])))
 
 (deftest mapcat-tests
@@ -455,8 +459,7 @@
          [0 1 2 3 4 5 6 7 8 9])))
 
 (deftest filter-tests
-  (is (= (filter even? [1 2 3 4 5]) [2 4]))
-  (is (= (filter* even? [1 2 3 4 5]) [2 4])))
+  (is (= (filter even? [1 2 3 4 5]) [2 4])))
 
 (deftest remove-tests
   (is (= (remove even? [1 2 3 4 5]) [1 3 5])))
