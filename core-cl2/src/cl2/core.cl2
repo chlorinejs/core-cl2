@@ -720,6 +720,11 @@ empty, returns nil. (seq nil) returns nil."
            (for [index (range 0 max-index)]
              (map #(nth % index) colls)))))
 
+(defn interpose
+  [sep coll]
+  (let [c (seq coll)]
+    (drop 1 (interleave (repeat (count c) sep) c))))
+
 (defn trampoline
   "trampoline can be used to convert algorithms requiring mutual
   recursion without stack consumption. Calls f with supplied args, if

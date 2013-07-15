@@ -588,3 +588,12 @@
 (deftest interleave-tests
   (is (= (interleave [:a :b :c] [1 2 3] [:x :y :z :zee])
          [:a 1 :x :b 2 :y :c 3 :z])))
+
+(deftest interpose-tests
+  (is (= (interpose "," [:a :b :c])
+         [:a "," :b "," :c]))
+  (is (= (interpose "," {:a 1 :b 2})
+         [[:a 1] "," [:b 2]]))
+  ;; you can do this but (.join "," "hello") is even better
+  (is (= (interpose "," "hello")
+         ["h" "," "e" "," "l" "," "l" "," "o"])))
