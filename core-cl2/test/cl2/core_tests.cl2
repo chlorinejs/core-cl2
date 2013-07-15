@@ -395,6 +395,8 @@
 (deftest assoc-map-test
   (def my-map {:a 1 :b 2})
   (def new-map (assoc my-map :c 3))
+  (is (= (assoc nil :k 3)
+         {:k 3}))
   (is (= new-map {:a 1 :b 2 :c 3}))
   (is (= my-map {:a 1 :b 2})))
 
