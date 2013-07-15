@@ -385,6 +385,9 @@
 
 (deftest get-tests
   (is (= (get {:a 1} :a) 1))
+  (is (= (get {:a 1} :b) nil))
+  (is (= (get {:a 1} :b 1) 1))
+  (is (= (get {:a 1 :b 0} :b 1) 0))
   (is (= (get [1 :x 'y] 2) 'y))
   (is (= (get "abc" 1) "b")))
 
