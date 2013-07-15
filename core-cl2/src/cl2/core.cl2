@@ -724,6 +724,15 @@ empty, returns nil. (seq nil) returns nil."
   (let [c (seq coll)]
     (drop 1 (interleave (repeat (count c) sep) c))))
 
+(defn assoc-in
+  "Associates a value in a nested associative structure, where ks is a
+  sequence of keys and v is the new value and returns a new nested structure.
+  If any levels do not exist, hash-maps will be created."
+  [m [k & ks] v]
+  (if (count ks)
+    (assoc m k (assoc-in (or (get m k) {}) ks v))
+    (assoc m k v)))
+
 (defn trampoline
   "trampoline can be used to convert algorithms requiring mutual
   recursion without stack consumption. Calls f with supplied args, if

@@ -599,3 +599,23 @@
   ;; you can do this but (.join "," "hello") is even better
   (is (= (interpose "," "hello")
          ["h" "," "e" "," "l" "," "l" "," "o"])))
+
+(deftest assoc-in-tests
+  (def users {:foo  {:name "John" :age 43}})
+  (is (= (assoc-in users [:foo :age] 44)
+         {:foo  {:name "John" :age 44}}))
+  ;; ensure data is not mutated
+  (is (= users
+         {:foo  {:name "John" :age 43}}))
+
+  (def user-list [{:foo  {:name "John" :age 43}}
+                  {:foo  {:name "Paul" :age 34}}])
+  (is (= (assoc-in user-list [0 :foo :age] 44)
+         [{:foo  {:name "John" :age 44}}
+          {:foo  {:name "Paul" :age 34}}]))
+  ;; ensure data is not mutated
+  (is (= user-list
+         [{:foo  {:name "John" :age 43}}
+          {:foo  {:name "Paul" :age 34}}]))
+  (is (= {:foo 1 :bar {:boo {:buzz 5}}}
+         (assoc-in {:foo 1} [:bar :boo :buzz] 5))))
