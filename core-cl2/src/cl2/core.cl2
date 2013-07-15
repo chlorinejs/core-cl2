@@ -34,7 +34,7 @@
 
 (defn false? [expr] (=== false expr))
 
-(defn nil? [expr] (=== nil expr))
+(defn nil? [expr] (or (=== nil expr)  (=== null expr)))
 
 (defn first
   "Returns the first item in the collection. Doesn't work on maps.
