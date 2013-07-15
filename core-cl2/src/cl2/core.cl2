@@ -684,13 +684,34 @@
   ([n step pad coll]
      (partition4 n step pad coll)))
 
-(def ^{:doc "Returns the substring of s beginning at start inclusive,
+(alias ^{:doc "Returns the substring of s beginning at start inclusive,
  and ending at end (defaults to length of string), exclusive."}
   subs subvec)
 
 (def println (if (=== "object" (typeof console))
                console.log
                (fn [])))
+
+(defn seq
+  "Returns a seq on the collection. If the collection is
+empty, returns nil. (seq nil) returns nil."
+  [x]
+  (cond
+   (empty? x)
+   nil
+
+   (vector? x)
+   x
+
+   (string? x)
+   (.split x "")
+
+   (set? x)
+   (keys x)
+
+   :else ;;map?
+   (for [[k v] x]
+     [k v])))
 
 (defn trampoline
   "trampoline can be used to convert algorithms requiring mutual

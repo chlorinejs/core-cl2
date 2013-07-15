@@ -568,6 +568,18 @@
   (is (= (subvec [1 2 3 4 5] 1 3)
          [2 3])))
 
+(deftest seq-tests
+  (is (= (seq [])
+         nil))
+  (is (= (seq [1 2 3])
+         [1 2 3]))
+  (is (= (seq "abc")
+         ["a" "b" "c"]))
+  (is (= (seq {:a 1 :b 2})
+         [[:a 1] [:b 2]]))
+  (is (= (seq #{:a :b})
+         [:a :b])))
+
 (deftest trampoline-tests
   (defn tramfactorial [x n] (if (= 1 n) x #(tramfactorial (* x n) (dec n))))
   (is (= (trampoline tramfactorial 1 5)
