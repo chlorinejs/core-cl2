@@ -12,10 +12,7 @@
   ([m k]
      `(get* ~m ~k))
   ([m k not-found]
-     `(let [v (get ~m ~k)]
-        (if (undefined? v)
-          ~not-found
-          v))))
+     `(get' ~m ~k ~not-found)))
 
 (defmacro contains? [m k]
   `(in ~k ~m))

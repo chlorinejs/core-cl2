@@ -389,7 +389,10 @@
   (is (= (get {:a 1} :b 1) 1))
   (is (= (get {:a 1 :b 0} :b 1) 0))
   (is (= (get [1 :x 'y] 2) 'y))
-  (is (= (get "abc" 1) "b")))
+  (is (= (get {:a false} :a 4) false))
+  (is (= (get {:a nil} :a 4) nil))
+  (is (= (get "abc" 1) "b"))
+  (is (= (get "abc" 10 :xyz) :xyz)))
 
 (deftest conj-tests
   (is (= (conj [1] 2) [1 2]))
