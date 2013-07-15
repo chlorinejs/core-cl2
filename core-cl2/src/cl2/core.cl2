@@ -22,11 +22,10 @@
 (defn get'
   "Returns the value mapped to key, not-found or nil if key not present."
   [m k not-found]
-  (or (or (and (string? m) (get m k))
-          not-found)
-      (or (and (contains? m k)
-               (get m k))
-          not-found)))
+  (let [v (get m k)]
+        (if (undefined? v)
+          not-found
+          v)))
 
 (alias get get')
 
