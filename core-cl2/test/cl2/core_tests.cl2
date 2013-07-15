@@ -584,3 +584,7 @@
   (defn tramfactorial [x n] (if (= 1 n) x #(tramfactorial (* x n) (dec n))))
   (is (= (trampoline tramfactorial 1 5)
          120)))
+
+(deftest interleave-tests
+  (is (= (interleave [:a :b :c] [1 2 3] [:x :y :z :zee])
+         [:a 1 :x :b 2 :y :c 3 :z])))

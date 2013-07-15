@@ -713,6 +713,13 @@ empty, returns nil. (seq nil) returns nil."
    (for [[k v] x]
      [k v])))
 
+(defn interleave
+  [& colls]
+  (let [max-index (apply min (map count colls))]
+    (apply concat
+           (for [index (range 0 max-index)]
+             (map #(nth % index) colls)))))
+
 (defn trampoline
   "trampoline can be used to convert algorithms requiring mutual
   recursion without stack consumption. Calls f with supplied args, if
