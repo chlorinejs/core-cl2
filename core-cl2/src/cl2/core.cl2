@@ -723,6 +723,7 @@ empty, returns nil. (seq nil) returns nil."
              (map #(nth % index) colls)))))
 
 (defn interpose
+  "Returns a vector of the elements of coll separated by sep"
   [sep coll]
   (let [c (seq coll)]
     (drop 1 (interleave (repeat (count c) sep) c))))
