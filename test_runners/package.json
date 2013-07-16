@@ -5,7 +5,7 @@
   , "dependencies": {
       "testem": ">= 0.2.26"
     , "mocha": ">= 1.7.4"
-    , "chloric": "0.1.13"
+    , "chloric": "0.1.15"
   }
   , "scripts": {
       "watch": "cl2c -u chloric-profile.clj -t 10000 -v -w '../core-cl2/src/cl2/,../core-cl2/test/cl2/' ../core-cl2/test/test_runners.cl2"
