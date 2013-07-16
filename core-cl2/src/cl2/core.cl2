@@ -59,7 +59,7 @@
   "Returns a vector of the items after the first. Doesn't work on maps.
   If there are no more items, returns nil."
   [x]
-  (if (empty? x) nil (if (< 1 (count x)) (.slice x 1))))
+  (if-not (empty? x) (if (< 1 (count x)) (.slice x 1))))
 
 (defn rest
   "Returns a possibly empty vector of the items after the first.
