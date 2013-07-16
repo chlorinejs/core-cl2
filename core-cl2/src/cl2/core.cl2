@@ -734,7 +734,7 @@ empty, returns nil. (seq nil) returns nil."
   If any levels do not exist, hash-maps will be created."
   [m [k & ks] v]
   (if (count ks)
-    (assoc m k (assoc-in (or (get m k) {}) ks v))
+    (assoc m k (assoc-in (get m k {}) ks v))
     (assoc m k v)))
 
 (defn trampoline
