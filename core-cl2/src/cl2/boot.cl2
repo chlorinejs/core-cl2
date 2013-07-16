@@ -50,7 +50,7 @@
                    arg-count (count-arg v#)]
                (let [child-name (gensym "f")
                      excution-form
-                     `(apply ~child-name ~root-arguments)]
+                     `(.apply ~child-name 0 ~root-arguments)]
                  {:child-declr
                   `(def ~child-name (fn* ~@fdeclr#))
                   :case-form
