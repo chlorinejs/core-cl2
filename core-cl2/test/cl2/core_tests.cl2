@@ -625,3 +625,12 @@
           {:foo  {:name "Paul" :age 34}}]))
   (is (= {:foo 1 :bar {:boo {:buzz 5}}}
          (assoc-in {:foo 1} [:bar :boo :buzz] 5))))
+
+(deftest update-in-tests
+  (def users [{:name "James" :age 26}
+              {:name "John" :age 43}])
+  (is (= (update-in users [1 :age] inc)
+         [{:name "James", :age 26}
+          {:name "John", :age 44}]))
+  (= users [{:name "James" :age 26}
+            {:name "John" :age 43}]))
