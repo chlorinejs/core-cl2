@@ -10,7 +10,29 @@
 (borrow-macros when when-not unless if-not if-let when-let cond
                condp .. -> ->> cond-> cond->> doto)
 
-(defmacro apply [fun & args] `(.apply ~fun 0 ~@args))
+(defmacro apply*
+  "Helper macro to call native apply method"
+  [f & args]
+  `(.apply ~f 0 ~@args))
+
+;; (apply f [1 2 3]) => (apply* f [1 2 3])
+;; (apply f c) => (apply* f c)
+;; (apply f 1 2 [3 4]) => (apply* f [1 2 3 4])
+;; (apply f 1 2 3 c) => (apply* f (.concat [1 2 3] c))
+
+(defmacro apply
+  "Applies fn f to the argument list formed by prepending intervening arguments to args."
+  [f & args]
+  (if (= 1 (count args))
+    (if (or (coll? (first args))
+            (symbol? (first args)))
+      `(apply* ~f ~@args)
+      (throw (Throwable. "Invalid apply form 1")))
+    (if (coll? (last args))
+      `(apply* ~f ~(vec (concat (butlast args) (last args))))
+      (if (symbol? (last args))
+        `(apply* ~f (.concat ~(vec (butlast args)) ~(last args)))
+        (throw (Throwable. "Invalid apply form"))))))
 
 (defmacro fn
   "Function form. Supports multi-arity."
@@ -42,20 +64,31 @@
           (every? valid-fn-declrs? fdeclrs))
      (let [count-arg (fn [v] (if (contains? (set v) '&)
                                :variadic
-                               (count v)))]
-       `(fn* ~@(concat (remove nil? [fname docstring])) []
-          (def args arguments)
-
-          ~(concat ['case `(count args)]
-                   (apply concat
-                          (for [fdeclr# fdeclrs]
-                            (let [[v# _] fdeclr#]
-                              (if (= (count-arg v#) :variadic)
-                                (vector `(let [f ~(cons 'fn fdeclr#)]
-                                           (apply f args)))
-                                (vector (count-arg v#)
-                                        `(let [f ~(cons 'fn fdeclr#)]
-                                           (apply f args))))))))))
+                               (count v)))
+           root-arguments (gensym "args")
+           children
+           (for [fdeclr# fdeclrs]
+             (let [[v# _]    fdeclr#
+                   arg-count (count-arg v#)]
+               (let [child-name (gensym "f")
+                     excution-form
+                     `(.apply ~child-name 0 ~root-arguments)]
+                 {:child-declr
+                  `(def ~child-name (fn* ~@fdeclr#))
+                  :case-form
+                  (if (= arg-count :variadic)
+                    ;; in `case`, default values are not specified
+                    [excution-form]
+                    ;; other cases:
+                    [arg-count excution-form])})))
+           child-dclrs   (map    :child-declr children)
+           case-forms    (apply concat (map :case-form   children))]
+       `(fn* ~@(concat (remove nil? [fname docstring]))
+             []
+             (def ~root-arguments arguments)
+             ~@child-dclrs
+             (case (count ~root-arguments)
+               ~@case-forms)))
      :otherwise
      (throw (Exception. "Invalid function declaration!"))
      )))

@@ -1,4 +1,4 @@
-(defproject core-cl2 "0.7.3"
+(defproject core-cl2 "0.8.0"
   :description "Chlorine's bootstrap"
   :url "http://github.com/chlorinejs/core-cl2"
   :dependencies []
@@ -6,5 +6,5 @@
   :profiles {:provided
              {:dependencies
               [[org.clojure/clojure "1.5.1"]
-               [chlorine "1.5.3.1"]
+               [chlorine "1.6.0"]
                ]}})

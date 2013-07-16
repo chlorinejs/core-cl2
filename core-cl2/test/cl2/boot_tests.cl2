@@ -1,6 +1,31 @@
 (deftest apply-tests
+  (is (= (macroexpand (apply (fn* [x y] (+ x y)) [1 2]))
+         (macroexpand
+          (.apply (fn* [x y] (+ x y)) 0 [1 2]))))
+  (is (= (apply* concat [1 2 3 [4 5]])
+         [1 2 3 4 5]))
+  (is (= (apply* (fn* [x y z t] (+ x y z t)) [1 2 3 4])
+         10))
+
+  (is (= (macroexpand (apply (fn* [x y] (+ x y)) [1 2]))
+         (macroexpand (.apply (fn* [x y] (+ x y)) 0 [1 2]))))
   (is (= (apply (fn* [x y] (+ x y)) [1 2])
-         3)))
+         3))
+
+  (is (= (macroexpand
+          (apply (fn* [x y z t] (+ x y z t)) 1 2 [3 4]))
+         (macroexpand
+          (.apply (fn* [x y z t] (+ x y z t)) 0 [1 2 3 4]))))
+  (is (= (apply (fn* [x y z t] (+ x y z t)) 1 2 [3 4])
+         10))
+
+  (is (= (macroexpand
+          (apply (fn* [x y z t] (+ x y z t)) 1 2 c))
+         (macroexpand
+          (.apply (fn* [x y z t] (+ x y z t)) 0 (.concat [1 2] c)))))
+  (is (= (let [c [3 6]]
+           (apply (fn* [x y z t] (+ x y z t)) 1 2 c))
+         12)))
 
 (deftest dotimes-tests
   (is (= 100

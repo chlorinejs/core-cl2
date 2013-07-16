@@ -12,7 +12,14 @@
   (is (= 3 (last [1 2 3])))
   (is (= nil (last [])))
   (is (= nil (last nil)))
-  )
+  (is (= [2 3] (next [1 2 3])))
+  (is (= nil (next [])))
+  (is (= [2 3 4]
+         (rest [1 2 3 4])))
+  (is (= [] (rest [])))
+  (is (= (butlast [1 2 3 4])
+         [1 2 3]))
+  (is (= nil (butlast []))))
 
 (deftest type-tests
   (is (vector? [1 2 3]))
@@ -155,12 +162,20 @@
   (is (= 120
          (reduce (fn [x y] (* x y))
                      [1 2 3 4 5])))
-  (is (= 120
-         (reduce* (fn [x y] (* x y))
-                     1
-                     [1 2 3 4 5])))
   (is (= 10
          (reduce + [1 2 3 4]))))
+
+(deftest non-native-tests
+  (is (= 120
+         (reduce* (fn [x y] (* x y))
+                  1
+                  [1 2 3 4 5])))
+  (is (= (map* #(+ 1 %) [1 2 3 4 5]) [2 3 4 5 6]))
+  (is (= true (every?* even? [2 4 6])))
+  (is (= false (every?* even? [1 4 6])))
+  (is (= true (some* even? [1 2 3 4])))
+  (is (not (some* even? [1 3 5 7])))
+  (is (= (filter* even? [1 2 3 4 5]) [2 4])))
 
 (deftest defmulti-tests
   (defmulti  foo (fn [& args] (count args)))
@@ -377,8 +392,14 @@
 
 (deftest get-tests
   (is (= (get {:a 1} :a) 1))
+  (is (= (get {:a 1} :b) nil))
+  (is (= (get {:a 1} :b 1) 1))
+  (is (= (get {:a 1 :b 0} :b 1) 0))
   (is (= (get [1 :x 'y] 2) 'y))
-  (is (= (get "abc" 1) "b")))
+  (is (= (get {:a false} :a 4) false))
+  (is (= (get {:a nil} :a 4) nil))
+  (is (= (get "abc" 1) "b"))
+  (is (= (get "abc" 10 :xyz) :xyz)))
 
 (deftest conj-tests
   (is (= (conj [1] 2) [1 2]))
@@ -387,6 +408,8 @@
 (deftest assoc-map-test
   (def my-map {:a 1 :b 2})
   (def new-map (assoc my-map :c 3))
+  (is (= (assoc nil :k 3)
+         {:k 3}))
   (is (= new-map {:a 1 :b 2 :c 3}))
   (is (= my-map {:a 1 :b 2})))
 
@@ -433,21 +456,17 @@
 (deftest every?-tests
   (is (= true (every? even? [2 4 6])))
   (is (= false (every? even? [1 4 6])))
-  (is (= true (every?* even? [2 4 6])))
-  (is (= false (every?* even? [1 4 6]))))
+)
 
 (deftest some-tests
   (is (= true (some even? [1 2 3 4])))
   (is (not (some even? [1 3 5 7])))
-  (is (= true (some* even? [1 2 3 4])))
-  (is (not (some* even? [1 3 5 7])))
   (is (= {:id 1 :username "foo"}
          (some #(and (= 1 (:id %)) %)
                [{:id 1 :username "foo"}
                 {:id 2 :username "bar"}]))))
 
 (deftest map-tests
-  (is (= (map* #(+ 1 %) [1 2 3 4 5]) [2 3 4 5 6]))
   (is (= (map #(+ 1 %) [1 2 3 4 5]) [2 3 4 5 6])))
 
 (deftest mapcat-tests
@@ -455,8 +474,7 @@
          [0 1 2 3 4 5 6 7 8 9])))
 
 (deftest filter-tests
-  (is (= (filter even? [1 2 3 4 5]) [2 4]))
-  (is (= (filter* even? [1 2 3 4 5]) [2 4])))
+  (is (= (filter even? [1 2 3 4 5]) [2 4])))
 
 (deftest remove-tests
   (is (= (remove even? [1 2 3 4 5]) [1 3 5])))
@@ -551,7 +569,15 @@
 
 (deftest partition-tests
   (is (= (partition 4 4 (range 20))
-         '((0 1 2 3) (4 5 6 7) (8 9 10 11) (12 13 14 15) (16 17 18 19)))))
+         [[0 1 2 3] [4 5 6 7] [8 9 10 11] [12 13 14 15] [16 17 18 19]]))
+  (is (= (partition 10 10 [] [1 2 3 4])
+         [[1 2 3 4]]))
+  (is (= (partition 3 3 [] [1 2 3 4])
+         [[1 2 3] [4]]))
+  (is (= (partition 10 10 nil [1 2 3 4])
+         [[1 2 3 4]]))
+  (is (= (partition 3 3 [nil nil nil] [1 2 3 4])
+         [[1 2 3] [4 nil nil]])))
 
 (deftest subs-tests
   (is (= (subs "abcde" 1)
@@ -565,7 +591,61 @@
   (is (= (subvec [1 2 3 4 5] 1 3)
          [2 3])))
 
+(deftest seq-tests
+  (is (= (seq [])
+         nil))
+  (is (= (seq [1 2 3])
+         [1 2 3]))
+  (is (= (seq "abc")
+         ["a" "b" "c"]))
+  (is (= (seq {:a 1 :b 2})
+         [[:a 1] [:b 2]]))
+  (is (= (seq #{:a :b})
+         [:a :b])))
+
 (deftest trampoline-tests
   (defn tramfactorial [x n] (if (= 1 n) x #(tramfactorial (* x n) (dec n))))
   (is (= (trampoline tramfactorial 1 5)
          120)))
+
+(deftest interleave-tests
+  (is (= (interleave [:a :b :c] [1 2 3] [:x :y :z :zee])
+         [:a 1 :x :b 2 :y :c 3 :z])))
+
+(deftest interpose-tests
+  (is (= (interpose "," [:a :b :c])
+         [:a "," :b "," :c]))
+  (is (= (interpose "," {:a 1 :b 2})
+         [[:a 1] "," [:b 2]]))
+  ;; you can do this but (.join "," "hello") is even better
+  (is (= (interpose "," "hello")
+         ["h" "," "e" "," "l" "," "l" "," "o"])))
+
+(deftest assoc-in-tests
+  (def users {:foo  {:name "John" :age 43}})
+  (is (= (assoc-in users [:foo :age] 44)
+         {:foo  {:name "John" :age 44}}))
+  ;; ensure data is not mutated
+  (is (= users
+         {:foo  {:name "John" :age 43}}))
+
+  (def user-list [{:foo  {:name "John" :age 43}}
+                  {:foo  {:name "Paul" :age 34}}])
+  (is (= (assoc-in user-list [0 :foo :age] 44)
+         [{:foo  {:name "John" :age 44}}
+          {:foo  {:name "Paul" :age 34}}]))
+  ;; ensure data is not mutated
+  (is (= user-list
+         [{:foo  {:name "John" :age 43}}
+          {:foo  {:name "Paul" :age 34}}]))
+  (is (= {:foo 1 :bar {:boo {:buzz 5}}}
+         (assoc-in {:foo 1} [:bar :boo :buzz] 5))))
+
+(deftest update-in-tests
+  (def users [{:name "James" :age 26}
+              {:name "John" :age 43}])
+  (is (= (update-in users [1 :age] inc)
+         [{:name "James", :age 26}
+          {:name "John", :age 44}]))
+  (= users [{:name "James" :age 26}
+            {:name "John" :age 43}]))

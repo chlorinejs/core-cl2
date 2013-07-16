@@ -1,3 +1,6 @@
+(load-file "./compatible.cl2")
+;;(load-file "./native.cl2")
+
 (defn not [x] (! x))
 
 (defn contains?
@@ -19,19 +22,20 @@
 (defn get'
   "Returns the value mapped to key, not-found or nil if key not present."
   [m k not-found]
-  (or (or (and (string? m) (get m k))
-          not-found)
-      (or (and (contains? m k)
-               (get m k))
-          not-found)))
+  (let [look-up (if (string? m)
+                  (seq m)
+                  m)]
+    (if (contains? look-up k)
+      (get m k)
+      not-found)))
 
-(def get get')
+(alias get get')
 
 (defn true? [expr] (=== true expr))
 
 (defn false? [expr] (=== false expr))
 
-(defn nil? [expr] (=== nil expr))
+(defn nil? [expr] (or (=== nil expr)  (=== null expr)))
 
 (defn first
   "Returns the first item in the collection. Doesn't work on maps.
@@ -55,13 +59,18 @@
   "Returns a vector of the items after the first. Doesn't work on maps.
   If there are no more items, returns nil."
   [x]
-  (if (empty? x) nil (if (< 1 (count x)) (.slice x 1))))
+  (if-not (empty? x) (if (< 1 (count x)) (.slice x 1))))
 
 (defn rest
   "Returns a possibly empty vector of the items after the first.
   Doesn't work on maps."
   [x]
   (if (nil? x) [] (.slice x 1)))
+
+(defn butlast
+  "Return a vector of all but the last item in coll"
+  [x]
+  (if-not (empty? x) (.slice x 0 (dec (count x)))))
 
 (defn nnext
   "Same as (next (next x))"
@@ -117,27 +126,6 @@
   [coll]
   (or (=== coll "") (nil? coll) (= {} coll) (= [] coll) (= #{} coll)))
 
-(defn reduce*
-  "Standard version of reduce."
-  [f val coll]
-  (let [c (count coll)]
-    (loop [i 0
-           r val]
-      (if (< i c)
-        (recur (+ i 1) (f r (get coll i)))
-        r))))
-
-(def reduce')
-(if (fn? Array.prototype.reduce)
-  ;; Array.prototype.reduce passes not only two but four arguments
-  ;; to f. Wrapping f with an anonymous function to ignore the
-  ;; rest arguments
-  (set! reduce' (fn [f val coll]
-                  (.reduce coll
-                           (fn [x y] (f x y))
-                           val)))
-  (set! reduce' reduce*))
-
 (defn reduce
   "f should be a function of 2 arguments. If val is not supplied,
   returns the result of applying f to the first 2 items in coll, then
@@ -180,7 +168,7 @@
   supplied, the name is prefix# where # is some unique number. If
   prefix is not supplied, the prefix is 'G__'."
   [prefix-string]
-  (inc! *gensym*)
+  (set! *gensym* (inc *gensym*))
   (str (or prefix-string "G__") *gensym*))
 
 (defn subvec
@@ -224,28 +212,6 @@
               "RegExp")  'regexp
         :else            'map))
 
-(defn map*
-  "Non-native map implementation for old browsers."
-  [f arr]
-  (let [c (count arr)]
-    (loop [r []
-           i 0]
-      (if (< i c)
-        (do
-          (.push r (f (get arr i)))
-          (recur r (+ i 1)))
-        r))))
-
-(def ^{:doc "Creates a new vector with the results of calling a
-provided function  on every element in this vector."}
-  map)
-(if (fn? Array.prototype.map)
-  ;; Array.prototype.map passes not only one but three arguments
-  ;; to f. Wrapping f with an anonymous function to ignore the
-  ;; rest arguments
-  (set! map (fn [f coll] (.map coll (fn [x] (f x)))))
-  (set! map map*))
-
 (defn remove
   "Returns a vector of the items in coll for which
   (pred item) returns false. pred must be free of side-effects."
@@ -259,29 +225,6 @@ provided function  on every element in this vector."}
             (.push r (get seq i)))
           (recur r (+ 1 i)))
         r))))
-
-(defn filter*
-  "Non-native filter implementation for old browsers."
-  [pred arr]
-  (let [c (count arr)]
-    (loop [r []
-           i 0]
-      (if (< i c)
-        (do
-          (if (pred (get arr i)) (.push r (get arr i)))
-          (recur r (+ i 1)))
-        r))))
-
-(def ^{:doc "Returns a vector of the items in coll for which
-  (pred item) returns true. pred must be free of side-effects."}
-  filter)
-(if (fn? Array.prototype.filter)
-  ;; wrapping pred with an anonymous function to ignore
-  ;; unwanted (index and coll) arguments passed by
-  ;; native filter.
-  (set! filter (fn [pred coll]
-                 (.filter coll (fn [x] (pred x)))))
-  (set! filter filter*))
 
 (defn merge
   "Returns a map that consists of the rest of the maps conj-ed onto
@@ -535,47 +478,6 @@ provided function  on every element in this vector."}
     [k (get m k)]
     nil))
 
-(defn every?*
-  "Non-native every? implementation for old browsers."
-  [pred coll]
-  (cond
-   (empty? coll) true
-   (pred (first coll)) (every?* pred (next coll))
-   :else false))
-
-(def ^{:doc "Returns true if (pred x) is logical true for every x in
-coll, else false."}
-  every?)
-(if (fn? Array.prototype.every)
-  ;; wrapping pred with an anonymous function to ignore
-  ;; unwanted (index and coll) arguments passed by
-  ;; native filter.
-  (set! every? (fn [pred coll]
-                 (.every coll (fn [x] (pred x)))))
-  (set! every? every?*))
-
-(defn some*
-  "Non-native some implementation for old browsers."
-  [pred coll]
-  (when coll
-    (or (pred (first coll))
-        (some* pred (next coll)))))
-
-(def ^{:doc "Returns the first logical true value of (pred x) for any
-x in coll, else nil. One common idiom is to use a set as pred,
-for example this will return :fred if :fred is in the sequence,
-otherwise nil: (some #{:fred} coll)"}
-  some)
-(if (fn? Array.prototype.some)
-  ;; wrapping pred with an anonymous function to ignore
-  ;; unwanted (index and coll) arguments passed by
-  ;; native filter.
-  (set! some (fn [pred coll]
-               (def ret)
-               (. coll some #(do (set! ret (pred %)) ret))
-               ret))
-  (set! some some*))
-
 (defn concat
   "Returns a vector representing the concatenation of the elements in
   the supplied colls."
@@ -770,11 +672,12 @@ otherwise nil: (some #{:fred} coll)"}
 (defn partition4
   "Four-argument version of partition"
   [n step pad coll]
-  (when-let [s coll]
-    (when-let [p (take n s)]
-      (if (= n (count p))
-        (cons p (partition4 n step pad (nthrest s step)))
-        [(take n (concat p pad))]))))
+  (let [pad (if (nil? pad) [] pad)]
+    (when-let [s coll]
+      (when-let [p (take n s)]
+        (if (= n (count p))
+          (cons p (partition4 n step pad (nthrest s step)))
+          [(take n (concat p pad))])))))
 
 (defn partition
   "Returns a vector of lists of n items each, at offsets step
@@ -788,13 +691,68 @@ otherwise nil: (some #{:fred} coll)"}
   ([n step pad coll]
      (partition4 n step pad coll)))
 
-(def ^{:doc "Returns the substring of s beginning at start inclusive,
+(alias ^{:doc "Returns the substring of s beginning at start inclusive,
  and ending at end (defaults to length of string), exclusive."}
   subs subvec)
 
 (def println (if (=== "object" (typeof console))
                console.log
                (fn [])))
+
+(defn seq
+  "Returns a seq on the collection. If the collection is
+empty, returns nil. (seq nil) returns nil."
+  [x]
+  (cond
+   (empty? x)
+   nil
+
+   (vector? x)
+   x
+
+   (string? x)
+   (.split x "")
+
+   (set? x)
+   (keys x)
+
+   :else ;;map?
+   (for [[k v] x]
+     [k v])))
+
+(defn interleave
+  "Returns a vector of the first item in each coll, then the second etc."
+  [& colls]
+  (let [max-index (apply min (map count colls))]
+    (apply concat
+           (for [index (range 0 max-index)]
+             (map #(nth % index) colls)))))
+
+(defn interpose
+  "Returns a vector of the elements of coll separated by sep"
+  [sep coll]
+  (let [c (seq coll)]
+    (drop 1 (interleave (repeat (count c) sep) c))))
+
+(defn assoc-in
+  "Associates a value in a nested associative structure, where ks is a
+  sequence of keys and v is the new value and returns a new nested structure.
+  If any levels do not exist, hash-maps will be created."
+  [m [k & ks] v]
+  (if (count ks)
+    (assoc m k (assoc-in (get m k {}) ks v))
+    (assoc m k v)))
+
+(defn update-in
+  "'Updates' a value in a nested associative structure, where ks is a
+  sequence of keys and f is a function that will take the old value
+  and any supplied args and return the new value, and returns a new
+  nested structure.  If any levels do not exist, hash-maps will be
+  created."
+  [m [k & ks] f & args]
+  (if (count ks)
+    (assoc m k (apply update-in (get m k {}) ks f args))
+    (assoc m k (apply f (get m k {}) args))))
 
 (defn trampoline
   "trampoline can be used to convert algorithms requiring mutual
