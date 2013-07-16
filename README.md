@@ -18,7 +18,7 @@ make watch
 ```
 open an other terminal to run the test
 ```
-make watch-test
+make livetest
 ```
 
 # Note
