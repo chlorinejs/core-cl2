@@ -672,11 +672,12 @@
 (defn partition4
   "Four-argument version of partition"
   [n step pad coll]
-  (when-let [s coll]
-    (when-let [p (take n s)]
-      (if (= n (count p))
-        (cons p (partition4 n step pad (nthrest s step)))
-        [(take n (concat p pad))]))))
+  (let [pad (if (nil? pad) [] pad)]
+    (when-let [s coll]
+      (when-let [p (take n s)]
+        (if (= n (count p))
+          (cons p (partition4 n step pad (nthrest s step)))
+          [(take n (concat p pad))])))))
 
 (defn partition
   "Returns a vector of lists of n items each, at offsets step
