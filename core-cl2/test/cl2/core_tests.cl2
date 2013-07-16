@@ -12,7 +12,14 @@
   (is (= 3 (last [1 2 3])))
   (is (= nil (last [])))
   (is (= nil (last nil)))
-  )
+  (is (= [2 3] (next [1 2 3])))
+  (is (= nil (next [])))
+  (is (= [2 3 4]
+         (rest [1 2 3 4])))
+  (is (= [] (rest [])))
+  (is (= (butlast [1 2 3 4])
+         [1 2 3]))
+  (is (= nil (butlast []))))
 
 (deftest type-tests
   (is (vector? [1 2 3]))

@@ -67,6 +67,11 @@
   [x]
   (if (nil? x) [] (.slice x 1)))
 
+(defn butlast
+  "Return a vector of all but the last item in coll"
+  [x]
+  (if-not (empty? x) (.slice x 0 (dec (count x)))))
+
 (defn nnext
   "Same as (next (next x))"
   [x]
