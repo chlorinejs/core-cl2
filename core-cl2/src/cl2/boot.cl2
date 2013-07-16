@@ -10,7 +10,29 @@
 (borrow-macros when when-not unless if-not if-let when-let cond
                condp .. -> ->> cond-> cond->> doto)
 
-(defmacro apply [fun & args] `(.apply ~fun 0 ~@args))
+(defmacro apply*
+  "Helper macro to call native apply method"
+  [f & args]
+  `(.apply ~f 0 ~@args))
+
+;; (apply f [1 2 3]) => (apply* f [1 2 3])
+;; (apply f c) => (apply* f c)
+;; (apply f 1 2 [3 4]) => (apply* f [1 2 3 4])
+;; (apply f 1 2 3 c) => (apply* f (.concat [1 2 3] c))
+
+(defmacro apply
+  "Applies fn f to the argument list formed by prepending intervening arguments to args."
+  [f & args]
+  (if (= 1 (count args))
+    (if (or (coll? (first args))
+            (symbol? (first args)))
+      `(apply* ~f ~@args)
+      (throw (Throwable. "Invalid apply form 1")))
+    (if (coll? (last args))
+      `(apply* ~f ~(vec (concat (butlast args) (last args))))
+      (if (symbol? (last args))
+        `(apply* ~f (.concat ~(vec (butlast args)) ~(last args)))
+        (throw (Throwable. "Invalid apply form"))))))
 
 (defmacro fn
   "Function form. Supports multi-arity."
