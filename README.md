@@ -1,6 +1,7 @@
 # ChlorineJs Core library
 
-[![Build Status](https://api.travis-ci.org/chlorinejs/core-cl2.png?branch=master)](https://travis-ci.org/chlorinejs/core-cl2)
+[![Master Build Status](https://api.travis-ci.org/chlorinejs/core-cl2.png?branch=master)](https://travis-ci.org/chlorinejs/core-cl2)
+[![Develop Build Status](https://api.travis-ci.org/chlorinejs/core-cl2.png?branch=develop)](https://travis-ci.org/chlorinejs/core-cl2)
 
 [Chlorine](http://github.com/chlorinejs/chlorine) (formerly Clojurejs) is a naive implementation of a Clojure subset language to Javascript translator.
 
