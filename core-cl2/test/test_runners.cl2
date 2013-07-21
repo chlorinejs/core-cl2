@@ -4,7 +4,6 @@
 (load-file "./cl2/for_tests.cl2")
 (load-file "./cl2/core_tests.cl2")
 (load-file "./cl2/print_tests.cl2")
-(load-file "./cl2/mutable_tests.cl2")
 (load-file "./cl2/hiccup_tests.cl2")
 (load-file "./cl2/concurrency_tests.cl2")
 (load-file "./cl2/json_tests.cl2")
