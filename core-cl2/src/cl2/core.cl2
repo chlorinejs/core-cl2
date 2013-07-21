@@ -1,6 +1,3 @@
-(load-file "./compatible.cl2")
-;;(load-file "./native.cl2")
-
 (defn not [x] (! x))
 
 (defn contains?
