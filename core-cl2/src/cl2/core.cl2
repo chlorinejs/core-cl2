@@ -348,6 +348,12 @@
   [& args]
   (reduce #(* %1 %2) 1 args))
 
+(defn /
+  "If no denominators are supplied, returns 1/numerator,
+  else returns numerator divided by all of the denominators."
+  [& args]
+  (reduce #(js-divide %1 %2) 1 args))
+
 (defn identity
   "Returns its argument."
   [x] x)

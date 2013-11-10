@@ -55,6 +55,10 @@
   ([x] x)
   ([x & more] `(** ~x ~@more)))
 
+(defmacro /
+  ([x] (/ 1 x))
+  ([x & more] `(js-divide ~x ~@more)))
+
 (defmacro inc [arg] `(+ 1 ~arg))
 
 (defmacro dec [arg] `(- ~arg 1))
