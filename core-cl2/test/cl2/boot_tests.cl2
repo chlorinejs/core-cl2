@@ -44,14 +44,6 @@
   (is (=== true (contains? {:a 1 :b 2} :a)))
   (is (=== false (contains? {:a 1 :b 2} :c))))
 
-(deftest inc!-dec!-tests
-  (def a 2)
-  (inc! a)
-  (def b 5)
-  (dec! b)
-  (is (=== 3 a))
-  (is (=== 4 b)))
-
 (deftest dot-form-tests
   (is (=== "c;b;a"
          (.. [:c :b :a]
