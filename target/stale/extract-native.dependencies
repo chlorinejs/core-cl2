@@ -1,0 +1,1 @@
+([:dependencies ([org.clojure/clojure "1.5.1"] [chlorine/chlorine "1.6.4-SNAPSHOT"])])
