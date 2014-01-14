@@ -22,7 +22,8 @@
                (some #(if (or (number? %)
                               (keyword? %)
                               (string? %)
-                              (true? %))
+                              (true? %)
+                              (char? %))
                         %)
                      args))
            falsey-primitive-member?
