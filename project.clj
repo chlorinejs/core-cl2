@@ -12,7 +12,7 @@
            :scripts {:mocha "mocha -u qunit test/test_runner.js"
                      :mocha-auto "mocha -w -u qunit test/test_runner.js"}}
   :plugins [[lein-cl2c "0.0.1-SNAPSHOT"]
-            [lein-npm "0.2.0-SNAPSHOT"]]
+            [lein-npm "0.2.0"]]
   :cl2c {:compile
          {:watch ["src", "test"]
           :filter "src/"
