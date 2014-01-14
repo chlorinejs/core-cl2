@@ -9,6 +9,7 @@
                         (keyword? %)
                         (string? %)
                         (true? %)
+                        (char? %)
                         (false? %)
                         (nil? %))
                    [x y]))
