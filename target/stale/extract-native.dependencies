@@ -1,1 +1,1 @@
-([:dependencies ([org.clojure/tools.namespace "0.2.3"] [org.clojure/tools.nrepl "0.2.3" :exclusions ([org.clojure/clojure])] [clojure-complete/clojure-complete "0.2.3" :exclusions ([org.clojure/clojure])] [evaljs/evaljs "0.1.2"] [hiccup-bridge/hiccup-bridge "1.0.0-20121005.191216-2"] [clj-ssh/clj-ssh "0.5.0"] [midje/midje "1.5.1"] [alembic/alembic "0.1.0"] [lein-try/lein-try "0.4.0"] [org.clojure/clojure "1.5.1"] [chlorine/chlorine "1.6.4-SNAPSHOT"])])
+([:dependencies ([org.clojure/clojure "1.5.1"] [chlorine/chlorine "1.6.4-SNAPSHOT"])])
