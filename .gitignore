@@ -9,3 +9,5 @@ hs_err_*.log
 pom.xml
 /classes
 /lib
+/node_modules
+/npm-debug.log

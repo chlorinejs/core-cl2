@@ -9,6 +9,7 @@
                         (keyword? %)
                         (string? %)
                         (true? %)
+                        (char? %)
                         (false? %)
                         (nil? %))
                    [x y]))
@@ -22,7 +23,8 @@
                (some #(if (or (number? %)
                               (keyword? %)
                               (string? %)
-                              (true? %))
+                              (true? %)
+                              (char? %))
                         %)
                      args))
            falsey-primitive-member?
