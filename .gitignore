@@ -10,3 +10,4 @@ pom.xml
 /classes
 /lib
 /node_modules
+/npm-debug.log
