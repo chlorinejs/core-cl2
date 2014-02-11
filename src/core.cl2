@@ -688,7 +688,7 @@
   do not overlap. If a pad collection is supplied, use its elements as
   necessary to complete last partition upto n items. In case there are
   not enough padding elements, return a partition with less than n items."
-  ([n coll] (partion3 n n coll))
+  ([n coll] (partition3 n n coll))
   ([n step coll]
      (partition3 n step coll))
   ([n step pad coll]

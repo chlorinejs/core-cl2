@@ -75,7 +75,7 @@
 
 (defmacro partition
   ([n coll]
-     `(partion3 ~n ~n ~coll))
+     `(partition3 ~n ~n ~coll))
   ([n step coll]
      `(partition3 ~n ~step ~coll))
   ([n step pad coll]
